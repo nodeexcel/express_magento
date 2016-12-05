@@ -22,7 +22,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                 var format = 'HH:mm:ss ZZ';
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
                 var getdate_time = moment().format('YYYY-MM-DD H:mm:ss');
-                // if (current_time == cron_running_time_with_IST) {
+                if (current_time == cron_running_time_with_IST) {
                     console.log('You will see this message every minute');
                     var categoryListDB = CollectioncategoryList;
                     categoryListDB.findOne({
@@ -256,7 +256,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                         }
                     });
 //********************* END, CRON FOR HOME PRODUCTS ************************
-                // }
+                }
             }
         });
     }, null, true);
