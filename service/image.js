@@ -87,18 +87,18 @@ minify = function (url, APP_ID, callback) {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {
             if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
-                      imagemin(["public/" + image_url], 'public/' + image_minified_name, {
-                       plugins: [
-                       imageminMozjpeg(),
-                       imageminPngquant({quality: '5'})
-                       ]
-                      }).then(files => {
-                           if (files[0].path !== null) {
-                               callback(200, config.CDN_URL+image_minified_name+image_jpg );
-                           } else {
-                               callback(500, "oops! some error occured");
-                           }
-                 })
+                     imagemin(["public/original_image/" + image_jpg], 'public/' + image_minified_name, {
+                      plugins: [
+                      imageminMozjpeg(),
+                      imageminPngquant({quality: '5'})
+                      ]
+                     }).then(files => {
+                          if (files[0].path !== null) {
+                              callback(200, config.CDN_URL+image_minified_name+image_jpg );
+                          } else {
+                              callback(500, "oops! some error occured");
+                          }
+                })
             } else {
                 callback(200, config.CDN_URL + image_minified_name + image_jpg);
             }

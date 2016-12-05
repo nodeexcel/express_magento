@@ -6,6 +6,7 @@ var timezone = jstz.determine().name();
 require('./category');
 require('./home');
 
+
 cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsList, app_id) {
 
     // pattern for crone  after 5 min '*/5 * * * *'
@@ -20,7 +21,8 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                 var current_time = moment().tz('Asia/Calcutta').format('HH:mm:ss ZZ'); //13:56:34 +0530
                 var format = 'HH:mm:ss ZZ';
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
-                if (current_time == cron_running_time_with_IST) {
+                var getdate_time = moment().format('YYYY-MM-DD H:mm:ss');
+                // if (current_time == cron_running_time_with_IST) {
                     console.log('You will see this message every minute');
                     var categoryListDB = CollectioncategoryList;
                     categoryListDB.findOne({
@@ -39,7 +41,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                                     var allData = body.msg.children[0].children;
                                     for (var a = allData.length - 1; a >= 0; a--) {
                                         var allRecords = new categoryListDB({cache: 0, key: allData[a].id,
-                                            categoryName: allData[a].name, type: 'category'});
+                                            categoryName: allData[a].name, type: 'category',time:getdate_time});
                                         allRecords.save(function (err) {
                                             if (err) {
                                                 console.log('not saved');
@@ -66,7 +68,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                                         for (var a = 0; a < allData.length; a++) {
                                             var row = allData[a].data;
                                             var allRecords = new categoryListDB({cache: 0, key: row.sku,
-                                                name: row.name, type: 'product'});
+                                                name: row.name, type: 'product',time:getdate_time});
                                             allRecords.save(function (err) {
                                                 if (err) {
                                                     console.log('not saved');
@@ -87,20 +89,6 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                                                 }
                                             });
                                         }
-//                                    var categoryProductsDB = CollectioncategoryList;
-//                                    categoryProductsDB.update({
-//                                        'categoryId': inputId
-//                                    }, {
-//                                        $set: {
-//                                            children: body.msg
-//                                        }
-//                                    }, function (err) {
-//                                        if (!err) {
-//                                            console.log('Update Done');
-//                                        } else {
-//                                            console.log('my error');
-//                                        }
-//                                    });
                                     }
                                 });
                             } else if (type == 'product') {
@@ -164,7 +152,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                                     var allData = body.msg;
                                     for (var a = 0; a < allData.length; a++) {
                                         var allRecords = new homeSliderList({cache: 0, URL: allData[a],
-                                            type: 'Home Slider'});
+                                            type: 'Home Slider',time:getdate_time});
                                         allRecords.save(function (err) {
                                             if (err) {
                                                 console.log('not saved');
@@ -214,7 +202,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                                     var allData = body.msg;
                                     for (var a = allData.length - 1; a >= 0; a--) {
                                         var allRecords = new homeProductList({cache: 0, key: allData[a].data.sku,
-                                            categoryName: allData[a].data.name, type: 'product'});
+                                            categoryName: allData[a].data.name, type: 'product',time:getdate_time});
                                         allRecords.save(function (err) {
                                             if (err) {
                                                 console.log('not saved');
@@ -268,7 +256,7 @@ cron = function (AppUrls, CollectioncategoryList, homeSliderList, homeProductsLi
                         }
                     });
 //********************* END, CRON FOR HOME PRODUCTS ************************
-                }
+                // }
             }
         });
     }, null, true);
