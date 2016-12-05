@@ -62,7 +62,7 @@ resize = function (url, APP_ID, mobile_width, callback) {
                                     });
                         });
                     } else {
-                        callback(200, config.DEFAULT_IMAGE_URL);
+                        callback(200,config.DEFAULT_IMAGE_URL);
                     }
                 });
             } else {
@@ -83,26 +83,26 @@ minify = function (url, APP_ID, callback) {
         var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
         var image_jpg = '/' + image_name_without_extension + '.jpg';
         var image_minified_name = filename.replace("comtethr/300", "comtethr/300/minify");
-        if (filename == '/default') {
-            callback(200, config.DEFAULT_IMAGE_URL);
+        if(filename == '/default'){
+            callback(200,config.DEFAULT_IMAGE_URL);
+        }else{
+        if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
+                imagemin(["public/original_image/" + image_jpg], 'public/' + image_minified_name, {
+                 plugins: [
+                 imageminMozjpeg(),
+                 imageminPngquant({quality: '5'})
+                 ]
+                }).then(files=> {
+                     if (files[0].path !== null) {
+                         callback(200, config.CDN_URL+image_minified_name+image_jpg );
+                     } else {
+                         callback(500, "oops! some error occured");
+                     }
+           })
         } else {
-            if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
-                     imagemin(["public/original_image/" + image_jpg], 'public/' + image_minified_name, {
-                      plugins: [
-                      imageminMozjpeg(),
-                      imageminPngquant({quality: '5'})
-                      ]
-                     }).then(files => {
-                          if (files[0].path !== null) {
-                              callback(200, config.CDN_URL+image_minified_name+image_jpg );
-                          } else {
-                              callback(500, "oops! some error occured");
-                          }
-                })
-            } else {
-                callback(200, config.CDN_URL + image_minified_name + image_jpg);
-            }
+            callback(200, config.CDN_URL+image_minified_name+image_jpg);
         }
+    }
     } else {
         callback(500, " APP_ID or url cannot be empty");
     }
