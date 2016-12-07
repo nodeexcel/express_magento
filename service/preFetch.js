@@ -20,6 +20,7 @@ fetchCategoryList = function (categoryListDB) {
             };
             categoryList(req, function (body) {
                 if (body.status == 0) {
+                    console.log('error');
                 } else {
                     var allData = body.msg.children[0].children;
                     var reverseAllData = _.reverse(allData);
@@ -116,8 +117,8 @@ fetchCategoryList = function (categoryListDB) {
     });
 };
 
-fetchHomeSliderList = function (homeSliderList) {
-    homeSliderList.findOne({
+fetchHomeSliderList = function (homeSliderListDB) {
+    homeSliderListDB.findOne({
         cache: 0
     }, function (error, result) {
         if (error) {
@@ -132,7 +133,7 @@ fetchHomeSliderList = function (homeSliderList) {
                 } else {
                     var allData = body.msg;
                     _.forEach(allData, function (value) {
-                        var allRecords = new homeSliderList({cache: 0, URL: value,
+                        var allRecords = new homeSliderListDB({cache: 0, URL: value,
                             type: 'Home Slider'});
                         allRecords.save(function (err) {
                             if (err) {
@@ -146,7 +147,7 @@ fetchHomeSliderList = function (homeSliderList) {
             });
         } else {
             var urlId = result.get('_id');
-            homeSliderList.update({_id: urlId}, {
+            homeSliderListDB.update({_id: urlId}, {
                 $set: {
                     cache: 1
                 }
@@ -161,8 +162,8 @@ fetchHomeSliderList = function (homeSliderList) {
     });
 };
 
-fetchhomeProductList = function (homeProductList) {
-    homeProductList.findOne({
+fetchhomeProductList = function (homeProductListDB) {
+    homeProductListDB.findOne({
         cache: 0
     }, function (error, result) {
         if (error) {
@@ -178,7 +179,7 @@ fetchhomeProductList = function (homeProductList) {
                     var allData = body.msg;
                     var reverseAllData = _.reverse(allData);
                     _.forEach(reverseAllData, function (value) {
-                        var allRecords = new homeProductList({cache: 0, key: value.data.sku,
+                        var allRecords = new homeProductListDB({cache: 0, key: value.data.sku,
                             categoryName: value.data.name, type: 'product'});
                         allRecords.save(function (err) {
                             if (err) {
@@ -211,7 +212,7 @@ fetchhomeProductList = function (homeProductList) {
                             if (productBody.status == 0) {
                                 console.log('error');
                             } else {
-                                homeProductList.update({
+                                homeProductListDB.update({
                                     'key': inputId
                                 }, {
                                     $set: {
