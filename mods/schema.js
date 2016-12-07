@@ -18,5 +18,6 @@ prefetchData = new Schema({
     "name": String,
     "type": String,
     "req": Array,
-    "reqType": String
+    "reqType": String,
+    "APP_ID": String
 });
