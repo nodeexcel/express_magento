@@ -52,7 +52,7 @@ module.exports = function () {
             } else {
                 _.forEach(value, function (row) {
                     app_id = row.get('APP_ID');
-                    processStore(app_urls, CollectioncategoryList, homeSlider, homeProducts, app_id);
+//                    processStore(app_urls, CollectioncategoryList, homeSlider, homeProducts, app_id);
                 });
             }
         });
