@@ -20,23 +20,3 @@ prefetchData = new Schema({
     "req": Array,
     "reqType": String
 });
-
-//categoryListSchema = new Schema({
-//    "cache": Number,
-//    "key": String,
-//    "name": String,
-//    "type": String
-//});
-//
-//homeSliderSchema = mongoose.Schema({
-//    "cache": Number,
-//    "URL": String,
-//    "type": String
-//});
-//
-//homeProductSchema = mongoose.Schema({
-//    cache: Number,
-//    key: String,
-//    categoryName: String,
-//    type: String
-//});

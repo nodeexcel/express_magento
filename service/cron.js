@@ -28,7 +28,7 @@ var prefetchDataDB = conn.model('prefetchData', prefetchData);
 
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
-    new CronJob('* * * * * *', function () {
+    new CronJob('*/1 * * * *', function () {
         app_urls.findOne({APP_ID: app_id}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -49,7 +49,6 @@ processStore = function (app_id) {
                     if (err) {
                         console.log(err);
                     } else if (!result || result.length == 0) {
-                        console.log('result ni hai');
                         if (user.prefetch_status == 'NOT STARTED') {
                             app_urls.update({
                                 _id: selectId
@@ -65,15 +64,16 @@ processStore = function (app_id) {
                                     var reqArray = [{"req": {headers: {app_id: config.APP_ID},
                                                 body: {store_id: '1', parent_id: '1', type: 'full'},
                                                 URL: config.URL
-                                            }, "reqType": "Category List"},
-                                        {"req": {headers: {app_id: config.APP_ID},
-                                                body: {mobile_width: '300'},
-                                                URL: config.URL
-                                            }, "reqType": "Home Slider"},
-                                        {"req": {headers: {app_id: config.APP_ID},
-                                                body: {mobile_width: '300'},
-                                                URL: config.URL
-                                            }, "reqType": "Home Products"}];
+                                            }, "reqType": "Category List", cache: 0},
+//                                        {"req": {headers: {app_id: config.APP_ID},
+//                                                body: {mobile_width: '300'},
+//                                                URL: config.URL
+//                                            }, "reqType": "Home Slider", cache: 0},
+//                                        {"req": {headers: {app_id: config.APP_ID},
+//                                                body: {mobile_width: '300'},
+//                                                URL: config.URL
+//                                            }, "reqType": "Home Products", cache: 0}
+                                    ];
                                     _.forEach(reqArray, function (row) {
                                         var record = new prefetchDataDB({
                                             "cache": 0,
@@ -123,29 +123,33 @@ processStore = function (app_id) {
                                             conosle.log('Category List not deleted');
                                         } else {
                                             console.log('Record Deleted!!');
-                                            fetchCategoryList(prefetchDataDB);
-                                        }
-                                    });
-                                } else if (item.reqType == 'Home Slider') {
-                                    prefetchDataDB.remove({reqType: 'Home Slider'}, function (err) {
-                                        if (err) {
-                                            conosle.log('Home Slider not deleted');
-                                        } else {
-                                            console.log('Record Deleted!!');
-                                            fetchHomeSliderList(prefetchDataDB);
-                                        }
-                                    });
-                                } else if (item.reqType == 'Home Products') {
-                                    prefetchDataDB.remove({reqType: 'Home Products'}, function (err) {
-                                        if (err) {
-                                            conosle.log('Home Products not deleted');
-                                        } else {
-                                            console.log('Record Deleted!!');
-                                            fetchhomeProductList(prefetchDataDB);
+                                            fetchCategoryList(prefetchDataDB, function () {
+                                                console.log('end!!');
+                                                callback(0);
+                                            });
                                         }
                                     });
                                 }
-                                callback(0);
+//                                else if (item.reqType == 'Home Slider') {
+//                                    prefetchDataDB.remove({reqType: 'Home Slider'}, function (err) {
+//                                        if (err) {
+//                                            conosle.log('Home Slider not deleted');
+//                                        } else {
+//                                            console.log('Record Deleted!!');
+//                                            fetchHomeSliderList(prefetchDataDB);
+//                                        }
+//                                    });
+//                                } else if (item.reqType == 'Home Products') {
+//                                    prefetchDataDB.remove({reqType: 'Home Products'}, function (err) {
+//                                        if (err) {
+//                                            conosle.log('Home Products not deleted');
+//                                        } else {
+//                                            console.log('Record Deleted!!');
+//                                            fetchhomeProductList(prefetchDataDB);
+//                                        }
+//                                    });
+//                                }
+//                                callback(0);
                             }
                         }
                     }
