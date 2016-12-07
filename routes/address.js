@@ -9,7 +9,7 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/edit', isAuth, function (req, res) {
-    validate(req, res, {countryid: 'required',
+    validate(req, {countryid: 'required',
         zip: 'required',
         city: 'required',
         telephone: 'required',
@@ -22,14 +22,18 @@ router.post('/edit', isAuth, function (req, res) {
         newPassword: 'optional',
         secret: 'required',
         entity_id: 'required'}, req.body.secret, function (body) {
-        API(req, res, body, '/address/edit/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/address/edit/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });
 
 router.post('/delete', isAuth, function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -42,8 +46,12 @@ router.post('/delete', isAuth, function (req, res) {
         newPassword: 'optional',
         secret: 'required',
         entity_id: 'required'}, req.body.secret, function (body) {
-        API(req, res, body, '/address/delete/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/address/delete/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });

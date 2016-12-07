@@ -8,7 +8,7 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/login', function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -27,14 +27,18 @@ router.post('/login', function (req, res) {
         type: 'optional',
         website_id: 'required',
         email: 'required'}, null, function (body) {
-        API(req, res, body, '/customer/login/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/customer/login/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });
 
 router.post('/register', function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -53,14 +57,18 @@ router.post('/register', function (req, res) {
         type: 'optional',
         website_id: 'required',
         email: 'required'}, null, function (body) {
-        API(req, res, body, '/customer/register/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/customer/register/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });
 
 router.post('/forgot', function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -79,14 +87,18 @@ router.post('/forgot', function (req, res) {
         type: 'optional',
         website_id: 'required',
         email: 'required'}, null, function (body) {
-        API(req, res, body, '/customer/forgot/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/customer/forgot/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });
 
 router.post('/social_account', function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -107,8 +119,12 @@ router.post('/social_account', function (req, res) {
         email: 'required',
         social: 'required',
         social_id: 'required'}, null, function (body) {
-        API(req, res, body, '/customer/social_account/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/customer/social_account/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });

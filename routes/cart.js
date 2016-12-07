@@ -9,7 +9,7 @@ var express = require('express');
 var router = express.Router();
 
 router.all('/cart', isAuth, function (req, res) {
-    validate(req, res, {countryid: 'optional',
+    validate(req, {countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -24,8 +24,12 @@ router.all('/cart', isAuth, function (req, res) {
         entity_id: 'optional',
         productid: 'required',
         store_id: 'required'}, req.body.secret, function (body) {
-        API(req, res, body, '/cart/cart/', function (status, response, msg) {
-            success(res, status, response);
+        API(req, body, '/cart/cart/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, status, response);
+            }
         });
     });
 });

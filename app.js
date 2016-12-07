@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+require('node-import');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -7,6 +8,9 @@ var bodyParser = require('body-parser');
 
 var verify = require('./middleware/verify.js');
 var redis = require('./middleware/redis.js');
+var optimus = require('connect-image-optimus');
+var connect = require('connect');
+
 
 var db = require('./mods/db.js');
 var app = express();
@@ -18,9 +22,9 @@ var serveStatic = require('serve-static');
 var staticPath = __dirname + '/static/';
 
 app.use(optimus(staticPath));
-//app.use(connect.static(staticPath));
+// app.use(connect.static(staticPath));
 app.use(serveStatic(staticPath));
-
+//var app = connect();
 
 var cors = require('cors');
 // view engine setup
@@ -83,6 +87,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
+    console.log(err)
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

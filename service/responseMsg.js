@@ -5,3 +5,7 @@ success = function (res, status, data) {
         res.status(500).send(data);
     }
 };
+
+oops = function (res, data) {
+    res.status(500).send(data);
+};

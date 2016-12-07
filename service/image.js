@@ -14,6 +14,10 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 
 resize = function (url, APP_ID, mobile_width, callback) {
+    
+      callback(200, config.DEFAULT_IMAGE_URL);
+      return;
+    
     if (url && APP_ID) {
         if (mobile_width) {
             mobile_width = mobile_width;
@@ -26,69 +30,84 @@ resize = function (url, APP_ID, mobile_width, callback) {
         var url_last_index_length = url.lastIndexOf('/');
         var image_name = url.substring(url_last_index_length + 1);
         var filename = image_stored_url.substring(0, image_stored_url.lastIndexOf("/"));
-        if (fileExists('public/original_image/' + image_name) == false) {
-            mkdirp('public/' + filename, function (err) {
-                if (err) {
-                    callback(500, "oops! some error occured");
-                } else {
-                    console.log('pow!');
-                }
-            });
-            var width = JSON.parse(mobile_width);
-            var file = fs.createWriteStream("public/original_image/" + image_name);
-            http.get(url, function (response) {
-                if (response.statusCode == 200) {
-                    response.pipe(file);
-                    response.on('end', function () {
-                        sharp('public/original_image/' + image_name)
-                                .resize(width)
-                                .toFile('public/' + filename + image_name, function (err) {
-                                    if (err) {
-                                        callback(500, err);
-                                    } else if (err === null) {
-                                        callback(200, "done", config.IMAGE_URL + filename + image_name);
-                                    } else {
-                                        callback(500, "oops! some error occured");
-                                    }
-                                });
-                    });
-                } else {
-                    callback(200, "done", config.DEFAULT_IMAGE_URL);
-                }
-
-            });
+        var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
+        var image_webp = '/' + image_name_without_extension + '.webp';
+        var image_png = '/' + image_name_without_extension + '.png';
+        if (image_name_without_extension == '') {
+            callback(200, config.DEFAULT_IMAGE_URL);
         } else {
-            callback(200, "done", config.IMAGE_URL + image_stored_url);
+            if (fileExists('public/original_image/' + image_name) == false) {
+                var width = parseInt(mobile_width);
+                var file = fs.createWriteStream("public/original_image/" + image_name);
+                http.get(url, function (response) {
+                    mkdirp('public/' + filename, function (err) {
+                        if (err) {
+                            callback(500, "oops! some error occured");
+                        } else {
+                        }
+                    });
+                    if (response.statusCode == 200) {
+                        response.pipe(file);
+                        response.on('end', function () {
+                            sharp('public/original_image/' + image_name)
+                                    .resize(width)
+                                    .toFile('public/' + filename + image_webp, function (err) {
+                                        if (err) {
+                                            callback(500, err);
+                                        } else if (err === null) {
+                                            sharp('public/original_image/' + image_name)
+                                                    .resize(width)
+                                                    .toFile('public/' + filename + image_png, function (err) {
+                                                        callback(200, config.CDN_URL + filename + image_png);
+                                                    });
+                                        } else {
+                                            callback(500, "oops! some error occured");
+                                        }
+                                    });
+                        });
+                    } else {
+                        callback(200,config.DEFAULT_IMAGE_URL);
+                    }
+                });
+            } else {
+                callback(200, config.CDN_URL + filename + image_png);
+            }
         }
     } else {
         callback(500, " APP_ID or url or mobile_width cannot be empty");
     }
 };
 
- minify = function (url, APP_ID, callback) {
-     if (url && APP_ID) {
-         var image_url = URL_.parse(url).path;
-         var image_fetch_url = image_url.replace("/shekhar_works/Eexpress_magento/public/", "");
-         var filename = image_fetch_url.substring(0, image_fetch_url.lastIndexOf("/"));
-         var url_last_index_length = url.lastIndexOf('/');
-         var image_name = url.substring(url_last_index_length + 1);
-         if (fileExists('public/minify/' + filename + '/' + image_name) == false) {
-                  imagemin(["public/original_image/" + image_name], 'public/minify/' + filename, {
-                   plugins: [
-                   imageminMozjpeg(),
-                   imageminPngquant({quality: '5'})
-                   ]
-                  }).then(files => {
-                       if (files[0].path !== null) {
-                           callback(200, "done", config.IMAGE_MINIFY_URL+image_fetch_url );
-                       } else {
-                           callback(500, "oops! some error occured");
-                       }
-             })
-         } else {
-             callback(200, "done", config.IMAGE_MINIFY_URL + image_fetch_url);
-         }
-     } else {
-         callback(500, " APP_ID or url cannot be empty");
-     }
- };
+minify = function (url, APP_ID, callback) {
+    if (url && APP_ID) {
+        var image_url = URL_.parse(url).path;
+        var filename = image_url.substring(0, image_url.lastIndexOf("/"));
+        var url_last_index_length = url.lastIndexOf('/');
+        var image_name = url.substring(url_last_index_length + 1);
+        var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
+        var image_jpg = '/' + image_name_without_extension + '.jpg';
+        var image_minified_name = filename.replace("comtethr/300", "comtethr/300/minify");
+        
+        callback(200, config.CDN_URL+image_minified_name+image_jpg);
+        return;
+        
+        if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
+                imagemin(["public/original_image/" + image_jpg], 'public/' + image_minified_name, {
+                 plugins: [
+                 imageminMozjpeg(),
+                 imageminPngquant({quality: '5'})
+                 ]
+                }).then(files => {
+                     if (files[0].path !== null) {
+                         callback(200, config.CDN_URL+image_minified_name+image_jpg );
+                     } else {
+                         callback(500, "oops! some error occured");
+                     }
+           })
+        } else {
+            callback(200, config.CDN_URL+image_minified_name+image_jpg);
+        }
+    } else {
+        callback(500, " APP_ID or url cannot be empty");
+    }
+};
