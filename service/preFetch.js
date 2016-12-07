@@ -9,15 +9,12 @@ var _ = require('lodash');
 var async = require('async');
 
 fetchCategoryList = function (prefetchDataDB, cb) {
-    var count = 0, count1 = 0;
-    console.log('category list chla rha h');
     prefetchDataDB.findOne({
         cache: 0
     }, function (error, result) {
         if (error) {
             console.log(error);
         } else if (!result) {
-            console.log('result nahi hai');
             var req = {headers: {app_id: config.APP_ID},
                 body: {store_id: '1', parent_id: '1', type: 'full'},
                 URL: config.URL
@@ -26,7 +23,6 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                 if (body.status == 0) {
                     console.log('error');
                 } else {
-                    console.log('else');
                     var allData = body.msg.children[0].children;
                     var reverseAllData = _.reverse(allData);
 
@@ -35,8 +31,7 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                             console.log('async eachOfLimt error');
                         } else {
                             console.log('async eachOfLimt function working...!!');
-                            console.log('first cb when record nhi hai');
-                            cb();
+//                            cb();
                         }
                     });
 
@@ -48,32 +43,10 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                             if (err) {
                                 console.log('not saved');
                             } else {
-                                count++;
-                                console.log('count');
-                                console.log(count + ":::" + reverseAllData.length);
-                                if (count == reverseAllData.length) {
-                                    console.log('callback chal gya hai');
-                                    callback();
-                                }
+                                callback();
                             }
                         });
                     }
-
-//                    _.forEach(reverseAllData, function (value) {
-//                        var allRecords = new prefetchDataDB({cache: 0, key: value.id,
-//                            categoryName: value.name, type: 'category', reqType: 'Category List',
-//                            req: req});
-//                        allRecords.save(function (err) {
-//                            if (err) {
-//                                console.log('not saved');
-//                            } else {
-//                                console.log('saved');
-//                            }
-//                        });
-//                    });
-
-
-
                 }
             });
         } else {
@@ -97,8 +70,7 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                             } else {
                                 console.log('async eachOfLimt function working for Category Products...!!');
                                 console.log('second cb when record hai');
-                                cb();
-
+//                                cb();
                             }
                         });
 
@@ -122,48 +94,15 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                                             console.log('Update Done');
                                         } else {
                                             console.log('my error');
-                                            count1++;
-                                            console.log('count1');
-                                            console.log(count1 + ":::" + allData.length);
-                                            if (count1 == allData.length) {
-                                                callback();
-                                            }
+                                            callback();
                                         }
                                     });
                                 }
                             });
                         }
-
-//                        _.forEach(allData, function (value) {
-//                            var row = value.data;
-//                            var allRecords = new prefetchDataDB({cache: 0, key: row.sku,
-//                                name: row.name, type: 'product', reqType: 'Category List',
-//                                req: myReq});
-//                            allRecords.save(function (err) {
-//                                if (err) {
-//                                    console.log('not saved');
-//                                } else {
-//                                    prefetchDataDB.update({
-//                                        'key': inputId
-//                                    }, {
-//                                        $set: {
-//                                            cache: 1
-//                                        }
-//                                    }, function (err) {
-//                                        if (!err) {
-//                                            console.log('Update Done');
-//                                        } else {
-//                                            console.log('my error');
-//                                        }
-//                                    });
-//                                }
-//                            });
-//                        });
-
                     }
                 });
             } else if (type == 'product') {
-                console.log('products hai');
                 var inputId = result.get('key');
                 var myReq = {headers: {app_id: config.APP_ID},
                     body: {sku: inputId, mobile_width: '300'},
@@ -191,8 +130,7 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                                 }, function (err) {
                                     if (!err) {
                                         console.log('Product Review get done.');
-                                        console.log('cb chala for product review');
-                                        cb();
+//                                        cb();
                                     } else {
                                         console.log('my error');
                                     }
@@ -201,12 +139,14 @@ fetchCategoryList = function (prefetchDataDB, cb) {
                         });
                     }
                 });
+            } else {
+                cb();
             }
         }
     });
 };
 
-fetchHomeSliderList = function (prefetchDataDB) {
+fetchHomeSliderList = function (prefetchDataDB, cb) {
     prefetchDataDB.findOne({
         cache: 0
     }, function (error, result) {
@@ -221,18 +161,27 @@ fetchHomeSliderList = function (prefetchDataDB) {
                 if (body.status == 0) {
                 } else {
                     var allData = body.msg;
-                    _.forEach(allData, function (value) {
-                        var allRecords = new prefetchDataDB({cache: 0, URL: value,
-                            type: 'Home Slider', reqType: 'Home Slider',
+                    async.eachOfLimit(allData, 10, processRecord, function (err) {
+                        if (err) {
+                            console.log('async eachOfLimt error');
+                        } else {
+                            console.log('async eachOfLimt function working...!!');
+//                            cb();
+                        }
+                    });
+                    function processRecord(item, key, callback) {
+                        var allRecords = new prefetchDataDB({cache: 0, key: item,
+                            type: 'Home Slider', reqType: 'Home Slider', name: item,
                             req: req});
                         allRecords.save(function (err) {
                             if (err) {
                                 console.log('not saved');
                             } else {
                                 console.log('saved');
+                                callback();
                             }
                         });
-                    });
+                    }
                 }
             });
         } else {
@@ -248,13 +197,14 @@ fetchHomeSliderList = function (prefetchDataDB) {
                     console.log(err);
                 } else {
                     console.log('Home Slider cache 1 Done!!');
+                    cb();
                 }
             });
         }
     });
 };
 
-fetchhomeProductList = function (prefetchDataDB) {
+fetchhomeProductList = function (prefetchDataDB, cb) {
     prefetchDataDB.findOne({
         cache: 0
     }, function (error, result) {
@@ -270,18 +220,28 @@ fetchhomeProductList = function (prefetchDataDB) {
                 } else {
                     var allData = body.msg;
                     var reverseAllData = _.reverse(allData);
-                    _.forEach(reverseAllData, function (value) {
-                        var allRecords = new prefetchDataDB({cache: 0, key: value.data.sku,
-                            name: value.data.name, type: 'product', reqType: 'Home Products',
+
+                    async.eachOfLimit(reverseAllData, 10, processRecord, function (err) {
+                        if (err) {
+                            console.log('async eachOfLimt error');
+                        } else {
+                            console.log('async eachOfLimt function working...!!');
+//                            cb();
+                        }
+                    });
+                    function processRecord(item, key, callback) {
+                        var allRecords = new prefetchDataDB({cache: 0, key: item.data.sku,
+                            name: item.data.name, type: 'product', reqType: 'Home Products',
                             req: req});
                         allRecords.save(function (err) {
                             if (err) {
                                 console.log('not saved');
                             } else {
                                 console.log('saved');
+                                callback();
                             }
                         });
-                    });
+                    }
                 }
             });
         } else {
@@ -322,6 +282,8 @@ fetchhomeProductList = function (prefetchDataDB) {
                         });
                     }
                 });
+            } else {
+                cb();
             }
         }
     });
