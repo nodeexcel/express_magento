@@ -49,6 +49,7 @@ processStore = function (app_id) {
                     if (err) {
                         console.log(err);
                     } else if (!result || result.length == 0) {
+                        console.log('result ni hai');
                         if (user.prefetch_status == 'NOT STARTED') {
                             app_urls.update({
                                 _id: selectId
@@ -60,6 +61,7 @@ processStore = function (app_id) {
                                 if (err) {
                                     console.log(err);
                                 } else {
+                                    console.log('prefetch status updated');
                                     var reqArray = [{"req": {headers: {app_id: config.APP_ID},
                                                 body: {store_id: '1', parent_id: '1', type: 'full'},
                                                 URL: config.URL
@@ -105,64 +107,46 @@ processStore = function (app_id) {
                         }
                     } else {
                         if (user.prefetch_status == 'RUNNING') {
-                            //async PARALLEL FUNCTION
-                            async.parallel([
-                                function (callback) {
-                                    for (var a = 0; a < result.length; a++) {
-                                        var row = result[a];
-                                        var reqType = row.get('reqType');
-                                        if (reqType == 'Category List') {
-                                            prefetchDataDB.remove({reqType: 'Category List'}, function (err) {
-                                                if (err) {
-                                                    conosle.log('Category List not deleted');
-                                                } else {
-                                                    console.log('Record Deleted!!');
-                                                    fetchCategoryList(prefetchDataDB);
-                                                }
-                                            });
-                                        }
-                                    }
-                                    callback();
-                                }, function (callback) {
-                                    for (var a = 0; a < result.length; a++) {
-                                        var row = result[a];
-                                        var reqType = row.get('reqType');
-                                        if (reqType == 'Home Slider') {
-                                            prefetchDataDB.remove({reqType: 'Home Slider'}, function (err) {
-                                                if (err) {
-                                                    conosle.log('Home Slider not deleted');
-                                                } else {
-                                                    console.log('Record Deleted!!');
-                                                    fetchHomeSliderList(prefetchDataDB);
-                                                }
-                                            });
-                                        }
-                                    }
-                                    callback();
-                                }, function (callback) {
-                                    for (var a = 0; a < result.length; a++) {
-                                        var row = result[a];
-                                        var reqType = row.get('reqType');
-                                        if (reqType == 'Home Products') {
-                                            prefetchDataDB.remove({reqType: 'Home Products'}, function (err) {
-                                                if (err) {
-                                                    conosle.log('Home Products not deleted');
-                                                } else {
-                                                    console.log('Record Deleted!!');
-                                                    fetchhomeProductList(prefetchDataDB);
-                                                }
-                                            });
-                                        }
-                                    }
-                                    callback();
-                                }
-                            ], function (err) {
+//                            async eachOfLimit function
+                            async.eachOfLimit(result, 3, processRecord, function (err) {
                                 if (err) {
-                                    console.log('parallel error');
+                                    console.log('async eachOfLimt error');
                                 } else {
-                                    console.log('Parallel function working...!!');
+                                    console.log('async eachOfLimt function working...!!');
                                 }
                             });
+
+                            function processRecord(item, key, callback) {
+                                if (item.reqType == 'Category List') {
+                                    prefetchDataDB.remove({reqType: 'Category List'}, function (err) {
+                                        if (err) {
+                                            conosle.log('Category List not deleted');
+                                        } else {
+                                            console.log('Record Deleted!!');
+                                            fetchCategoryList(prefetchDataDB);
+                                        }
+                                    });
+                                } else if (item.reqType == 'Home Slider') {
+                                    prefetchDataDB.remove({reqType: 'Home Slider'}, function (err) {
+                                        if (err) {
+                                            conosle.log('Home Slider not deleted');
+                                        } else {
+                                            console.log('Record Deleted!!');
+                                            fetchHomeSliderList(prefetchDataDB);
+                                        }
+                                    });
+                                } else if (item.reqType == 'Home Products') {
+                                    prefetchDataDB.remove({reqType: 'Home Products'}, function (err) {
+                                        if (err) {
+                                            conosle.log('Home Products not deleted');
+                                        } else {
+                                            console.log('Record Deleted!!');
+                                            fetchhomeProductList(prefetchDataDB);
+                                        }
+                                    });
+                                }
+                                callback(0);
+                            }
                         }
                     }
                 });
