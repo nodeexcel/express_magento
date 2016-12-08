@@ -13,11 +13,6 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
         cache: 0,
         APP_ID: APP_ID
     }).limit(10).exec(function (error, result) {
-
-//    prefetchDataDB.findOne({
-//        cache: 0,
-//        APP_ID: APP_ID
-//    }, function (error, result) {
         if (error) {
             console.log(error);
         } else if (!result || result.length == 0) {
@@ -37,13 +32,13 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                     console.log('error');
                 } else {
                     var allData = body.msg.children[0].children;
-                    console.log(allData);
                     var reverseAllData = _.reverse(allData);
                     async.eachOfLimit(reverseAllData, 10, processCategoryList, function (err) {
                         if (err) {
                             console.log('async eachOfLimt error');
                         } else {
-                            console.log('async eachOfLimt function working...!!');
+                            console.log('async eachOfLimt function working for Category List(Record Not Available)...!!');
+                            cb();
                         }
                     });
                     function processCategoryList(item, key, callback) {
@@ -67,47 +62,107 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                 }
             });
         } else {
-            var type = result.get('type');
-            if (type == 'category') {
-                var inputId = result.get('key');
-                var myReq = {
-                    headers: {
-                        app_id: APP_ID
-                    },
-                    body: {
-                        id: inputId,
-                        limit: '10',
-                        mobile_width: '300',
-                        pageno: '1'
-                    },
-                    URL: config.URL
-                };
-                categoryProducts(myReq, function (body) {
-                    if (body.status == 0) {
-                        console.log('error');
-                    } else {
-                        var allData = body.msg;
-                        async.eachOfLimit(allData, 10, processCategoryProducts, function (err) {
-                            if (err) {
-                                console.log('async eachOfLimt error');
-                            } else {
-                                console.log('async eachOfLimt function working for Category Products...!!');
-                            }
-                        });
-                        function processCategoryProducts(item, key, callback) {
-                            var row = item.data;
-                            var allRecords = new prefetchDataDB({
-                                cache: 0,
-                                key: row.sku,
-                                name: row.name,
-                                type: 'product',
-                                reqType: 'Category List',
-                                req: myReq,
-                                APP_ID: APP_ID
-                            });
-                            allRecords.save(function (err) {
+            async.eachOfLimit(result, 10, processCategoryListRecord, function (err) {
+                if (err) {
+                    console.log('async eachOfLimt error');
+                } else {
+                    console.log('async eachOfLimt function working for Category List(Record Available)...!!');
+                    cb();
+                }
+            });
+            function processCategoryListRecord(item, key, callback) {
+                if (item.type == 'category') {
+                    var inputId = item.key;
+                    var myReq = {
+                        headers: {
+                            app_id: APP_ID
+                        },
+                        body: {
+                            id: inputId,
+                            limit: '10',
+                            mobile_width: '300',
+                            pageno: '1'
+                        },
+                        URL: config.URL
+                    };
+                    categoryProducts(myReq, function (body) {
+                        if (body.status == 0) {
+                            console.log('error');
+                        } else {
+                            var allData = body.msg;
+                            async.eachOfLimit(allData, 10, processCategoryProducts, function (err) {
                                 if (err) {
-                                    console.log('not saved');
+                                    console.log('async eachOfLimt error');
+                                } else {
+                                    console.log('async eachOfLimt function working for Category Products...!!');
+                                    callback();
+                                }
+                            });
+                            function processCategoryProducts(item, key, callback) {
+                                var row = item.data;
+                                var allRecords = new prefetchDataDB({
+                                    cache: 0,
+                                    key: row.sku,
+                                    name: row.name,
+                                    type: 'product',
+                                    reqType: 'Category List',
+                                    req: myReq,
+                                    APP_ID: APP_ID
+                                });
+                                allRecords.save(function (err) {
+                                    if (err) {
+                                        console.log('not saved');
+                                    } else {
+                                        prefetchDataDB.update({
+                                            'key': inputId
+                                        }, {
+                                            $set: {
+                                                cache: 1
+                                            }
+                                        }, function (err) {
+                                            if (!err) {
+                                                console.log('Update Done');
+                                                callback();
+                                            } else {
+                                                console.log('my error');
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else if (item.type == 'product') {
+                    var inputId = item.key;
+                    var myReq = {
+                        headers: {
+                            app_id: config.APP_ID
+                        },
+                        body: {
+                            sku: inputId,
+                            mobile_width: '300'
+                        },
+                        URL: config.URL
+                    };
+                    productGet(myReq, function (body) {
+                        if (body.status == 0) {
+                            console.log('error');
+                        } else {
+                            console.log('Product Get Done');
+                            var productReq = {
+                                headers: {
+                                    app_id: config.APP_ID
+                                },
+                                body: {
+                                    sku: inputId,
+                                    mobile_width: '300',
+                                    pageno: 1
+                                },
+                                URL: config.URL
+                            };
+                            productReview(productReq, function (productBody) {
+                                if (productBody.status == 0) {
+                                    console.log('error');
                                 } else {
                                     prefetchDataDB.update({
                                         'key': inputId
@@ -117,68 +172,19 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                                         }
                                     }, function (err) {
                                         if (!err) {
-                                            console.log('Update Done');
+                                            console.log('Product Review get done.');
+//                                            cb();
+                                            callback();
                                         } else {
                                             console.log('my error');
-                                            callback();
                                         }
                                     });
                                 }
                             });
                         }
-                    }
-                });
-            } else if (type == 'product') {
-                var inputId = result.get('key');
-                var myReq = {
-                    headers: {
-                        app_id: config.APP_ID
-                    },
-                    body: {
-                        sku: inputId,
-                        mobile_width: '300'
-                    },
-                    URL: config.URL
-                };
-                productGet(myReq, function (body) {
-                    if (body.status == 0) {
-                        console.log('error');
-                    } else {
-                        console.log('Product Get Done');
-                        var productReq = {
-                            headers: {
-                                app_id: config.APP_ID
-                            },
-                            body: {
-                                sku: inputId,
-                                mobile_width: '300',
-                                pageno: 1
-                            },
-                            URL: config.URL
-                        };
-                        productReview(productReq, function (productBody) {
-                            if (productBody.status == 0) {
-                                console.log('error');
-                            } else {
-                                prefetchDataDB.update({
-                                    'key': inputId
-                                }, {
-                                    $set: {
-                                        cache: 1
-                                    }
-                                }, function (err) {
-                                    if (!err) {
-                                        console.log('Product Review get done.');
-                                    } else {
-                                        console.log('my error');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            } else {
-                cb();
+                    });
+                }
+
             }
         }
     });
@@ -189,10 +195,6 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, cb) {
         cache: 0,
         APP_ID: APP_ID
     }).limit(10).exec(function (error, result) {
-//        prefetchDataDB.findOne({
-//        cache: 0,
-//        APP_ID: APP_ID
-//    }, function (error, result) {
         if (error) {
             console.log(error);
         } else if (!result || result.length == 0) {
@@ -213,7 +215,8 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, cb) {
                         if (err) {
                             console.log('async eachOfLimt error');
                         } else {
-                            console.log('async eachOfLimt function working...!!');
+                            console.log('async eachOfLimt function working for Home Slider(Record Empty)...!!');
+                            cb();
                         }
                     });
                     function processHomeSlider(item, key, callback) {
@@ -238,21 +241,31 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, cb) {
                 }
             });
         } else {
-            var urlId = result.get('_id');
-            prefetchDataDB.update({
-                _id: urlId
-            }, {
-                $set: {
-                    cache: 1
-                }
-            }, function (err) {
+            async.eachOfLimit(result, 10, processHomeSliderRecord, function (err) {
                 if (err) {
-                    console.log(err);
+                    console.log('async eachOfLimt error');
                 } else {
-                    console.log('Home Slider cache 1 Done!!');
+                    console.log('async eachOfLimt function working for Home Slider(Record)...!!');
                     cb();
                 }
             });
+            function processHomeSliderRecord(item, key, callback) {
+                var urlId = item._id;
+                prefetchDataDB.update({
+                    _id: urlId
+                }, {
+                    $set: {
+                        cache: 1
+                    }
+                }, function (err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('Home Slider cache 1 Done!!');
+                        callback();
+                    }
+                });
+            }
         }
     });
 };
@@ -262,10 +275,6 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
         cache: 0,
         APP_ID: APP_ID
     }).limit(10).exec(function (error, result) {
-//    prefetchDataDB.findOne({
-//        cache: 0,
-//        APP_ID: APP_ID
-//    }, function (error, result) {
         if (error) {
             console.log(error);
         } else if (!result || result.length == 0) {
@@ -287,7 +296,8 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
                         if (err) {
                             console.log('async eachOfLimt error');
                         } else {
-                            console.log('async eachOfLimt function working...!!');
+                            console.log('async eachOfLimt function working for Home Products...!!');
+                            cb();
                         }
                     });
                     function processHomeProducts(item, key, callback) {
@@ -312,58 +322,67 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
                 }
             });
         } else {
-            var type = result.get('type');
-            if (type == 'product') {
-                var inputId = result.get('key');
-                var myReq = {
-                    headers: {
-                        app_id: APP_ID
-                    },
-                    body: {
-                        sku: inputId,
-                        mobile_width: '300'
-                    },
-                    URL: config.URL
-                };
-                productGet(myReq, function (body) {
-                    if (body.status == 0) {
-                        console.log('error');
-                    } else {
-                        console.log('Product Get Done');
-                        var productReq = {
-                            headers: {
-                                app_id: APP_ID
-                            },
-                            body: {
-                                sku: inputId,
-                                mobile_width: '300',
-                                pageno: 1
-                            },
-                            URL: config.URL
-                        };
-                        productReview(productReq, function (productBody) {
-                            if (productBody.status == 0) {
-                                console.log('error');
-                            } else {
-                                prefetchDataDB.update({
-                                    'key': inputId
-                                }, {
-                                    $set: {
-                                        cache: 1
-                                    }
-                                }, function (err) {
-                                    if (!err) {
-                                        console.log('Product Review get done.');
-                                    } else {
-                                        console.log('my error');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            } else {
-                cb();
+            async.eachOfLimit(result, 10, processHomeProductsRecord, function (err) {
+                if (err) {
+                    console.log('async eachOfLimt error');
+                } else {
+                    console.log('async eachOfLimt function working for Home Products(Record)...!!');
+                    cb();
+                }
+            });
+            function processHomeProductsRecord(item, key, callback) {
+                var type = item.type;
+                if (type == 'product') {
+                    var inputId = item.key;
+                    var myReq = {
+                        headers: {
+                            app_id: APP_ID
+                        },
+                        body: {
+                            sku: inputId,
+                            mobile_width: '300'
+                        },
+                        URL: config.URL
+                    };
+                    productGet(myReq, function (body) {
+                        if (body.status == 0) {
+                            console.log('error');
+                        } else {
+                            console.log('Product Get Done');
+                            var productReq = {
+                                headers: {
+                                    app_id: APP_ID
+                                },
+                                body: {
+                                    sku: inputId,
+                                    mobile_width: '300',
+                                    pageno: 1
+                                },
+                                URL: config.URL
+                            };
+                            productReview(productReq, function (productBody) {
+                                if (productBody.status == 0) {
+                                    console.log('error');
+                                } else {
+                                    prefetchDataDB.update({
+                                        'key': inputId
+                                    }, {
+                                        $set: {
+                                            cache: 1
+                                        }
+                                    }, function (err) {
+                                        if (!err) {
+                                            console.log('Product Review get done.');
+                                            callback();
+                                        } else {
+                                            console.log('my error');
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             }
         }
     });

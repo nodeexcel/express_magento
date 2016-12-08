@@ -22,7 +22,7 @@ var prefetchDataDB = conn.model('prefetchData', prefetchData);
 
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
-    new CronJob('* * * * * *', function () {
+    new CronJob('*/1 * * * *', function () {
         app_urls.findOne({APP_ID: app_id}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -151,23 +151,23 @@ processStore = function (app_id) {
                                         console.log('Category List not deleted');
                                     } else {
                                         console.log('Record Deleted!!');
-
                                         if (item.reqType == 'Category List') {
                                             fetchCategoryList(prefetchDataDB, item.APP_ID, function () {
                                                 console.log('Category List end!!');
-                                                callback(0);
-                                            });
-                                        } else if (item.reqType == 'Home Slider') {
-                                            fetchHomeSliderList(prefetchDataDB, item.APP_ID, function () {
-                                                console.log('Home Slider end!!');
-                                                callback(0);
-                                            });
-                                        } else if (item.reqType == 'Home Products') {
-                                            fetchhomeProductList(prefetchDataDB, item.APP_ID, function () {
-                                                console.log('Home Products end!!');
-                                                callback(0);
+//                                                callback();
                                             });
                                         }
+//                                        else if (item.reqType == 'Home Slider') {
+//                                            fetchHomeSliderList(prefetchDataDB, item.APP_ID, function () {
+//                                                console.log('Home Slider end!!');
+////                                                callback();
+//                                            });
+//                                        } else if (item.reqType == 'Home Products') {
+//                                            fetchhomeProductList(prefetchDataDB, item.APP_ID, function () {
+//                                                console.log('Home Products end!!');
+////                                                callback();
+//                                            });
+//                                        }
                                     }
                                 });
                             }
