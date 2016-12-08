@@ -16,16 +16,6 @@ router.post('/config', function (req, res) {
             success(res, 1, body.msg);
         }
     });
-
-//    validate(req, {secret: 'optional'}, null, function (body) {
-//        API(req, body, '/web/config', function (status, response, msg) {
-//            if (status == 0) {
-//                oops(res, msg);
-//            } else {
-//                success(res, status, response);
-//            }
-//        });
-//    });
 });
 
 router.post('/getAllowedCountries', function (req, res) {

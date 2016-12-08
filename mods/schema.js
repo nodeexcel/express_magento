@@ -13,6 +13,7 @@ app_url_schema = new Schema({
 });
 
 prefetchData = new Schema({
+    "categoryId": String,
     "cache": Number,
     "key": String,
     "name": String,

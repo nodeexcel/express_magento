@@ -5,10 +5,13 @@ var jstz = require('jstz');
 var timezone = jstz.determine().name();
 require('./category');
 require('./home');
+require('./web');
 var _ = require('lodash');
 var async = require('async');
+var count = 1;
 
-fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
+fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
+    console.log('list chla');
     prefetchDataDB.find({
         cache: 0,
         APP_ID: APP_ID
@@ -21,7 +24,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                     app_id: APP_ID
                 },
                 body: {
-                    store_id: '1',
+                    store_id: storeId,
                     parent_id: '1',
                     type: 'full'
                 },
@@ -72,6 +75,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
             });
             function processCategoryListRecord(item, key, callback) {
                 if (item.type == 'category') {
+                    console.log(count + ":count");
                     var inputId = item.key;
                     var myReq = {
                         headers: {
@@ -81,54 +85,60 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                             id: inputId,
                             limit: '10',
                             mobile_width: '300',
-                            pageno: '1'
+                            pageno: count
                         },
                         URL: config.URL
                     };
                     categoryProducts(myReq, function (body) {
                         if (body.status == 0) {
-                            console.log('error');
+                            console.log('product not found');
                         } else {
                             var allData = body.msg;
-                            async.eachOfLimit(allData, 10, processCategoryProducts, function (err) {
-                                if (err) {
-                                    console.log('async eachOfLimt error');
-                                } else {
-                                    console.log('async eachOfLimt function working for Category Products...!!');
-                                    callback();
-                                }
-                            });
-                            function processCategoryProducts(item, key, callback) {
-                                var row = item.data;
-                                var allRecords = new prefetchDataDB({
-                                    cache: 0,
-                                    key: row.sku,
-                                    name: row.name,
-                                    type: 'product',
-                                    reqType: 'Category List',
-                                    req: myReq,
-                                    APP_ID: APP_ID
-                                });
-                                allRecords.save(function (err) {
+                            if (allData.length > 0) {
+                                async.eachOfLimit(allData, 10, processCategoryProducts, function (err) {
                                     if (err) {
-                                        console.log('not saved');
+                                        console.log('async eachOfLimt error');
                                     } else {
-                                        prefetchDataDB.update({
-                                            'key': inputId
-                                        }, {
-                                            $set: {
-                                                cache: 1
-                                            }
-                                        }, function (err) {
-                                            if (!err) {
-                                                console.log('Update Done');
-                                                callback();
-                                            } else {
-                                                console.log('my error');
-                                            }
-                                        });
+                                        console.log('async eachOfLimt function working for Category Products...!!');
+//                                        callback();
                                     }
                                 });
+                                function processCategoryProducts(item, key, callback) {
+                                    var row = item.data;
+                                    var allRecords = new prefetchDataDB({
+                                        categoryId: inputId,
+                                        cache: 0,
+                                        key: row.sku,
+                                        name: row.name,
+                                        type: 'product',
+                                        reqType: 'Category List',
+                                        req: myReq,
+                                        APP_ID: APP_ID
+                                    });
+                                    allRecords.save(function (err) {
+                                        if (err) {
+                                            console.log('not saved');
+                                        } else {
+                                            prefetchDataDB.update({
+                                                'key': inputId
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (!err) {
+                                                    console.log('Update Done');
+                                                    callback();
+                                                } else {
+                                                    console.log('my error');
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                                count++;
+                            } else {
+                                callback();
                             }
                         }
                     });
@@ -146,7 +156,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                     };
                     productGet(myReq, function (body) {
                         if (body.status == 0) {
-                            console.log('error');
+                            console.log('product get not found');
                         } else {
                             console.log('Product Get Done');
                             var productReq = {
@@ -162,7 +172,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                             };
                             productReview(productReq, function (productBody) {
                                 if (productBody.status == 0) {
-                                    console.log('error');
+                                    console.log('product review not found');
                                 } else {
                                     prefetchDataDB.update({
                                         'key': inputId
@@ -273,7 +283,7 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
     prefetchDataDB.find({
         cache: 0,
         APP_ID: APP_ID
-    }).limit(10).exec(function (error, result) {
+    }).limit(3).exec(function (error, result) {
         if (error) {
             console.log(error);
         } else if (!result || result.length == 0) {
@@ -387,59 +397,23 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
     });
 };
 
-fetchProductReview = function (productReq, prefetchDataDB, APP_ID, cb) {
-    prefetchDataDB.find({
-        cache: 0,
-        APP_ID: APP_ID
-    }).limit(10).exec(function (error, result) {
-        if (error) {
-            console.log(error);
-        } else if (result || result.length > 0) {
-            async.eachOfLimit(result, 10, processCategoryListRecord, function (err) {
-                if (err) {
-                    console.log('async eachOfLimt error');
-                } else {
-                    console.log('async eachOfLimt function working for Product Review(Record)...!!');
-                    cb();
-                }
-            });
-            function processCategoryListRecord(item, key, callback) {
-                if (item.type == 'product') {
-                    var inputId = item.key;
-//                    var productReq = {
-//                        headers: {
-//                            app_id: config.APP_ID
-//                        },
-//                        body: {
-//                            sku: inputId,
-//                            mobile_width: '300',
-//                            pageno: 1
-//                        },
-//                        URL: config.URL
-//                    };
-                    productReview(productReq, function (productBody) {
-                        if (productBody.status == 0) {
-                            console.log('error');
-                        } else {
-                            prefetchDataDB.update({
-                                'key': inputId
-                            }, {
-                                $set: {
-                                    cache: 1
-                                }
-                            }, function (err) {
-                                if (!err) {
-                                    console.log('Product Review get done.');
-//                                            cb();
-                                    callback();
-                                } else {
-                                    console.log('my error');
-                                }
-                            });
-                        }
-                    });
-                }
-            }
+fetchWebConfig = function (APP_ID, cb) {
+    var req = {
+        headers: {
+            app_id: APP_ID
+        },
+        body: {
+            secret: 'optional'
+        },
+        URL: config.URL
+    };
+    webConfig(req, function (body) {
+        if (body.status == 0) {
+            cb({status: 0});
+        } else {
+            var allData = body.msg;
+            cb({status: 1, msg: allData});
         }
     });
+
 };
