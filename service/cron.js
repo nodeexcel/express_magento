@@ -171,52 +171,49 @@ processStore = function (app_id) {
                                                     });
                                                 }
                                             });
+                                        } else if (item.reqType == PREFETCHHOMESLIDER) {
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Home Slider not deleted');
+                                                } else {
+                                                    console.log('Record Deleted Home Slider!!');
+                                                    fetchHomeSliderList(prefetchDataDB, config.APP_ID, function () {
+                                                        console.log('Home Slider end!!');
+                                                        callback();
+                                                    });
+                                                }
+                                            });
+                                        } else if (item.reqType == PREFETCHHOMEPRODUCTS) {
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Home Products not deleted');
+                                                } else {
+                                                    console.log('Record Deleted Home Products!!');
+                                                    fetchhomeProductList(prefetchDataDB, config.APP_ID, function () {
+                                                        console.log('Home Products end!!');
+                                                        callback();
+                                                    });
+                                                }
+                                            });
                                         }
-//                                else if (item.reqType == PREFETCHHOMESLIDER) {
-//                                    prefetchDataDB.update({
-//                                        _id: item._id,
-//                                        cache: 0
-//                                    }, {
-//                                        $set: {
-//                                            cache: 1
-//                                        }
-//                                    }, function (err) {
-//                                        if (err) {
-//                                            conosle.log('Home Slider not deleted');
-//                                        } else {
-//                                            console.log('Record Deleted Home Slider!!');
-//                                            fetchHomeSliderList(prefetchDataDB, config.APP_ID, function () {
-//                                                console.log('Home Slider end!!');
-//                                                callback();
-//                                            });
-//                                        }
-//                                    });
-//                                } else if (item.reqType == PREFETCHHOMEPRODUCTS) {
-//                                    prefetchDataDB.update({
-//                                        _id: item._id,
-//                                        cache: 0
-//                                    }, {
-//                                        $set: {
-//                                            cache: 1
-//                                        }
-//                                    }, function (err) {
-//                                        if (err) {
-//                                            conosle.log('Home Products not deleted');
-//                                        } else {
-//                                            console.log('Record Deleted Home Products!!');
-//                                            fetchhomeProductList(prefetchDataDB, config.APP_ID, function () {
-//                                                console.log('Home Products end!!');
-//                                                callback();
-//                                            });
-//                                        }
-//                                    });
-//                                }
-//                         
                                     }
                                 }
                             }
                         });
-
                     }
                 });
 

@@ -20,5 +20,6 @@ prefetchData = new Schema({
     "type": String,
     "req": Array,
     "reqType": String,
-    "APP_ID": String
+    "APP_ID": String,
+    "pageno": Number
 });

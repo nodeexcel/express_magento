@@ -8,10 +8,8 @@ require('./home');
 require('./web');
 var _ = require('lodash');
 var async = require('async');
-var count = 1;
 
 fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
-    console.log('list chla');
     prefetchDataDB.find({
         cache: 0,
         APP_ID: APP_ID
@@ -75,7 +73,6 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
             });
             function processCategoryListRecord(item, key, callback) {
                 if (item.type == 'category') {
-                    console.log(count + ":count");
                     var inputId = item.key;
                     var myReq = {
                         headers: {
@@ -85,7 +82,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                             id: inputId,
                             limit: '10',
                             mobile_width: '300',
-                            pageno: count
+                            pageno: '1'
                         },
                         URL: config.URL
                     };
@@ -113,17 +110,20 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                                         type: 'product',
                                         reqType: 'Category List',
                                         req: myReq,
-                                        APP_ID: APP_ID
+                                        APP_ID: APP_ID,
+                                        pageno: 1
                                     });
-                                    allRecords.save(function (err) {
+                                    allRecords.save(function (err, result) {
                                         if (err) {
                                             console.log('not saved');
                                         } else {
+                                            var page = result.get('pageno');
+                                            var myPage = page * 1;
                                             prefetchDataDB.update({
                                                 'key': inputId
                                             }, {
                                                 $set: {
-                                                    cache: 1
+                                                    pageno: myPage++
                                                 }
                                             }, function (err) {
                                                 if (!err) {
@@ -136,9 +136,23 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                                         }
                                     });
                                 }
-                                count++;
                             } else {
-                                callback();
+                                prefetchDataDB.update({
+                                    'key': inputId,
+                                    'type': 'category'
+                                }, {
+                                    $set: {
+                                        cache: 1
+                                    }
+                                }, function (err) {
+                                    if (!err) {
+                                        console.log('Update Done');
+                                        callback();
+                                    } else {
+                                        console.log('my error');
+                                    }
+                                });
+//                                callback();
                             }
                         }
                     });
