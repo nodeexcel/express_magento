@@ -37,7 +37,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                         if (err) {
                             console.log('async eachOfLimt error');
                         } else {
-                            console.log('async eachOfLimt function working for Category List(Record Not Available)...!!');
+                            console.log('async eachOfLimt function working for Category List(Record Empty)...!!');
                             cb();
                         }
                     });
@@ -184,7 +184,6 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, cb) {
                         }
                     });
                 }
-
             }
         }
     });
@@ -378,6 +377,63 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, cb) {
                                             console.log('my error');
                                         }
                                     });
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    });
+};
+
+fetchProductReview = function (productReq, prefetchDataDB, APP_ID, cb) {
+    prefetchDataDB.find({
+        cache: 0,
+        APP_ID: APP_ID
+    }).limit(10).exec(function (error, result) {
+        if (error) {
+            console.log(error);
+        } else if (result || result.length > 0) {
+            async.eachOfLimit(result, 10, processCategoryListRecord, function (err) {
+                if (err) {
+                    console.log('async eachOfLimt error');
+                } else {
+                    console.log('async eachOfLimt function working for Product Review(Record)...!!');
+                    cb();
+                }
+            });
+            function processCategoryListRecord(item, key, callback) {
+                if (item.type == 'product') {
+                    var inputId = item.key;
+//                    var productReq = {
+//                        headers: {
+//                            app_id: config.APP_ID
+//                        },
+//                        body: {
+//                            sku: inputId,
+//                            mobile_width: '300',
+//                            pageno: 1
+//                        },
+//                        URL: config.URL
+//                    };
+                    productReview(productReq, function (productBody) {
+                        if (productBody.status == 0) {
+                            console.log('error');
+                        } else {
+                            prefetchDataDB.update({
+                                'key': inputId
+                            }, {
+                                $set: {
+                                    cache: 1
+                                }
+                            }, function (err) {
+                                if (!err) {
+                                    console.log('Product Review get done.');
+//                                            cb();
+                                    callback();
+                                } else {
+                                    console.log('my error');
                                 }
                             });
                         }

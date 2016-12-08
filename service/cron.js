@@ -23,7 +23,9 @@ var prefetchDataDB = conn.model('prefetchData', prefetchData);
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
     new CronJob('*/1 * * * *', function () {
-        app_urls.findOne({APP_ID: app_id}, function (err, user) {
+        app_urls.findOne({
+            APP_ID: app_id
+        }, function (err, user) {
             if (err) {
                 console.log(err);
             } else if (!user) {
@@ -38,10 +40,13 @@ processStore = function (app_id) {
 
                 console.log('You will see this message every minute');
 
-                prefetchDataDB.find().limit(5).exec(function (err, result) {
+                prefetchDataDB.find({
+                    cache: 0
+                }).limit(5).exec(function (err, result) {
                     if (err) {
                         console.log(err);
                     } else if (!result || result.length == 0) {
+                        console.log(user.prefetch_status);
                         if (user.prefetch_status == 'NOT STARTED') {
                             app_urls.update({
                                 _id: selectId
@@ -53,7 +58,7 @@ processStore = function (app_id) {
                                 if (err) {
                                     console.log(err);
                                 } else {
-                                    console.log('prefetch status updated');
+                                    console.log('prefetch status RUNNING');
                                     var reqArray = [
                                         {
                                             "req": {
@@ -102,7 +107,7 @@ processStore = function (app_id) {
                                     ];
                                     _.forEach(reqArray, function (row) {
                                         var record = new prefetchDataDB({
-//                                            "cache": 0,
+                                            "cache": 0,
                                             "req": row.req,
                                             "reqType": row.reqType,
                                             "name": row.name,
@@ -144,32 +149,65 @@ processStore = function (app_id) {
                                 }
                             });
                             function processRecord(item, key, callback) {
-                                prefetchDataDB.remove({
-                                    _id: item._id
-                                }, function (err) {
-                                    if (err) {
-                                        console.log('Category List not deleted');
-                                    } else {
-                                        console.log('Record Deleted!!');
-                                        if (item.reqType == 'Category List') {
+                                if (item.reqType == 'Category List') {
+//                                    prefetchDataDB.remove({
+                                    prefetchDataDB.update({
+                                        _id: item._id,
+                                        cache: 0
+                                    }, {
+                                        $set: {
+                                            cache: 1
+                                        }
+                                    }, function (err) {
+                                        if (err) {
+                                            conosle.log('Category List not deleted');
+                                        } else {
+                                            console.log('Record Deleted Category List!!');
                                             fetchCategoryList(prefetchDataDB, item.APP_ID, function () {
                                                 console.log('Category List end!!');
-//                                                callback();
+                                                callback();
                                             });
                                         }
-//                                        else if (item.reqType == 'Home Slider') {
-//                                            fetchHomeSliderList(prefetchDataDB, item.APP_ID, function () {
-//                                                console.log('Home Slider end!!');
-////                                                callback();
-//                                            });
-//                                        } else if (item.reqType == 'Home Products') {
-//                                            fetchhomeProductList(prefetchDataDB, item.APP_ID, function () {
-//                                                console.log('Home Products end!!');
-////                                                callback();
-//                                            });
-//                                        }
-                                    }
-                                });
+                                    });
+                                } else if (item.reqType == 'Home Slider') {
+                                    prefetchDataDB.update({
+                                        _id: item._id,
+                                        cache: 0
+                                    }, {
+                                        $set: {
+                                            cache: 1
+                                        }
+                                    }, function (err) {
+                                        if (err) {
+                                            conosle.log('Home Slider not deleted');
+                                        } else {
+                                            console.log('Record Deleted Home Slider!!');
+                                            fetchHomeSliderList(prefetchDataDB, item.APP_ID, function () {
+                                                console.log('Home Slider end!!');
+                                                callback();
+                                            });
+                                        }
+                                    });
+                                } else if (item.reqType == 'Home Products') {
+                                    prefetchDataDB.update({
+                                        _id: item._id,
+                                        cache: 0
+                                    }, {
+                                        $set: {
+                                            cache: 1
+                                        }
+                                    }, function (err) {
+                                        if (err) {
+                                            conosle.log('Home Products not deleted');
+                                        } else {
+                                            console.log('Record Deleted Home Products!!');
+                                            fetchhomeProductList(prefetchDataDB, item.APP_ID, function () {
+                                                console.log('Home Products end!!');
+                                                callback();
+                                            });
+                                        }
+                                    });
+                                }
                             }
                         }
                     }

@@ -2,21 +2,30 @@ require('node-import');
 require('../service/validate');
 require('../service/request');
 require('../service/responseMsg');
+require('../service/web');
 imports('config/index');
 imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
 router.post('/config', function (req, res) {
-    validate(req, {secret: 'optional'}, null, function (body) {
-        API(req, body, '/web/config', function (status, response, msg) {
-            if (status == 0) {
-                oops(res, msg);
-            } else {
-                success(res, status, response);
-            }
-        });
+    webConfig(req, function (body) {
+        if (body.status == 0) {
+            oops(res, body.msg);
+        } else {
+            success(res, 1, body.msg);
+        }
     });
+
+//    validate(req, {secret: 'optional'}, null, function (body) {
+//        API(req, body, '/web/config', function (status, response, msg) {
+//            if (status == 0) {
+//                oops(res, msg);
+//            } else {
+//                success(res, status, response);
+//            }
+//        });
+//    });
 });
 
 router.post('/getAllowedCountries', function (req, res) {
