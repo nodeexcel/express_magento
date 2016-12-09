@@ -28,6 +28,7 @@ productGet = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
+                            console.log(response);
                             if (response !== undefined) {
                                 var optmized_response = {};
                                 async.eachOfLimit(response, 1, processData, function (err) {
