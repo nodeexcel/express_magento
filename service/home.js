@@ -121,38 +121,38 @@ homeSlider = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            callback({status: 0, msg: response});
-//                            if (response.url !== undefined) {
-//                                var optmized_response = [];
-//                                async.eachOfLimit(response.url, 5, processData, function (err) {
-//                                    if (err) {
-//                                        callback({status: 0, msg: "OOPS! How is this possible?"});
-//                                    } else {
-//                                        client.hmset('slider', {
-//                                            "body": JSON.stringify(response),
-//                                            "status": 1,
-//                                            "statuscode": msg
-//                                        });
-//                                        client.expire('categories', config.PRODUCT_EXPIRESAT);
-//                                        callback({status: status, msg: optmized_response});
-//                                    }
-//                                });
-//                            } else {
-//                                callback({status: 0, msg: ERROR});
-//                            }
-//                            function processData(item, key, callback) {
-//                                resize(item, APP_ID, body.mobile_width, function (status, image_name) {
-//                                    if (status == '200') {
-//                                        item = image_name;
-//                                        optmized_response[key] = item;
-//                                        callback(null);
-//                                    } else {
-//                                        item = item;
-//                                        optmized_response[key] = item;
-//                                        callback(null);
-//                                    }
-//                                });
-//                            }
+//                            callback({status: 0, msg: response});
+                            if (response.url !== undefined) {
+                                var optmized_response = [];
+                                async.eachOfLimit(response.url, 5, processData, function (err) {
+                                    if (err) {
+                                        callback({status: 0, msg: "OOPS! How is this possible?"});
+                                    } else {
+                                        client.hmset('slider', {
+                                            "body": JSON.stringify(response),
+                                            "status": 1,
+                                            "statuscode": msg
+                                        });
+                                        client.expire('categories', config.PRODUCT_EXPIRESAT);
+                                        callback({status: status, msg: optmized_response});
+                                    }
+                                });
+                            } else {
+                                callback({status: 0, msg: ERROR});
+                            }
+                            function processData(item, key, callback) {
+                                resize(item, APP_ID, body.mobile_width, function (status, image_name) {
+                                    if (status == '200') {
+                                        item = image_name;
+                                        optmized_response[key] = item;
+                                        callback(null);
+                                    } else {
+                                        item = item;
+                                        optmized_response[key] = item;
+                                        callback(null);
+                                    }
+                                });
+                            }
                         }
                     });
                 }

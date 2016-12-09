@@ -36,13 +36,10 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
                     console.log('category list API failed.');
                     cb();
                 } else {
-
-                    console.log(body.msg.children.length);
-                    console.log(body.msg.children);
-
                     var allData = body.msg.children[0].children;
-                    var reverseAllData = _.reverse(allData);
-                    async.eachOfLimit(reverseAllData, 10, processCategoryList, function (err) {
+                    var allCategory = getAllCategory(allData);
+//                        var reverseAllData = _.reverse(allCategory);
+                    async.eachOfLimit(allCategory, 10, processCategoryList, function (err) {
                         if (err) {
                             console.log('async eachOfLimt error' + err);
                             cb();
@@ -376,6 +373,16 @@ fetchProduct = function (prefetchDataDB, APP_ID, URL, cb) {
 };
 
 
-function getAllCategory() {
-
-}
+var arrayCategory = [];
+getAllCategory = function (x) {
+    if (x) {
+        for (var a = 0; a < x.length; a++) {
+            var row = x[a];
+            arrayCategory.push(row);
+            if (row.children) {
+                getAllCategory(row.children);
+            }
+        }
+    }
+    return arrayCategory;
+};
