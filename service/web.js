@@ -4,7 +4,9 @@ require('./request');
 
 
 webConfig = function (req, callback) {
-    validate(req, {secret: 'optional'}, null, function (body) {
+    validate(req, {
+        secret: 'optional'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {

@@ -4,13 +4,13 @@ var CronJob = require('cron').CronJob;
 var moment = require('moment');
 var jstz = require('jstz');
 var timezone = jstz.determine().name();
+var _ = require('lodash');
+var mongoose = require('mongoose');
+var async = require('async');
 require('./category');
 require('./home');
 require('../mods/schema');
-var _ = require('lodash');
-var mongoose = require('mongoose');
 require('./preFetch');
-var async = require('async');
 require('./web');
 
 //var Schema = mongoose.Schema;
@@ -34,6 +34,7 @@ processStore = function (app_id) {
                 console.log(user);
             } else {
                 var selectId = user._id;
+                var URL = user.URL;
                 cron_running_time = user.cron_running_time;
                 var current_time = moment().tz('Asia/Calcutta').format('HH:mm ZZ'); //13:56:34 +0530
                 var format = 'HH:mm ZZ';
@@ -42,10 +43,11 @@ processStore = function (app_id) {
 
                 console.log('You will see this message every minute');
 
-                fetchWebConfig(app_id, function (respond) {
+                fetchWebConfig(app_id, URL, function (respond) {
                     if (respond.status != 0) {
                         prefetchDataDB.find({
-                            cache: 0
+                            cache: 0,
+                            APP_ID: app_id
                         }).limit(5).exec(function (err, result) {
                             if (err) {
                                 console.log(err);
@@ -66,47 +68,47 @@ processStore = function (app_id) {
                                                 {
                                                     "req": {
                                                         headers: {
-                                                            app_id: config.APP_ID
+                                                            app_id: app_id
                                                         },
                                                         body: {
                                                             store_id: respond.msg.store_id,
                                                             parent_id: '1',
                                                             type: 'full'
                                                         },
-                                                        URL: config.URL
+                                                        URL: URL
                                                     },
-                                                    "reqType": "Category List",
-                                                    "name": "Category List",
-////                                                    "APP_ID": config.APP_ID
+                                                    "reqType": PREFETCHCATEGORYLIST,
+                                                    "name": PREFETCHCATEGORYLIST,
+                                                    "APP_ID": app_id
                                                 },
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: config.APP_ID
-//                                                        },
-//                                                        body: {
-//                                                            mobile_width: '300'
-//                                                        },
-//                                                        URL: config.URL
-//                                                    },
-//                                                    "reqType": "Home Slider",
-//                                                    "name": "Home Slider",
-////                                                    "APP_ID": config.APP_ID
-//                                                },
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: config.APP_ID
-//                                                        },
-//                                                        body: {
-//                                                            mobile_width: '300'
-//                                                        },
-//                                                        URL: config.URL
-//                                                    },
-//                                                    "reqType": "Home Products",
-//                                                    "name": "Home Products",
-////                                                    "APP_ID": config.APP_ID
-//                                                }
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHHOMESLIDER,
+                                                    "name": PREFETCHHOMESLIDER,
+                                                    "APP_ID": app_id
+                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHHOMEPRODUCTS,
+                                                    "name": PREFETCHHOMEPRODUCTS,
+                                                    "APP_ID": app_id
+                                                }
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({
@@ -114,13 +116,13 @@ processStore = function (app_id) {
                                                     "req": row.req,
                                                     "reqType": row.reqType,
                                                     "name": row.name,
-//                                                    "APP_ID": row.APP_ID
+                                                    "APP_ID": row.APP_ID
                                                 });
                                                 record.save(function (err) {
                                                     if (err) {
-                                                        console.log('not saved');
+                                                        console.log('start list not saved');
                                                     } else {
-                                                        console.log('saved');
+                                                        console.log('start list saved');
                                                     }
                                                 });
                                             });
@@ -146,7 +148,7 @@ processStore = function (app_id) {
 //                            async eachOfLimit function
                                     async.eachOfLimit(result, 3, processRecord, function (err) {
                                         if (err) {
-                                            console.log('async eachOfLimt error');
+                                            console.log('async eachOfLimt error' + err);
                                         } else {
                                             console.log('async eachOfLimt function working...!!');
                                         }
@@ -162,10 +164,11 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Category List not deleted');
+                                                    conosle.log('Category List not updated' + err);
+                                                    callback();
                                                 } else {
-                                                    console.log('Record Deleted Category List!!');
-                                                    fetchCategoryList(prefetchDataDB, config.APP_ID, respond.msg.store_id, function () {
+                                                    console.log('fetchCategoryList function run');
+                                                    fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
                                                         console.log('Category List end!!');
                                                         callback();
                                                     });
@@ -181,10 +184,11 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Home Slider not deleted');
+                                                    conosle.log('Home Slider not updated' + err);
+                                                    callback();
                                                 } else {
-                                                    console.log('Record Deleted Home Slider!!');
-                                                    fetchHomeSliderList(prefetchDataDB, config.APP_ID, function () {
+                                                    console.log('fetchHomeSliderList function run');
+                                                    fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
                                                         console.log('Home Slider end!!');
                                                         callback();
                                                     });
@@ -200,11 +204,52 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Home Products not deleted');
+                                                    conosle.log('Home Products not updated' + err);
+                                                    callback();
                                                 } else {
-                                                    console.log('Record Deleted Home Products!!');
-                                                    fetchhomeProductList(prefetchDataDB, config.APP_ID, function () {
+                                                    console.log('fetchhomeProductList function run');
+                                                    fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
                                                         console.log('Home Products end!!');
+                                                        callback();
+                                                    });
+                                                }
+                                            });
+                                        } else if (item.reqType == PREFETCHCATEGORY) {
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Category not updated' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchCategory function run');
+                                                    fetchCategory(prefetchDataDB, app_id, URL, function () {
+                                                        console.log('Category end!!');
+                                                        callback();
+                                                    });
+                                                }
+                                            });
+                                        } else if (item.reqType == PREFETCHPRODUCT) {
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Products not updated' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchProduct function run');
+                                                    fetchProduct(prefetchDataDB, app_id, URL, function () {
+                                                        console.log('Products end!!');
                                                         callback();
                                                     });
                                                 }
@@ -217,7 +262,6 @@ processStore = function (app_id) {
                     }
                 });
                 //                }   //END IF CONDITION
-
             }
         });
     }, null, true);

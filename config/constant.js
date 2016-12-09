@@ -9,3 +9,5 @@ var UNDEFINE = "undefined";
 var PREFETCHCATEGORYLIST = 'Category List';
 var PREFETCHHOMESLIDER = 'Home Slider';
 var PREFETCHHOMEPRODUCTS = 'Home Products';
+var PREFETCHCATEGORY = 'category';
+var PREFETCHPRODUCT = 'product';

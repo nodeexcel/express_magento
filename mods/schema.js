@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 
 app_url_schema = new Schema({
     headers: {type: String, required: true},
-    url: {type: String, required: true},
+    URL: {type: String, required: true},
     status: {type: String, required: true},
     cron_running_time: {type: String, required: true},
     prefetch_status: {type: String, required: true}
