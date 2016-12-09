@@ -77,7 +77,7 @@ processStore = function (app_id) {
                                                     },
                                                     "reqType": "Category List",
                                                     "name": "Category List",
-//                                                    "APP_ID": config.APP_ID
+////                                                    "APP_ID": config.APP_ID
                                                 },
 //                                                {
 //                                                    "req": {
