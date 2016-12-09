@@ -29,9 +29,9 @@ processStore = function (app_id) {
             APP_ID: app_id
         }, function (err, user) {
             if (err) {
-                console.log(err);
+                console.log('Error. Line-32 File-/service/cronjs' + err);
             } else if (!user) {
-                console.log(user);
+                console.log('User not found. Line-34 File-/service/cronjs');
             } else {
                 var selectId = user._id;
                 var URL = user.URL;
@@ -41,16 +41,16 @@ processStore = function (app_id) {
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
 //               if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
 
-                console.log('You will see this message every minute');
+                console.log('You will see this message every minute. Line-44 File-/service/cronjs');
 
                 fetchWebConfig(app_id, URL, function (respond) {
                     if (respond.status != 0) {
                         prefetchDataDB.find({
                             cache: 0,
                             APP_ID: app_id
-                        }).limit(5).exec(function (err, result) {
+                        }).limit(10).exec(function (err, result) {
                             if (err) {
-                                console.log(err);
+                                console.log('Error. Line-53 File-/service/cronjs' + err);
                             } else if (!result || result.length == 0) {
                                 if (user.prefetch_status == 'NOT STARTED') {
                                     app_urls.update({
@@ -61,9 +61,9 @@ processStore = function (app_id) {
                                         }
                                     }, function (err) {
                                         if (err) {
-                                            console.log(err);
+                                            console.log('Error. Line-64 File-/service/cronjs' + err);
                                         } else {
-                                            console.log('prefetch status RUNNING');
+                                            console.log('prefetch status RUNNING. Line-66 File-/service/cronjs');
                                             var reqArray = [
                                                 {
                                                     "req": {
@@ -81,34 +81,34 @@ processStore = function (app_id) {
                                                     "name": PREFETCHCATEGORYLIST,
                                                     "APP_ID": app_id
                                                 },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMESLIDER,
-                                                    "name": PREFETCHHOMESLIDER,
-                                                    "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMEPRODUCTS,
-                                                    "name": PREFETCHHOMEPRODUCTS,
-                                                    "APP_ID": app_id
-                                                }
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHHOMESLIDER,
+//                                                    "name": PREFETCHHOMESLIDER,
+//                                                    "APP_ID": app_id
+//                                                },
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHHOMEPRODUCTS,
+//                                                    "name": PREFETCHHOMEPRODUCTS,
+//                                                    "APP_ID": app_id
+//                                                }
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({
@@ -120,9 +120,9 @@ processStore = function (app_id) {
                                                 });
                                                 record.save(function (err) {
                                                     if (err) {
-                                                        console.log('start list not saved');
+                                                        console.log('start list not saved. Line-123 File-/service/cronjs');
                                                     } else {
-                                                        console.log('start list saved');
+                                                        console.log('start list saved. Line-125 File-/service/cronjs');
                                                     }
                                                 });
                                             });
@@ -137,9 +137,9 @@ processStore = function (app_id) {
                                         }
                                     }, function (err) {
                                         if (err) {
-                                            console.log(err);
+                                            console.log('Error. Line-140 File-/service/cronjs' + err);
                                         } else {
-                                            console.log('Prefetch Status FINISHED');
+                                            console.log('Prefetch Status FINISHED. Line-143 File-/service/cronjs');
                                         }
                                     });
                                 }
@@ -148,9 +148,9 @@ processStore = function (app_id) {
 //                            async eachOfLimit function
                                     async.eachOfLimit(result, 3, processRecord, function (err) {
                                         if (err) {
-                                            console.log('async eachOfLimt error' + err);
+                                            console.log('async eachOfLimt error. Line-151 File-/service/cronjs' + err);
                                         } else {
-                                            console.log('async eachOfLimt function working...!!');
+                                            console.log('async eachOfLimt function working.. Line-153 File-/service/cronjs');
                                         }
                                     });
                                     function processRecord(item, key, callback) {
@@ -164,12 +164,12 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Category List not updated' + err);
+                                                    conosle.log('Category List not updated. Line-167 File-/service/cronjs' + err);
                                                     callback();
                                                 } else {
-                                                    console.log('fetchCategoryList function run');
+                                                    console.log('fetchCategoryList function run. Line-170 File-/service/cronjs');
                                                     fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
-                                                        console.log('Category List end!!');
+                                                        console.log('Category List end. Line-172 File-/service/cronjs');
                                                         callback();
                                                     });
                                                 }
@@ -184,12 +184,12 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Home Slider not updated' + err);
+                                                    conosle.log('Home Slider not updated. Line-187 File-/service/cronjs' + err);
                                                     callback();
                                                 } else {
-                                                    console.log('fetchHomeSliderList function run');
+                                                    console.log('fetchHomeSliderList function run. Line-190 File-/service/cronjs');
                                                     fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Home Slider end!!');
+                                                        console.log('Home Slider end. Line-192 File-/service/cronjs');
                                                         callback();
                                                     });
                                                 }
@@ -204,12 +204,12 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Home Products not updated' + err);
+                                                    conosle.log('Home Products not updated. Line-207 File-/service/cronjs' + err);
                                                     callback();
                                                 } else {
-                                                    console.log('fetchhomeProductList function run');
+                                                    console.log('fetchhomeProductList function run. Line-210 File-/service/cronjs');
                                                     fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Home Products end!!');
+                                                        console.log('Home Products end. Line-212 File-/service/cronjs');
                                                         callback();
                                                     });
                                                 }
@@ -224,12 +224,12 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Category not updated' + err);
+                                                    conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
                                                     callback();
                                                 } else {
-                                                    console.log('fetchCategory function run');
+                                                    console.log('fetchCategory function run. Line-230 File-/service/cronjs');
                                                     fetchCategory(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Category end!!');
+                                                        console.log('Category end. Line-232 File-/service/cronjs');
                                                         callback();
                                                     });
                                                 }
@@ -244,12 +244,12 @@ processStore = function (app_id) {
                                                 }
                                             }, function (err) {
                                                 if (err) {
-                                                    conosle.log('Products not updated' + err);
+                                                    conosle.log('Products not updated. Line-247 File-/service/cronjs' + err);
                                                     callback();
                                                 } else {
-                                                    console.log('fetchProduct function run');
+                                                    console.log('fetchProduct function run. Line-250 File-/service/cronjs');
                                                     fetchProduct(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Products end!!');
+                                                        console.log('Products end. Line-252 File-/service/cronjs');
                                                         callback();
                                                     });
                                                 }
