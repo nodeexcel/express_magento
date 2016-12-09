@@ -79,34 +79,34 @@ processStore = function (app_id) {
                                                     "name": "Category List",
 //                                                    "APP_ID": config.APP_ID
                                                 },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: config.APP_ID
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: config.URL
-                                                    },
-                                                    "reqType": "Home Slider",
-                                                    "name": "Home Slider",
-//                                                    "APP_ID": config.APP_ID
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: config.APP_ID
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: config.URL
-                                                    },
-                                                    "reqType": "Home Products",
-                                                    "name": "Home Products",
-//                                                    "APP_ID": config.APP_ID
-                                                }
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: config.APP_ID
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: config.URL
+//                                                    },
+//                                                    "reqType": "Home Slider",
+//                                                    "name": "Home Slider",
+////                                                    "APP_ID": config.APP_ID
+//                                                },
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: config.APP_ID
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: config.URL
+//                                                    },
+//                                                    "reqType": "Home Products",
+//                                                    "name": "Home Products",
+////                                                    "APP_ID": config.APP_ID
+//                                                }
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({

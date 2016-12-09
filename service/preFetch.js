@@ -50,7 +50,8 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                             type: 'category',
                             reqType: 'Category List',
                             req: req,
-                            APP_ID: APP_ID
+                            APP_ID: APP_ID,
+                            pageno: 1
                         });
                         allRecords.save(function (err) {
                             if (err) {
@@ -74,6 +75,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
             function processCategoryListRecord(item, key, callback) {
                 if (item.type == 'category') {
                     var inputId = item.key;
+                    var inputPage = item.pageno;
                     var myReq = {
                         headers: {
                             app_id: APP_ID
@@ -82,7 +84,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                             id: inputId,
                             limit: '10',
                             mobile_width: '300',
-                            pageno: '1'
+                            pageno: inputPage
                         },
                         URL: config.URL
                     };
@@ -110,31 +112,35 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, storeId, cb) {
                                         type: 'product',
                                         reqType: 'Category List',
                                         req: myReq,
-                                        APP_ID: APP_ID,
-                                        pageno: 1
+                                        APP_ID: APP_ID
                                     });
-                                    allRecords.save(function (err, result) {
-                                        if (err) {
-                                            console.log('not saved');
+//                                    allRecords.save(function (err, result) {
+//                                        if (err) {
+//                                            console.log('not saved');
+//                                        } else {
+
+                                    console.log('key' + inputId);
+
+                                    var page = inputPage;
+                                    var myPage = (page * 1) + 1;
+                                    prefetchDataDB.update({
+                                        'key': inputId,
+                                        'type': 'category'
+                                    }, {
+                                        $set: {
+                                            pageno: myPage
+                                        }
+                                    }, function (err) {
+                                        if (!err) {
+                                            console.log('Update Done' + myPage);
+                                            callback();
                                         } else {
-                                            var page = result.get('pageno');
-                                            var myPage = page * 1;
-                                            prefetchDataDB.update({
-                                                'key': inputId
-                                            }, {
-                                                $set: {
-                                                    pageno: myPage++
-                                                }
-                                            }, function (err) {
-                                                if (!err) {
-                                                    console.log('Update Done');
-                                                    callback();
-                                                } else {
-                                                    console.log('my error');
-                                                }
-                                            });
+                                            console.log(err);
+                                            console.log('my error');
                                         }
                                     });
+//                                        }
+//                                    });
                                 }
                             } else {
                                 prefetchDataDB.update({
