@@ -28,42 +28,41 @@ productGet = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            callback({status: status, msg: response});
-//                            if (response.data.media_images !== undefined) {
-//                                var optmized_response = [];
-//                                var minify_imag = [];
-//                                async.eachOfLimit(response.data.media_images, 1, processData, function (err) {
-//                                    response.data.media_images = optmized_response;
-//                                    response.data.minify_image = minify_imag;
-//                                    if (err) {
-//                                        callback({status: 0, msg: 'OOPS! How is this possible?'});
-//                                    } else {
-//                                        redisSet('product_' + body.sku, {
-//                                            'id': body.sku,
-//                                            "body": JSON.stringify(response)
-//                                        }, function () {
-//                                            callback({status: status, msg: response});
-//                                        });
-//                                    }
-//                                });
-//                            } else {
-//                                callback({status: 0, msg: ERROR});
-//                            }
-//                            function processData(image_url, key, callback) {
-//                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
-//                                    if (status == "200") {
-//                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
-//                                            optmized_response.push(image_name);
-//                                            minify_imag.push(minify_image);
-//                                            callback(null);
-//                                        });
-//                                    } else {
-//                                        optmized_response.push(image_url);
-//                                        minify_imag.push(image_url);
-//                                        callback(null);
-//                                    }
-//                                });
-//                            }
+                            if (response.data.media_images !== undefined) {
+                                var optmized_response = [];
+                                var minify_imag = [];
+                                async.eachOfLimit(response.data.media_images, 1, processData, function (err) {
+                                    response.data.media_images = optmized_response;
+                                    response.data.minify_image = minify_imag;
+                                    if (err) {
+                                        callback({status: 0, msg: 'OOPS! How is this possible?'});
+                                    } else {
+                                        redisSet('product_' + body.sku, {
+                                            'id': body.sku,
+                                            "body": JSON.stringify(response)
+                                        }, function () {
+                                            callback({status: status, msg: response});
+                                        });
+                                    }
+                                });
+                            } else {
+                                callback({status: 0, msg: ERROR});
+                            }
+                            function processData(image_url, key, callback) {
+                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
+                                    if (status == "200") {
+                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
+                                            optmized_response.push(image_name);
+                                            minify_imag.push(minify_image);
+                                            callback(null);
+                                        });
+                                    } else {
+                                        optmized_response.push(image_url);
+                                        minify_imag.push(image_url);
+                                        callback(null);
+                                    }
+                                });
+                            }
                         }
                     });
                 }
@@ -121,9 +120,9 @@ productGetRating = function (req, callback) {
                                 callback({status: 0, msg: response});
                             } else {
                                 redisSet('product_', {
-                                    "body": JSON.stringify(response),
+                                    "body": JSON.stringify(response)
                                 }, function () {
-                                    callback({status: status, msg: response})
+                                    callback({status: status, msg: response});
                                 });
                             }
                         });

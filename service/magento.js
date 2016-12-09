@@ -1,6 +1,6 @@
 require('node-import');
 imports('config/index');
-//require('./cron');
+require('./cron');
 require('../mods/schema');
 var _ = require('lodash');
 

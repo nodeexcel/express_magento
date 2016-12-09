@@ -19,7 +19,7 @@ var optimus = require('connect-image-optimus');
 var connect = require('connect');
 var serveStatic = require('serve-static');
 
-var staticPath = __dirname + '/static/';
+var staticPath = __dirname + '/public/';
 
 app.use(optimus(staticPath));
 // app.use(connect.static(staticPath));

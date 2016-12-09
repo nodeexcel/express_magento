@@ -38,11 +38,11 @@ processStore = function (app_id) {
                 var current_time = moment().tz('Asia/Calcutta').format('HH:mm ZZ'); //13:56:34 +0530
                 var format = 'HH:mm ZZ';
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
-//                if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
+//               if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
 
                 console.log('You will see this message every minute');
 
-                fetchWebConfig('com.tethr', function (respond) {
+                fetchWebConfig(app_id, function (respond) {
                     if (respond.status != 0) {
                         prefetchDataDB.find({
                             cache: 0
@@ -216,11 +216,8 @@ processStore = function (app_id) {
                         });
                     }
                 });
-
-
-
-
                 //                }   //END IF CONDITION
+
             }
         });
     }, null, true);

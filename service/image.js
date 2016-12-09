@@ -83,7 +83,6 @@ minify = function (url, APP_ID, mobile_width, callback) {
         var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
         var image_jpg = '/' + image_name_without_extension + '.jpg';
         var image_minified_name = filename.replace("comtethr/" + mobile_width, "comtethr/" + mobile_width + "/minify");
-        console.log(image_minified_name)
         if (filename == '/default') {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {

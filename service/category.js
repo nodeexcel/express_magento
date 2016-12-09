@@ -46,43 +46,42 @@ categoryProducts = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            callback({status: status, msg: response});
-//                            if (response !== undefined) {
-//                                var optmized_response = [];
-//                                async.eachOfLimit(response, 5, processData, function (err) {
-//                                    if (err) {
-//                                        callback({status: 0, msg: 'OOPS! How is this possible?'});
-//                                    } else {
-//                                        redisSet('category_' + body.id, {
-//                                            'id': body.id,
-//                                            "limit": body.limit,
-//                                            "body": JSON.stringify(optmized_response)
-//                                        }, function () {
-//                                            callback({status: status, msg: optmized_response});
-//                                        });
-//                                    }
-//                                });
-//                            } else {
-//                                callback({status: 0, msg: ERROR});
-//                            }
-//                            function processData(item, key, callback) {
-//                                var image_url = item.data.small_image;
-//                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
-//                                    if (status == '200') {
-//                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
-//                                            item.data.small_image = image_name;
-//                                            item.data.minify_image = minify_image;
-//                                            optmized_response[key] = item;
-//                                            callback(null);
-//                                        })
-//                                    } else {
-//                                        item.data.small_image = image_url;
-//                                        item.data.minify_image = image_url;
-//                                        optmized_response[key] = item;
-//                                        callback(null);
-//                                    }
-//                                });
-//                            }
+                            if (response !== undefined) {
+                                var optmized_response = [];
+                                async.eachOfLimit(response, 5, processData, function (err) {
+                                    if (err) {
+                                        callback({status: 0, msg: 'OOPS! How is this possible?'});
+                                    } else {
+                                        redisSet('category_' + body.id, {
+                                            'id': body.id,
+                                            "limit": body.limit,
+                                            "body": JSON.stringify(optmized_response)
+                                        }, function () {
+                                            callback({status: status, msg: optmized_response});
+                                        });
+                                    }
+                                });
+                            } else {
+                                callback({status: 0, msg: ERROR});
+                            }
+                            function processData(item, key, callback) {
+                                var image_url = item.data.small_image;
+                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
+                                    if (status == '200') {
+                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
+                                            item.data.small_image = image_name;
+                                            item.data.minify_image = minify_image;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        })
+                                    } else {
+                                        item.data.small_image = image_url;
+                                        item.data.minify_image = image_url;
+                                        optmized_response[key] = item;
+                                        callback(null);
+                                    }
+                                });
+                            }
                         }
                     });
                 }
