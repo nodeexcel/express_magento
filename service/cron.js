@@ -81,34 +81,34 @@ processStore = function (app_id) {
                                                     "name": PREFETCHCATEGORYLIST,
                                                     "APP_ID": app_id
                                                 },
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: app_id
-//                                                        },
-//                                                        body: {
-//                                                            mobile_width: '300'
-//                                                        },
-//                                                        URL: URL
-//                                                    },
-//                                                    "reqType": PREFETCHHOMESLIDER,
-//                                                    "name": PREFETCHHOMESLIDER,
-//                                                    "APP_ID": app_id
-//                                                },
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: app_id
-//                                                        },
-//                                                        body: {
-//                                                            mobile_width: '300'
-//                                                        },
-//                                                        URL: URL
-//                                                    },
-//                                                    "reqType": PREFETCHHOMEPRODUCTS,
-//                                                    "name": PREFETCHHOMEPRODUCTS,
-//                                                    "APP_ID": app_id
-//                                                }
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHHOMESLIDER,
+                                                    "name": PREFETCHHOMESLIDER,
+                                                    "APP_ID": app_id
+                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHHOMEPRODUCTS,
+                                                    "name": PREFETCHHOMEPRODUCTS,
+                                                    "APP_ID": app_id
+                                                }
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({
@@ -228,7 +228,7 @@ processStore = function (app_id) {
                                                     callback();
                                                 } else {
                                                     console.log('fetchCategory function run. Line-230 File-/service/cronjs');
-                                                    fetchCategory(prefetchDataDB, app_id, URL, function () {
+                                                    fetchCategory(item, prefetchDataDB, app_id, URL, function () {
                                                         console.log('Category end. Line-232 File-/service/cronjs');
                                                         callback();
                                                     });
@@ -248,7 +248,7 @@ processStore = function (app_id) {
                                                     callback();
                                                 } else {
                                                     console.log('fetchProduct function run. Line-250 File-/service/cronjs');
-                                                    fetchProduct(prefetchDataDB, app_id, URL, function () {
+                                                    fetchProduct(item, prefetchDataDB, app_id, URL, function () {
                                                         console.log('Products end. Line-252 File-/service/cronjs');
                                                         callback();
                                                     });
