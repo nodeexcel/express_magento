@@ -1,103 +1,177 @@
 require('node-import');
+require('./validate');
+require('./image');
+require('./request');
+require('./cache');
+require('./responseMsg');
 imports('config/index');
 imports('config/constant');
-var request = require('request');
-var fileExists = require('file-exists');
-var sharp = require('sharp');
-var http = require('http');
-var imagemin = require('imagemin');
-var imageminMozjpeg = require('imagemin-mozjpeg');
-var imageminPngquant = require('imagemin-pngquant');
-var fs = require('fs');
+var express = require('express');
+var router = express.Router();
+var async = require('async');
 var URL_ = require('url');
-var mkdirp = require('mkdirp');
-var path = require('path');
+var fileExists = require('file-exists');
+var redis = require("redis"),
+        client = redis.createClient();
 
-resize = function (url, APP_ID, callback) {
-    if (url && APP_ID) {
-        var image_url = URL_.parse(url).path;
-        var app_id = APP_ID.replace(/[^a-zA-Z0-9 ]/g, "");
-        var image_stored_url = app_id + '/' + image_url;
-        var url_last_index_length = url.lastIndexOf('/');
-        var image_name = url.substring(url_last_index_length + 1);
-        var filename = image_stored_url.substring(0, image_stored_url.lastIndexOf("/"));
-        var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
-        var image_webp = '/' + image_name_without_extension + '.webp';
-        var image_png = '/' + image_name_without_extension + '.png';
-        if (image_name_without_extension == '') {
-            callback(200, config.DEFAULT_IMAGE_URL);
+homeProducts = function (req, callback) {
+    var APP_ID = req.headers.app_id;
+    validate(req, {
+        type: 'optional',
+        secret: 'optional',
+    }, null, function (body) {
+        if (body.status == 0) {
+            callback({status: 0, msg: body.body});
         } else {
-            if (fileExists('public/original_image/' + image_name) == false) {
-                var file = fs.createWriteStream("public/original_image/" + image_name);
-                http.get(url, function (response) {
-                    mkdirp('public/' + filename, function (err) {
-                        if (err) {
-                            callback(500, "oops! some error occured");
+            redisFetch(req, 'products_', null, body.type, function (result) {
+                if (result.status == 0) {
+                    callback({status: 0, msg: result.body});
+                } else if (result.status == 1) {
+                    callback({status: 1, msg: result.body});
+                } else {
+                    API(req, body, '/home/products/', function (status, response, msg) {
+                        if (status == 0) {
+                            callback({status: 0, msg: response});
                         } else {
+                            if (response !== undefined) {
+                                var optmized_response = [];
+                                async.eachOfLimit(response, 5, processData, function (err) {
+                                    if (err) {
+                                        callback({status: 0, msg: 'OOPS! How is this possible?'});
+                                    } else {
+                                        redisSet('products_' + body.type, {
+                                            "body": JSON.stringify(response),
+                                            "type": body.type
+                                        }, function () {
+                                            callback({status: status, msg: optmized_response});
+                                        });
+                                    }
+                                });
+                            } else {
+                                callback({status: 0, msg: ERROR});
+                            }
+                            function processData(item, key, callback) {
+                                var image_url = item.data.small_image;
+                                resize(image_url, APP_ID, function (status, image_name) {
+                                    if (status == '200') {
+                                        minify(image_name, APP_ID, function (status, minify_image) {
+                                            item.data.small_image = image_name;
+                                            item.data.minify_image = minify_image;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        });
+                                    } else {
+                                        item.data.small_image = image_url;
+                                        item.data.minify_image = image_url;
+                                        optmized_response[key] = item;
+                                        callback(null);
+                                    }
+                                });
+                            }
                         }
                     });
-                    if (response.statusCode == 200) {
-                        response.pipe(file);
-                        response.on('end', function () {
-                            sharp('public/original_image/' + image_name)
-                                    .resize(200)
-                                    .toFile('public/' + filename + image_webp, function (err) {
-                                        if (err) {
-                                            callback(500, err);
-                                        } else if (err === null) {
-                                            sharp('public/original_image/' + image_name)
-                                                    .resize(200)
-                                                    .toFile('public/' + filename + image_png, function (err) {
-                                                        callback(200, config.CDN_URL + filename + image_png);
-                                                    });
-                                        } else {
-                                            callback(500, "oops! some error occured");
-                                        }
-                                    });
-                        });
-                    } else {
-                        callback(200, config.DEFAULT_IMAGE_URL);
-                    }
-                });
-            } else {
-                callback(200, config.CDN_URL + filename + image_png);
-            }
+                }
+            });
         }
-    } else {
-        callback(500, "APP_ID or url cannot be empty");
-    }
+    });
 };
 
-minify = function (url, APP_ID,callback) {
-    if (url && APP_ID) {
-        var image_url = URL_.parse(url).path;
-        var filename = image_url.substring(0, image_url.lastIndexOf("/"));
-        var url_last_index_length = url.lastIndexOf('/');
-        var image_name = url.substring(url_last_index_length + 1);
-        var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
-        var image_jpg = '/' + image_name_without_extension + '.jpg';
-        var image_minified_name = filename.replace("comtethr/", "comtethr/minify");
-        if (filename == '/default') {
-            callback(200, config.DEFAULT_IMAGE_URL);
+homeCategories = function (req, callback) {
+    validate(req, {}, null, function (body) {
+        if (body.status == 0) {
+            callback({status: 0, msg: body.body});
         } else {
-            if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
-                      imagemin(["public/" + image_url], 'public' + image_minified_name, {
-                       plugins: [
-                       imageminMozjpeg(),
-                       imageminPngquant({quality: '5'})
-                       ]
-                      }).then(files => {
-                           if (files[0].path !== null) {
-                               callback(200, config.CDN_URL+image_minified_name+image_jpg );
-                           } else {
-                               callback(500, "oops! some error occured");
-                           }
-                 })
-            } else {
-                callback(200, config.CDN_URL + image_minified_name + image_jpg);
-            }
+            redisFetch(req, 'categories', null, null, function (result) {
+                if (result.status == 0) {
+                    callback({status: 0, msg: result.body});
+                } else if (result.status == 1) {
+                    callback({status: 1, msg: result.body});
+                } else {
+                    API(req, body, '/home/categories/', function (status, response, msg) {
+                        if (status == 0) {
+                            callback({status: 0, msg: response});
+                        } else {
+                            redisSet('categories', {
+                                "body": JSON.stringify(response)
+                            }, function () {
+                                callback({status: status, msg: response});
+                            });
+                        }
+                    });
+                }
+            });
         }
-    } else {
-        callback(500, " APP_ID or url cannot be empty");
-    }
+    });
+};
+
+homeSlider = function (req, callback) {
+    var APP_ID = req.headers.app_id;
+    validate(req, {
+    }, null, function (body) {
+        if (body.status == 0) {
+            callback({status: 0, msg: body.body});
+        } else {
+            redisFetch(req, 'slider', null, null, function (result) {
+                if (result.status == 0) {
+                    callback({status: 0, msg: result.body});
+                } else if (result.status == 1) {
+                    callback({status: 1, msg: result.body});
+                } else {
+                    API(req, body, '/home/slider/', function (status, response, msg) {
+                        if (status == 0) {
+                            callback({status: 0, msg: response});
+                        } else {
+                            if (req.isAdmin == true) {
+                                if (response.url !== undefined) {
+                                    var optmized_response = [];
+                                    async.eachOfLimit(response.url, 5, processData, function (err) {
+                                        if (err) {
+                                            callback({status: 0, msg: "OOPS! How is this possible?"});
+                                        } else {
+                                            client.hmset('slider', {
+                                                "body": JSON.stringify(response),
+                                                "status": 1,
+                                                "statuscode": msg
+                                            });
+                                            client.expire('categories', config.PRODUCT_EXPIRESAT);
+                                            callback({status: status, msg: optmized_response});
+                                        }
+                                    });
+                                } else {
+                                    callback({status: 0, msg: ERROR});
+                                }
+                                function processData(item, key, callback) {
+                                    resize(item, APP_ID, function (status, image_name) {
+                                        if (status == '200') {
+
+                                            item = image_name;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        } else {
+                                            item = item;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        }
+                                    });
+                                }
+                            } else {
+                                var sendResponse = [];
+                                for (var i = 0; i < response.url.length; i++) {
+                                    var imageName = response.url[i].substring(response.url[i].lastIndexOf('/') + 1);
+                                    if (fileExists('public/original_image/' + imageName) == false) {
+                                        sendResponse.push(response.url[i])
+                                    } else {
+                                        var imageUrl = URL_.parse(response.url[i]).path;
+                                        sendResponse.push(config.CDN_URL + APP_ID + imageUrl);
+                                    }
+                                }
+                                response.url = sendResponse;
+                                callback({status: status, msg: response});
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
