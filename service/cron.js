@@ -24,7 +24,7 @@ var prefetchDataDB = conn.model('prefetchData', prefetchData);
 
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
-    new CronJob('*/1 * * * *', function () {
+    new CronJob('* * * * * *', function () {
         app_urls.findOne({
             APP_ID: app_id
         }, function (err, user) {
@@ -81,34 +81,34 @@ processStore = function (app_id) {
                                                     "name": PREFETCHCATEGORYLIST,
                                                     "APP_ID": app_id
                                                 },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMESLIDER,
-                                                    "name": PREFETCHHOMESLIDER,
-                                                    "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMEPRODUCTS,
-                                                    "name": PREFETCHHOMEPRODUCTS,
-                                                    "APP_ID": app_id
-                                                }
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHHOMESLIDER,
+//                                                    "name": PREFETCHHOMESLIDER,
+//                                                    "APP_ID": app_id
+//                                                },
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHHOMEPRODUCTS,
+//                                                    "name": PREFETCHHOMEPRODUCTS,
+//                                                    "APP_ID": app_id
+//                                                }
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({
