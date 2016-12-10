@@ -29,7 +29,3 @@ homeProductSchema = mongoose.Schema({
     categoryName: String,
     type: String
 });
-
-gsmSchema = mongoose.Schema({
-    gsm_id: {type: String, required: true}
-});

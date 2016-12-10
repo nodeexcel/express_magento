@@ -14,7 +14,6 @@ module.exports = function () {
         getActiveInstallations(app_urls);
     });
 
-    var gsm_id = mongoose.model('GsmId', gsmSchema);
     conn.on('error', function (err) {
         process.exit();
     });
