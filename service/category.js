@@ -1,14 +1,21 @@
+imports('config/index');
+imports('config/constant');
 require('node-import');
 require('./validate');
 require('./image');
 require('./request');
 require('./cache');
 require('./responseMsg');
-imports('config/index');
-imports('config/constant');
+require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var mongoose = require('mongoose');
+
+var conn = mongoose.connection;
+var Grid = require('gridfs-stream');
+Grid.mongo = mongoose.mongo;
+var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 categoryProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
@@ -42,7 +49,48 @@ categoryProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    staticsticAPIDB.findOne({
+                        nameAPI: 'categoryProducts'
+                    }, function (error, row) {
+                        if (error) {
+                            callback({status: 1, msg: result.body});
+                        } else if (row) {
+                            var totalAPI = row.totalAPI;
+                            var redisAPI = row.redisAPI;
+                            var magentoAPI = row.magentoAPI;
+                            staticsticAPIDB.update({
+                                nameAPI: 'categoryProducts'
+                            }, {
+                                $set: {
+                                    totalAPI: totalAPI + 1,
+                                    redisAPI: redisAPI + 1,
+                                    magentoAPI: magentoAPI
+                                }
+                            }, function (err) {
+                                if (!err) {
+                                    console.log('Category Updated Done with cache 1. Line-71 File-/service/categoryjs');
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    console.log('Error. Line-74 File-/service/categoryjs' + err);
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        } else {
+                            var record = new staticsticAPIDB({
+                                nameAPI: 'categoryProducts',
+                                totalAPI: 1,
+                                redisAPI: 1,
+                                magentoAPI: 0
+                            });
+                            record.save(function (err) {
+                                if (err) {
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        }
+                    });
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -60,7 +108,48 @@ categoryProducts = function (req, callback) {
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
                                         }, function () {
-                                            callback({status: status, msg: optmized_response});
+                                            staticsticAPIDB.findOne({
+                                                nameAPI: 'categoryProducts'
+                                            }, function (error, row) {
+                                                if (error) {
+                                                    callback({status: status, msg: optmized_response});
+                                                } else if (row) {
+                                                    var totalAPI = row.totalAPI;
+                                                    var redisAPI = row.redisAPI;
+                                                    var magentoAPI = row.magentoAPI;
+                                                    staticsticAPIDB.update({
+                                                        nameAPI: 'categoryProducts'
+                                                    }, {
+                                                        $set: {
+                                                            totalAPI: totalAPI + 1,
+                                                            redisAPI: redisAPI,
+                                                            magentoAPI: magentoAPI + 1
+                                                        }
+                                                    }, function (err) {
+                                                        if (!err) {
+                                                            console.log('Category Updated Done with cache 1. Line-130 File-/service/categoryjs');
+                                                            callback({status: status, msg: optmized_response});
+                                                        } else {
+                                                            console.log('Error. Line-133 File-/service/categoryjs' + err);
+                                                            callback({status: status, msg: optmized_response});
+                                                        }
+                                                    });
+                                                } else {
+                                                    var record = new staticsticAPIDB({
+                                                        nameAPI: 'categoryProducts',
+                                                        totalAPI: 1,
+                                                        redisAPI: 0,
+                                                        magentoAPI: 1
+                                                    });
+                                                    record.save(function (err) {
+                                                        if (err) {
+                                                            callback({status: status, msg: optmized_response});
+                                                        } else {
+                                                            callback({status: status, msg: optmized_response});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                         });
                                     }
                                 });
@@ -92,7 +181,6 @@ categoryProducts = function (req, callback) {
         }
     });
 };
-
 categoryList = function (req, callback) {
     validate(req, {
         countryid: 'optional',
@@ -120,7 +208,48 @@ categoryList = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    staticsticAPIDB.findOne({
+                        nameAPI: 'categoryList'
+                    }, function (error, row) {
+                        if (error) {
+                            callback({status: 1, msg: result.body});
+                        } else if (row) {
+                            var totalAPI = row.totalAPI;
+                            var redisAPI = row.redisAPI;
+                            var magentoAPI = row.magentoAPI;
+                            staticsticAPIDB.update({
+                                nameAPI: 'categoryList'
+                            }, {
+                                $set: {
+                                    totalAPI: totalAPI + 1,
+                                    redisAPI: redisAPI + 1,
+                                    magentoAPI: magentoAPI
+                                }
+                            }, function (err) {
+                                if (!err) {
+                                    console.log('Category Updated Done with cache 1. Line-230 File-/service/categoryjs');
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    console.log('Error. Line-233 File-/service/categoryjs' + err);
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        } else {
+                            var record = new staticsticAPIDB({
+                                nameAPI: 'categoryList',
+                                totalAPI: 1,
+                                redisAPI: 1,
+                                magentoAPI: 0
+                            });
+                            record.save(function (err) {
+                                if (err) {
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        }
+                    });
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {
                         if (status == 0) {
@@ -131,7 +260,48 @@ categoryList = function (req, callback) {
                                 "body": JSON.stringify(response),
                                 "type": body.type
                             }, function () {
-                                callback({status: 1, msg: response});
+                                staticsticAPIDB.findOne({
+                                    nameAPI: 'categoryList'
+                                }, function (error, row) {
+                                    if (error) {
+                                        callback({status: 1, msg: response});
+                                    } else if (row) {
+                                        var totalAPI = row.totalAPI;
+                                        var redisAPI = row.redisAPI;
+                                        var magentoAPI = row.magentoAPI;
+                                        staticsticAPIDB.update({
+                                            nameAPI: 'categoryList'
+                                        }, {
+                                            $set: {
+                                                totalAPI: totalAPI + 1,
+                                                redisAPI: redisAPI,
+                                                magentoAPI: magentoAPI + 1
+                                            }
+                                        }, function (err) {
+                                            if (!err) {
+                                                console.log('Category Updated Done with cache 1. Line-282 File-/service/categoryjs');
+                                                callback({status: 1, msg: response});
+                                            } else {
+                                                console.log('Error. Line-285 File-/service/categoryjs' + err);
+                                                callback({status: 1, msg: response});
+                                            }
+                                        });
+                                    } else {
+                                        var record = new staticsticAPIDB({
+                                            nameAPI: 'categoryList',
+                                            totalAPI: 1,
+                                            redisAPI: 0,
+                                            magentoAPI: 1
+                                        });
+                                        record.save(function (err) {
+                                            if (err) {
+                                                callback({status: 1, msg: response});
+                                            } else {
+                                                callback({status: 1, msg: response});
+                                            }
+                                        });
+                                    }
+                                });
                             });
                         }
                     });

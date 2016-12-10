@@ -23,3 +23,10 @@ prefetchData = new Schema({
     "APP_ID": String,
     "page": Number
 });
+
+staticsticAPI = new Schema({
+    nameAPI: String,
+    totalAPI: Number,
+    redisAPI: Number,
+    magentoAPI: Number
+});
