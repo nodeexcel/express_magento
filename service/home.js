@@ -9,6 +9,8 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var URL_ = require('url');
+var fileExists = require('file-exists');
 var redis = require("redis"),
         client = redis.createClient();
 
@@ -50,9 +52,9 @@ homeProducts = function (req, callback) {
                             }
                             function processData(item, key, callback) {
                                 var image_url = item.data.small_image;
-                                resize(image_url, APP_ID,function (status, image_name) {
+                                resize(image_url, APP_ID, function (status, image_name) {
                                     if (status == '200') {
-                                        minify(image_name, APP_ID,function (status, minify_image) {
+                                        minify(image_name, APP_ID, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
                                             optmized_response[key] = item;
@@ -119,36 +121,52 @@ homeSlider = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            if (response.url !== undefined) {
-                                var optmized_response = [];
-                                async.eachOfLimit(response.url, 5, processData, function (err) {
-                                    if (err) {
-                                        callback({status: 0, msg: "OOPS! How is this possible?"});
-                                    } else {
-                                        client.hmset('slider', {
-                                            "body": JSON.stringify(response),
-                                            "status": 1,
-                                            "statuscode": msg
-                                        });
-                                        client.expire('categories', config.PRODUCT_EXPIRESAT);
-                                        callback({status: status, msg: optmized_response});
-                                    }
-                                });
+                            if (req.isAdmin == true) {
+                                if (response.url !== undefined) {
+                                    var optmized_response = [];
+                                    async.eachOfLimit(response.url, 5, processData, function (err) {
+                                        if (err) {
+                                            callback({status: 0, msg: "OOPS! How is this possible?"});
+                                        } else {
+                                            client.hmset('slider', {
+                                                "body": JSON.stringify(response),
+                                                "status": 1,
+                                                "statuscode": msg
+                                            });
+                                            client.expire('categories', config.PRODUCT_EXPIRESAT);
+                                            callback({status: status, msg: optmized_response});
+                                        }
+                                    });
+                                } else {
+                                    callback({status: 0, msg: ERROR});
+                                }
+                                function processData(item, key, callback) {
+                                    resize(item, APP_ID, function (status, image_name) {
+                                        if (status == '200') {
+
+                                            item = image_name;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        } else {
+                                            item = item;
+                                            optmized_response[key] = item;
+                                            callback(null);
+                                        }
+                                    });
+                                }
                             } else {
-                                callback({status: 0, msg: ERROR});
-                            }
-                            function processData(item, key, callback) {
-                                resize(item, APP_ID, function (status, image_name) {
-                                    if (status == '200') {
-                                        item = image_name;
-                                        optmized_response[key] = item;
-                                        callback(null);
+                                var sendResponse = [];
+                                for (var i = 0; i < response.url.length; i++) {
+                                    var imageName = response.url[i].substring(response.url[i].lastIndexOf('/') + 1);
+                                    if (fileExists('public/original_image/' + imageName) == false) {
+                                        sendResponse.push(response.url[i])
                                     } else {
-                                        item = item;
-                                        optmized_response[key] = item;
-                                        callback(null);
+                                        var imageUrl = URL_.parse(response.url[i]).path;
+                                        sendResponse.push(config.CDN_URL + APP_ID + imageUrl);
                                     }
-                                });
+                                }
+                                response.url = sendResponse;
+                                callback({status: status, msg: response});
                             }
                         }
                     });
