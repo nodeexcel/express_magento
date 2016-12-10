@@ -1,16 +1,22 @@
+imports('config/index');
+imports('config/constant');
 require('node-import');
 require('./validate');
 require('./image');
 require('./request');
 require('./cache');
 require('./responseMsg');
-imports('config/index');
-imports('config/constant');
+require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
 var redis = require("redis"),
         client = redis.createClient();
+var mongoose = require('mongoose');
+var conn = mongoose.connection;
+var Grid = require('gridfs-stream');
+Grid.mongo = mongoose.mongo;
+var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 homeProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
@@ -26,7 +32,48 @@ homeProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    staticsticAPIDB.findOne({
+                        nameAPI: 'homeProducts'
+                    }, function (error, row) {
+                        if (error) {
+                            callback({status: 1, msg: result.body});
+                        } else if (row) {
+                            var totalAPI = row.totalAPI;
+                            var redisAPI = row.redisAPI;
+                            var magentoAPI = row.magentoAPI;
+                            staticsticAPIDB.update({
+                                nameAPI: 'homeProducts'
+                            }, {
+                                $set: {
+                                    totalAPI: totalAPI + 1,
+                                    redisAPI: redisAPI + 1,
+                                    magentoAPI: magentoAPI
+                                }
+                            }, function (err) {
+                                if (!err) {
+                                    console.log('Home Products Updated Done with cache 1. Line-54 File-/service/homejs');
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    console.log('Error. Line-57 File-/service/homejs' + err);
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        } else {
+                            var record = new staticsticAPIDB({
+                                nameAPI: 'homeProducts',
+                                totalAPI: 1,
+                                redisAPI: 1,
+                                magentoAPI: 0
+                            });
+                            record.save(function (err) {
+                                if (err) {
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        }
+                    });
                 } else {
                     API(req, body, '/home/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -42,7 +89,48 @@ homeProducts = function (req, callback) {
                                             "body": JSON.stringify(response),
                                             "type": body.type
                                         }, function () {
-                                            callback({status: status, msg: optmized_response});
+                                            staticsticAPIDB.findOne({
+                                                nameAPI: 'homeProducts'
+                                            }, function (error, row) {
+                                                if (error) {
+                                                    callback({status: status, msg: optmized_response});
+                                                } else if (row) {
+                                                    var totalAPI = row.totalAPI;
+                                                    var redisAPI = row.redisAPI;
+                                                    var magentoAPI = row.magentoAPI;
+                                                    staticsticAPIDB.update({
+                                                        nameAPI: 'homeProducts'
+                                                    }, {
+                                                        $set: {
+                                                            totalAPI: totalAPI + 1,
+                                                            redisAPI: redisAPI,
+                                                            magentoAPI: magentoAPI + 1
+                                                        }
+                                                    }, function (err) {
+                                                        if (!err) {
+                                                            console.log('Home Products Updated Done with cache 1. Line-111 File-/service/homejs');
+                                                            callback({status: status, msg: optmized_response});
+                                                        } else {
+                                                            console.log('Error. Line-114 File-/service/homejs' + err);
+                                                            callback({status: status, msg: optmized_response});
+                                                        }
+                                                    });
+                                                } else {
+                                                    var record = new staticsticAPIDB({
+                                                        nameAPI: 'homeProducts',
+                                                        totalAPI: 1,
+                                                        redisAPI: 0,
+                                                        magentoAPI: 1
+                                                    });
+                                                    record.save(function (err) {
+                                                        if (err) {
+                                                            callback({status: status, msg: optmized_response});
+                                                        } else {
+                                                            callback({status: status, msg: optmized_response});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                         });
                                     }
                                 });
@@ -115,7 +203,48 @@ homeSlider = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    staticsticAPIDB.findOne({
+                        nameAPI: 'homeSlider'
+                    }, function (error, row) {
+                        if (error) {
+                            callback({status: 1, msg: result.body});
+                        } else if (row) {
+                            var totalAPI = row.totalAPI;
+                            var redisAPI = row.redisAPI;
+                            var magentoAPI = row.magentoAPI;
+                            staticsticAPIDB.update({
+                                nameAPI: 'homeSlider'
+                            }, {
+                                $set: {
+                                    totalAPI: totalAPI + 1,
+                                    redisAPI: redisAPI + 1,
+                                    magentoAPI: magentoAPI
+                                }
+                            }, function (err) {
+                                if (!err) {
+                                    console.log('Home Slider Updated Done with cache 1. Line-225 File-/service/homejs');
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    console.log('Error. Line-228 File-/service/homejs' + err);
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        } else {
+                            var record = new staticsticAPIDB({
+                                nameAPI: 'homeSlider',
+                                totalAPI: 1,
+                                redisAPI: 1,
+                                magentoAPI: 0
+                            });
+                            record.save(function (err) {
+                                if (err) {
+                                    callback({status: 1, msg: result.body});
+                                } else {
+                                    callback({status: 1, msg: result.body});
+                                }
+                            });
+                        }
+                    });
                 } else {
                     API(req, body, '/home/slider/', function (status, response, msg) {
                         if (status == 0) {
@@ -134,7 +263,48 @@ homeSlider = function (req, callback) {
                                             "statuscode": msg
                                         });
                                         client.expire('categories', config.PRODUCT_EXPIRESAT);
-                                        callback({status: status, msg: optmized_response});
+                                        staticsticAPIDB.findOne({
+                                            nameAPI: 'homeSlider'
+                                        }, function (error, row) {
+                                            if (error) {
+                                                callback({status: status, msg: optmized_response});
+                                            } else if (row) {
+                                                var totalAPI = row.totalAPI;
+                                                var redisAPI = row.redisAPI;
+                                                var magentoAPI = row.magentoAPI;
+                                                staticsticAPIDB.update({
+                                                    nameAPI: 'homeSlider'
+                                                }, {
+                                                    $set: {
+                                                        totalAPI: totalAPI + 1,
+                                                        redisAPI: redisAPI,
+                                                        magentoAPI: magentoAPI + 1
+                                                    }
+                                                }, function (err) {
+                                                    if (!err) {
+                                                        console.log('Home Slider Updated Done with cache 1. Line-285 File-/service/homejs');
+                                                        callback({status: status, msg: optmized_response});
+                                                    } else {
+                                                        console.log('Error. Line-288 File-/service/homejs' + err);
+                                                        callback({status: status, msg: optmized_response});
+                                                    }
+                                                });
+                                            } else {
+                                                var record = new staticsticAPIDB({
+                                                    nameAPI: 'homeSlider',
+                                                    totalAPI: 1,
+                                                    redisAPI: 0,
+                                                    magentoAPI: 1
+                                                });
+                                                record.save(function (err) {
+                                                    if (err) {
+                                                        callback({status: status, msg: optmized_response});
+                                                    } else {
+                                                        callback({status: status, msg: optmized_response});
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 });
                             } else {

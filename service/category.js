@@ -11,7 +11,6 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var mongoose = require('mongoose');
-
 var conn = mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
