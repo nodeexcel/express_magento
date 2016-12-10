@@ -23,7 +23,6 @@ module.exports = function () {
         req.mongo = conn;
         req.gfs = gfs;
         req.app = app_urls;
-        req.Collection_gsm = gsm_id;
         next();
     };
 };
