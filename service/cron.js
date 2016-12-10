@@ -215,25 +215,25 @@ processStore = function (app_id) {
                                                 }
                                             });
                                         } else if (item.reqType == PREFETCHCATEGORY) {
-                                            prefetchDataDB.update({
-                                                _id: item._id,
-                                                cache: 0
-                                            }, {
-                                                $set: {
-                                                    cache: 1
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
-                                                    callback();
-                                                } else {
-                                                    console.log('fetchCategory function run. Line-230 File-/service/cronjs');
-                                                    fetchCategory(item, prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Category end. Line-232 File-/service/cronjs');
-                                                        callback();
-                                                    });
-                                                }
+//                                            prefetchDataDB.update({
+//                                                _id: item._id,
+//                                                cache: 0
+//                                            }, {
+//                                                $set: {
+//                                                    cache: 1
+//                                                }
+//                                            }, function (err) {
+//                                                if (err) {
+//                                                    conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
+//                                                    callback();
+//                                                } else {
+                                            console.log('fetchCategory function run. Line-230 File-/service/cronjs');
+                                            fetchCategory(item, prefetchDataDB, app_id, URL, function () {
+                                                console.log('Category end. Line-232 File-/service/cronjs');
+                                                callback();
                                             });
+//                                                }
+//                                            });
                                         } else if (item.reqType == PREFETCHPRODUCT) {
                                             prefetchDataDB.update({
                                                 _id: item._id,

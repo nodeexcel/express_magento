@@ -33,7 +33,7 @@ categoryProducts = function (req, callback) {
         limit: 'required',
         id: 'required',
         mobile_width: 'required',
-        pageno: 'required'
+        page: 'required'
     }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
@@ -46,7 +46,7 @@ categoryProducts = function (req, callback) {
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
-                            callback({status: 0, msg: response});
+                            callback({status: 0, msg: msg});
                         } else {
 //                            callback({status: status, msg: response});
                             if (response !== undefined) {
