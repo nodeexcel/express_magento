@@ -31,7 +31,7 @@ categoryProducts = function (req, callback) {
         type: 'optional',
         limit: 'required',
         id: 'required',
-        pageno: 'required'}, null, function (body) {
+        page: 'required'}, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
@@ -51,7 +51,7 @@ categoryProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id, {
+                                        redisSet('category_' + body.id + page, {
                                             'id': body.id,
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
