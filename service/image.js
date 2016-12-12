@@ -11,10 +11,11 @@ var imageminPngquant = require('imagemin-pngquant');
 var fs = require('fs');
 var URL_ = require('url');
 var mkdirp = require('mkdirp');
+var sizeOf = require('image-size');
 var path = require('path');
 
-resize = function (req, url, callback) { 
-var APP_ID = req.headers.app_id;
+resize = function (req, url, callback) {
+    var APP_ID = req.headers.app_id;
     if (url && APP_ID) {
         var image_url = URL_.parse(url).path;
         var app_id = APP_ID.replace(/[^a-zA-Z0-9 ]/g, "");
@@ -40,21 +41,41 @@ var APP_ID = req.headers.app_id;
                     if (response.statusCode == 200) {
                         response.pipe(file);
                         response.on('end', function () {
-                            sharp('public/original_image/' + image_name)
-                                    .resize(480)
-                                    .toFile('public/' + filename + image_webp, function (err) {
-                                        if (err) {
-                                            callback(500, config.DEFAULT_IMAGE_URL);
-                                        } else if (err === null) {
-                                            sharp('public/original_image/' + image_name)
-                                                    .resize(480)
-                                                    .toFile('public/' + filename + image_png, function (err) {
-                                                        callback(200, config.CDN_URL + filename + image_png);
-                                                    });
+                            sizeOf('public/original_image/' + image_name, function (err, dimensions) {
+                                if (dimensions) {
+                                    if (dimensions.width > 480 || dimensions.height > 240) {
+                                        if (dimensions.width > 480) {
+                                            var sharp_resize_width = 480;
                                         } else {
-                                            callback(500, config.DEFAULT_IMAGE_URL);
+                                            sharp_resize_width = dimensions.width;
                                         }
-                                    });
+                                        if (dimensions.height > 240) {
+                                            var sharp_resize_height = 240;
+                                        } else {
+                                            sharp_resize_height = dimensions.height;
+                                        }
+                                        sharp('public/original_image/' + image_name)
+                                                .resize(sharp_resize_width, sharp_resize_height)
+                                                .toFile('public/' + filename + image_webp, function (err) {
+                                                    if (err) {
+                                                        callback(500, config.DEFAULT_IMAGE_URL);
+                                                    } else if (err === null) {
+                                                        sharp('public/original_image/' + image_name)
+                                                                .resize(480)
+                                                                .toFile('public/' + filename + image_png, function (err) {
+                                                                    callback(200, config.CDN_URL + filename + image_png);
+                                                                });
+                                                    } else {
+                                                        callback(500, config.DEFAULT_IMAGE_URL);
+                                                    }
+                                                });
+                                    } else {
+                                        console.log(200, config.CDN_URL + 'public/original_image/' + image_name);
+                                    }
+                                } else {
+                                    callback(500, config.DEFAULT_IMAGE_URL);
+                                }
+                            });
                         });
                     } else {
                         callback(200, config.DEFAULT_IMAGE_URL);
@@ -83,30 +104,40 @@ minify = function (req, url, callback) {
         var image_name = url.substring(url_last_index_length + 1);
         var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
         var image_jpg = '/' + image_name_without_extension + '.jpg';
-        var image_minified_name = filename.replace(app_id+"/", app_id+"/minify");
+        var image_minified_name = filename.replace(app_id + "/", app_id + "/minify");
         if (filename == '/default') {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {
-            if (fileExists('public' + image_minified_name + '/' + image_jpg) == false && req.isAdmin == true) {
-                     imagemin(["public/" + image_url], 'public' + image_minified_name, {
-                      plugins: [
-                      imageminMozjpeg(),
-                      imageminPngquant({quality: '5'})
-                      ]
-                     }).then(files => {
-                          if (files[0].path !== null) {
-                              callback(200, config.CDN_URL+image_minified_name+image_jpg );
-                          } else {
-                              callback(500, config.DEFAULT_IMAGE_URL);
-                          }
-                })
-            } else {
-                if (fileExists('public/original_image/' + image_name) == false) {
-                    callback(200, url)
+            sizeOf('public/original_image/' + image_name, function (err, dimensions) {
+                if (dimensions) {
+                    if (dimensions.width > 480 || dimensions.height > 240) {
+                        if (fileExists('public' + image_minified_name + '/' + image_jpg) == false && req.isAdmin == true) {
+                                 imagemin(["public/" + image_url], 'public' + image_minified_name, {
+                                  plugins: [
+                                  imageminMozjpeg(),
+                                  imageminPngquant({quality: '5'})
+                                  ]
+                                 }).then(files => {
+                                      if (files[0].path !== null) {
+                                          callback(200, config.CDN_URL+image_minified_name+image_jpg );
+                                      } else {
+                                          callback(500, config.DEFAULT_IMAGE_URL);
+                                      }
+                            })
+                        } else {
+                            if (fileExists('public/original_image/' + image_name) == false) {
+                                callback(200, url)
+                            } else {
+                                callback(200, config.CDN_URL + image_minified_name + image_jpg);
+                            }
+                        }
+                    } else {
+                        console.log(200, config.CDN_URL + 'public/original_image/' + image_name);
+                    }
                 } else {
-                    callback(200, config.CDN_URL + image_minified_name + image_jpg);
+                    callback(500, config.DEFAULT_IMAGE_URL);
                 }
-            }
+            });
         }
     } else {
         callback(500, config.DEFAULT_IMAGE_URL);

@@ -62,17 +62,4 @@ router.post('/submitreview', function (req, res) {
     });
 });
 
-router.post('/productNotification', function (req, res) {
-    validate(req, {sku: 'required',
-        email: 'optional'}, null, function (body) {
-        API(req, body, '/product/productNotification/', function (status, response, msg) {
-            if (status == 0) {
-                oops(res, msg);
-            } else {
-                success(res, status, response);
-            }
-        });
-    });
-});
-
 module.exports = router;
