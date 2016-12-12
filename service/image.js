@@ -13,7 +13,7 @@ var URL_ = require('url');
 var mkdirp = require('mkdirp');
 var path = require('path');
 
-resize = function (url, APP_ID, callback) {
+resize = function (req, url, APP_ID, callback) {
     if (url && APP_ID) {
         var image_url = URL_.parse(url).path;
         var app_id = APP_ID.replace(/[^a-zA-Z0-9 ]/g, "");
@@ -27,7 +27,7 @@ resize = function (url, APP_ID, callback) {
         if (image_name_without_extension == '') {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {
-            if (fileExists('public/original_image/' + image_name) == false) {
+            if (fileExists('public/original_image/' + image_name) == false && req.isAdmin == true) {
                 var file = fs.createWriteStream("public/original_image/" + image_name);
                 http.get(url, function (response) {
                     mkdirp('public/' + filename, function (err) {
@@ -60,7 +60,11 @@ resize = function (url, APP_ID, callback) {
                     }
                 });
             } else {
-                callback(200, config.CDN_URL + filename + image_png);
+                if (fileExists('public/original_image/' + image_name) == false) {
+                    callback(200, url)
+                } else {
+                    callback(200, config.CDN_URL + filename + image_png);
+                }
             }
         }
     } else {
@@ -68,7 +72,7 @@ resize = function (url, APP_ID, callback) {
     }
 };
 
-minify = function (url, APP_ID,callback) {
+minify = function (req, url, APP_ID, callback) {
     if (url && APP_ID) {
         var image_url = URL_.parse(url).path;
         var filename = image_url.substring(0, image_url.lastIndexOf("/"));
@@ -80,21 +84,25 @@ minify = function (url, APP_ID,callback) {
         if (filename == '/default') {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {
-            if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
-                      imagemin(["public/" + image_url], 'public' + image_minified_name, {
-                       plugins: [
-                       imageminMozjpeg(),
-                       imageminPngquant({quality: '5'})
-                       ]
-                      }).then(files => {
-                           if (files[0].path !== null) {
-                               callback(200, config.CDN_URL+image_minified_name+image_jpg );
-                           } else {
-                               callback(500, "oops! some error occured");
-                           }
-                 })
+            if (fileExists('public' + image_minified_name + '/' + image_jpg) == false && req.isAdmin == true) {
+                     imagemin(["public/" + image_url], 'public' + image_minified_name, {
+                      plugins: [
+                      imageminMozjpeg(),
+                      imageminPngquant({quality: '5'})
+                      ]
+                     }).then(files => {
+                          if (files[0].path !== null) {
+                              callback(200, config.CDN_URL+image_minified_name+image_jpg );
+                          } else {
+                              callback(500, "oops! some error occured");
+                          }
+                })
             } else {
-                callback(200, config.CDN_URL + image_minified_name + image_jpg);
+                if (fileExists('public/original_image/' + image_name) == false) {
+                    callback(200, url)
+                } else {
+                    callback(200, config.CDN_URL + image_minified_name + image_jpg);
+                }
             }
         }
     } else {
