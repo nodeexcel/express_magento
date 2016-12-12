@@ -172,7 +172,7 @@ processStore = function (app_id) {
                                                         callback();
                                                     } else {
                                                         console.log('fetchCategoryList function run. Line-174 File-/service/cronjs');
-//                                                        FUNCTION FOR GETTING CATEGORY LIST
+//                                                        FUNCTION CALLED FOR GETTING CATEGORY LIST
                                                         fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
                                                             console.log('Category List end. Line-177 File-/service/cronjs');
                                                             callback();
@@ -193,7 +193,7 @@ processStore = function (app_id) {
                                                         callback();
                                                     } else {
                                                         console.log('fetchHomeSliderList function run. Line-195 File-/service/cronjs');
-//                                                        FUNCTION FOR GETTING HOME SLIDER LIST 
+//                                                        FUNCTION CALLED FOR GETTING HOME SLIDER LIST 
                                                         fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
                                                             console.log('Home Slider end. Line-198 File-/service/cronjs');
                                                             callback();
@@ -214,7 +214,7 @@ processStore = function (app_id) {
                                                         callback();
                                                     } else {
                                                         console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
-//                                                        FUNCTION FOR GETTING HOME PRODUCT LIST
+//                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
                                                         fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
                                                             console.log('Home Products end. Line-219 File-/service/cronjs');
                                                             callback();
@@ -235,7 +235,7 @@ processStore = function (app_id) {
 //                                                    callback();
 //                                                } else {
                                                 console.log('fetchCategory function run. Line-237 File-/service/cronjs');
-//                                                FUNCTION FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
+//                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
                                                 fetchCategory(item, prefetchDataDB, app_id, URL, function () {
                                                     console.log('Category end. Line-240 File-/service/cronjs');
                                                     callback();
@@ -256,7 +256,7 @@ processStore = function (app_id) {
                                                         callback();
                                                     } else {
                                                         console.log('fetchProduct function run. Line-258 File-/service/cronjs');
-//                                                        FUNCTION FOR GETTING PRODUCT REVIEW
+//                                                        FUNCTION CALLED FOR GETTING PRODUCT REVIEW
                                                         fetchProduct(item, prefetchDataDB, app_id, URL, function () {
                                                             console.log('Products end. Line-261 File-/service/cronjs');
                                                             callback();
