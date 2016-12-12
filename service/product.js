@@ -48,9 +48,9 @@ productGet = function (req, callback) {
                                 callback({status: 0, msg: ERROR});
                             }
                             function processData(image_url, key, callback) {
-                                resize(req, image_url, APP_ID, function (status, image_name) {
-                                    if (status == "200") {
-                                        minify(req, image_name, APP_ID, function (status, minify_image) {
+                                resize(req, image_url, function (status, image_name) {
+                                    if (status == 200) {
+                                        minify(req, image_name, function (status, minify_image) {
                                             optmized_response.push(image_name);
                                             minify_imag.push(minify_image);
                                             callback(null);
