@@ -25,14 +25,12 @@ homeProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'products_', null, body.type, function (result) {
+            var key = 'type';
+            redisFetch(req, 'products_', body.type, key, 'homeProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Home Products API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('homeProducts', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/home/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -48,10 +46,7 @@ homeProducts = function (req, callback) {
                                             "body": JSON.stringify(response),
                                             "type": body.type
                                         }, function () {
-//                                          FOR SET VALUE OF STATISTIC(Home Products API), DATA IS COMING FROM MAGENTO
-                                            setStatisticMagento('homeProducts', function () {
-                                                callback({status: status, msg: optmized_response});
-                                            });
+                                            callback({status: status, msg: optmized_response});
                                         });
                                     }
                                 });
@@ -90,7 +85,8 @@ homeCategories = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categories', null, null, function (result) {
+            var key = null;
+            redisFetch(req, 'categories', null, key, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -122,14 +118,12 @@ homeSlider = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'slider', null, null, function (result) {
+            var key = null;
+            redisFetch(req, 'slider', null, key, 'homeSlider', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                  FOR SET VALUE OF STATISTIC(Home Slider API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('homeSlider', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/home/slider/', function (status, response, msg) {
                         if (status == 0) {
@@ -148,10 +142,7 @@ homeSlider = function (req, callback) {
                                             "statuscode": msg
                                         });
                                         client.expire('categories', config.PRODUCT_EXPIRESAT);
-//                                      FOR SET VALUE OF STATISTIC(Home Slider API), DATA IS COMING FROM MAGENTO
-                                        setStatisticMagento('homeSlider', function () {
-                                            callback({status: status, msg: optmized_response});
-                                        });
+                                        callback({status: status, msg: optmized_response});
                                     }
                                 });
                             } else {

@@ -41,14 +41,12 @@ categoryProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.id, null, function (result) {
+            var key = 'id';
+            redisFetch(req, 'category_', body.id, key, 'categoryProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('categoryProducts', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -66,10 +64,7 @@ categoryProducts = function (req, callback) {
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
                                         }, function () {
-//                                          FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM MAGENTO
-                                            setStatisticMagento('categoryProducts', function () {
-                                                callback({status: status, msg: optmized_response});
-                                            });
+                                            callback({status: status, msg: optmized_response});
                                         });
                                     }
                                 });
@@ -126,14 +121,12 @@ categoryList = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.parent_id, body.type, function (result) {
+            var key = 'parent_id';
+            redisFetch(req, 'category_', body.parent_id, key, 'categoryList', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Category List API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('categoryList', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {
                         if (status == 0) {
@@ -144,10 +137,7 @@ categoryList = function (req, callback) {
                                 "body": JSON.stringify(response),
                                 "type": body.type
                             }, function () {
-//                              FOR SET VALUE OF STATISTIC(Category List API), DATA IS COMING FROM MAGENTO
-                                setStatisticMagento('categoryProducts', function () {
-                                    callback({status: status, msg: response});
-                                });
+                                callback({status: status, msg: response});
                             });
                         }
                     });

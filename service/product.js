@@ -23,14 +23,12 @@ productGet = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+            var key = 'parent_id';
+            redisFetch(req, 'product_', body.parent_id, key, 'productGet', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Product Get API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('productGet', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
@@ -50,10 +48,7 @@ productGet = function (req, callback) {
                                             'id': body.sku,
                                             "body": JSON.stringify(response)
                                         }, function () {
-//                                          FOR SET VALUE OF STATISTIC(Product Get API), DATA IS COMING FROM MAGENTO
-                                            setStatisticMagento('productGet', function () {
-                                                callback({status: status, msg: response});
-                                            });
+                                            callback({status: status, msg: response});
                                         });
                                     }
                                 });
@@ -93,14 +88,12 @@ productReview = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+            var key = 'parent_id';
+            redisFetch(req, 'product_', body.parent_id, key, 'productReview', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Product Review API), DATA IS COMING FROM REDIS
-                    setStatisticRedis('productReview', function () {
-                        callback({status: 1, msg: result.body});
-                    });
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -110,10 +103,7 @@ productReview = function (req, callback) {
                                 'id': body.sku,
                                 "body": JSON.stringify(response)
                             }, function () {
-//                                      FOR SET VALUE OF STATISTIC(Product Review API), DATA IS COMING FROM MAGENTO
-                                setStatisticMagento('productReview', function () {
-                                    callback({status: status, msg: response});
-                                });
+                                callback({status: status, msg: response});
                             });
                         }
                     });
@@ -130,14 +120,12 @@ productGetRating = function (req, callback) {
             callback({status: 0, msg: body.body});
         } else {
             if (req.URL) {
-                redisFetch(req, 'product_', null, null, function (result) {
+                var key = null;
+                redisFetch(req, 'product_', null, key, 'productGetRating', function (result) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
-//                    FOR SET VALUE OF STATISTIC(Product Get Rating API), DATA IS COMING FROM REDIS
-                        setStatisticRedis('productGetRating', function () {
-                            callback({status: 1, msg: result.body});
-                        });
+                        callback({status: 1, msg: result.body});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {
@@ -146,10 +134,7 @@ productGetRating = function (req, callback) {
                                 redisSet('product_', {
                                     "body": JSON.stringify(response)
                                 }, function () {
-//                                      FOR SET VALUE OF STATISTIC(Product Get Rating API), DATA IS COMING FROM MAGENTO
-                                    setStatisticMagento('productGetRating', function () {
-                                        callback({status: status, msg: response});
-                                    });
+                                    callback({status: status, msg: response});
                                 });
                             }
                         });

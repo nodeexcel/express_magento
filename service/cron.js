@@ -41,187 +41,187 @@ processStore = function (app_id) {
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
 //APIS RUN IF CURRENT TIME AND SAVED DB TIME BOTH MATCH
 
-//                if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
-                console.log('You will see this message every minute. Line-45 File-/service/cronjs');
+                if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
+                    console.log('You will see this message every minute. Line-45 File-/service/cronjs');
 
-                fetchWebConfig(app_id, URL, function (respond) {
-                    if (respond.status != 0) {
-                        prefetchDataDB.find({
-                            cache: 0,
-                            APP_ID: app_id
-                        }).limit(10).exec(function (err, result) {
-                            if (err) {
-                                console.log('Error. Line-54 File-/service/cronjs' + err);
-                            } else if (!result || result.length == 0) {
+                    fetchWebConfig(app_id, URL, function (respond) {
+                        if (respond.status != 0) {
+                            prefetchDataDB.find({
+                                cache: 0,
+                                APP_ID: app_id
+                            }).limit(10).exec(function (err, result) {
+                                if (err) {
+                                    console.log('Error. Line-54 File-/service/cronjs' + err);
+                                } else if (!result || result.length == 0) {
 //                                    API RUN WHEN FIRST TIME CRON WILL START
-                                if (user.prefetch_status == 'NOT STARTED') {
+                                    if (user.prefetch_status == 'NOT STARTED') {
 //                                        PREFETCH STATUS WILL UPDATED
-                                    app_urls.update({
-                                        _id: selectId
-                                    }, {
-                                        $set: {
-                                            prefetch_status: 'RUNNING'
-                                        }
-                                    }, function (err) {
-                                        if (err) {
-                                            console.log('Error. Line-67 File-/service/cronjs' + err);
-                                        } else {
-                                            console.log('prefetch status RUNNING. Line-69 File-/service/cronjs');
-                                            var reqArray = [
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
+                                        app_urls.update({
+                                            _id: selectId
+                                        }, {
+                                            $set: {
+                                                prefetch_status: 'RUNNING'
+                                            }
+                                        }, function (err) {
+                                            if (err) {
+                                                console.log('Error. Line-67 File-/service/cronjs' + err);
+                                            } else {
+                                                console.log('prefetch status RUNNING. Line-69 File-/service/cronjs');
+                                                var reqArray = [
+                                                    {
+                                                        "req": {
+                                                            headers: {
+                                                                app_id: app_id
+                                                            },
+                                                            body: {
+                                                                store_id: respond.msg.store_id,
+                                                                parent_id: '1',
+                                                                type: 'full'
+                                                            },
+                                                            URL: URL
                                                         },
-                                                        body: {
-                                                            store_id: respond.msg.store_id,
-                                                            parent_id: '1',
-                                                            type: 'full'
-                                                        },
-                                                        URL: URL
+                                                        "reqType": PREFETCHCATEGORYLIST,
+                                                        "name": PREFETCHCATEGORYLIST,
+                                                        "APP_ID": app_id
                                                     },
-                                                    "reqType": PREFETCHCATEGORYLIST,
-                                                    "name": PREFETCHCATEGORYLIST,
-                                                    "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
+                                                    {
+                                                        "req": {
+                                                            headers: {
+                                                                app_id: app_id
+                                                            },
+                                                            body: {
+                                                                mobile_width: '300'
+                                                            },
+                                                            URL: URL
                                                         },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
+                                                        "reqType": PREFETCHHOMESLIDER,
+                                                        "name": PREFETCHHOMESLIDER,
+                                                        "APP_ID": app_id
                                                     },
-                                                    "reqType": PREFETCHHOMESLIDER,
-                                                    "name": PREFETCHHOMESLIDER,
-                                                    "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
+                                                    {
+                                                        "req": {
+                                                            headers: {
+                                                                app_id: app_id
+                                                            },
+                                                            body: {
+                                                                mobile_width: '300'
+                                                            },
+                                                            URL: URL
                                                         },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMEPRODUCTS,
-                                                    "name": PREFETCHHOMEPRODUCTS,
-                                                    "APP_ID": app_id
-                                                }
-                                            ];
-                                            _.forEach(reqArray, function (row) {
-                                                var record = new prefetchDataDB({
-                                                    "cache": 0,
-                                                    "req": row.req,
-                                                    "reqType": row.reqType,
-                                                    "name": row.name,
-                                                    "APP_ID": row.APP_ID
+                                                        "reqType": PREFETCHHOMEPRODUCTS,
+                                                        "name": PREFETCHHOMEPRODUCTS,
+                                                        "APP_ID": app_id
+                                                    }
+                                                ];
+                                                _.forEach(reqArray, function (row) {
+                                                    var record = new prefetchDataDB({
+                                                        "cache": 0,
+                                                        "req": row.req,
+                                                        "reqType": row.reqType,
+                                                        "name": row.name,
+                                                        "APP_ID": row.APP_ID
+                                                    });
+                                                    record.save(function (err) {
+                                                        if (err) {
+                                                            console.log('start list not saved. Line-126 File-/service/cronjs');
+                                                        } else {
+                                                            console.log('start list saved. Line-128 File-/service/cronjs');
+                                                        }
+                                                    });
                                                 });
-                                                record.save(function (err) {
+                                            }
+                                        });
+                                    } else {
+//                                        IF ALL APIS CACHE 1 PREFETCH STATUS UPDATED AS FINISHED
+                                        app_urls.update({
+                                            _id: selectId
+                                        }, {
+                                            $set: {
+                                                prefetch_status: 'FINISHED'
+                                            }
+                                        }, function (err) {
+                                            if (err) {
+                                                console.log('Error. Line-144 File-/service/cronjs' + err);
+                                            } else {
+                                                console.log('Prefetch Status FINISHED. Line-146 File-/service/cronjs');
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    if (user.prefetch_status == 'RUNNING') {
+//                            async eachOfLimit function
+                                        async.eachOfLimit(result, 3, processRecord, function (err) {
+                                            if (err) {
+                                                console.log('async eachOfLimt error. Line-155 File-/service/cronjs' + err);
+                                            } else {
+                                                console.log('async eachOfLimt function working.. Line-157 File-/service/cronjs');
+                                            }
+                                        });
+                                        function processRecord(item, key, callback) {
+                                            if (item.reqType == PREFETCHCATEGORYLIST) { //IF REQUEST TYPE CATEGORYLIST, UPDATED CACHE 1
+                                                prefetchDataDB.update({
+                                                    _id: item._id,
+                                                    cache: 0
+                                                }, {
+                                                    $set: {
+                                                        cache: 1
+                                                    }
+                                                }, function (err) {
                                                     if (err) {
-                                                        console.log('start list not saved. Line-126 File-/service/cronjs');
+                                                        conosle.log('Category List not updated. Line-171 File-/service/cronjs' + err);
+                                                        callback();
                                                     } else {
-                                                        console.log('start list saved. Line-128 File-/service/cronjs');
+                                                        console.log('fetchCategoryList function run. Line-174 File-/service/cronjs');
+//                                                        FUNCTION CALLED FOR GETTING CATEGORY LIST
+                                                        fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
+                                                            console.log('Category List end. Line-177 File-/service/cronjs');
+                                                            callback();
+                                                        });
                                                     }
                                                 });
-                                            });
-                                        }
-                                    });
-                                } else {
-//                                        IF ALL APIS CACHE 1 PREFETCH STATUS UPDATED AS FINISHED
-                                    app_urls.update({
-                                        _id: selectId
-                                    }, {
-                                        $set: {
-                                            prefetch_status: 'FINISHED'
-                                        }
-                                    }, function (err) {
-                                        if (err) {
-                                            console.log('Error. Line-144 File-/service/cronjs' + err);
-                                        } else {
-                                            console.log('Prefetch Status FINISHED. Line-146 File-/service/cronjs');
-                                        }
-                                    });
-                                }
-                            } else {
-                                if (user.prefetch_status == 'RUNNING') {
-//                            async eachOfLimit function
-                                    async.eachOfLimit(result, 3, processRecord, function (err) {
-                                        if (err) {
-                                            console.log('async eachOfLimt error. Line-155 File-/service/cronjs' + err);
-                                        } else {
-                                            console.log('async eachOfLimt function working.. Line-157 File-/service/cronjs');
-                                        }
-                                    });
-                                    function processRecord(item, key, callback) {
-                                        if (item.reqType == PREFETCHCATEGORYLIST) { //IF REQUEST TYPE CATEGORYLIST, UPDATED CACHE 1
-                                            prefetchDataDB.update({
-                                                _id: item._id,
-                                                cache: 0
-                                            }, {
-                                                $set: {
-                                                    cache: 1
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    conosle.log('Category List not updated. Line-171 File-/service/cronjs' + err);
-                                                    callback();
-                                                } else {
-                                                    console.log('fetchCategoryList function run. Line-174 File-/service/cronjs');
-//                                                        FUNCTION CALLED FOR GETTING CATEGORY LIST
-                                                    fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
-                                                        console.log('Category List end. Line-177 File-/service/cronjs');
+                                            } else if (item.reqType == PREFETCHHOMESLIDER) {        //IF REQUEST TYPE HOMESLIDER, UPDATED CACHE 1 
+                                                prefetchDataDB.update({
+                                                    _id: item._id,
+                                                    cache: 0
+                                                }, {
+                                                    $set: {
+                                                        cache: 1
+                                                    }
+                                                }, function (err) {
+                                                    if (err) {
+                                                        conosle.log('Home Slider not updated. Line-192 File-/service/cronjs' + err);
                                                         callback();
-                                                    });
-                                                }
-                                            });
-                                        } else if (item.reqType == PREFETCHHOMESLIDER) {        //IF REQUEST TYPE HOMESLIDER, UPDATED CACHE 1 
-                                            prefetchDataDB.update({
-                                                _id: item._id,
-                                                cache: 0
-                                            }, {
-                                                $set: {
-                                                    cache: 1
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    conosle.log('Home Slider not updated. Line-192 File-/service/cronjs' + err);
-                                                    callback();
-                                                } else {
-                                                    console.log('fetchHomeSliderList function run. Line-195 File-/service/cronjs');
+                                                    } else {
+                                                        console.log('fetchHomeSliderList function run. Line-195 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME SLIDER LIST 
-                                                    fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Home Slider end. Line-198 File-/service/cronjs');
+                                                        fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
+                                                            console.log('Home Slider end. Line-198 File-/service/cronjs');
+                                                            callback();
+                                                        });
+                                                    }
+                                                });
+                                            } else if (item.reqType == PREFETCHHOMEPRODUCTS) {      //IF REQUEST TYPE HOMEPRODUCTS, UPDATED CACHE 1
+                                                prefetchDataDB.update({
+                                                    _id: item._id,
+                                                    cache: 0
+                                                }, {
+                                                    $set: {
+                                                        cache: 1
+                                                    }
+                                                }, function (err) {
+                                                    if (err) {
+                                                        conosle.log('Home Products not updated. Line-213 File-/service/cronjs' + err);
                                                         callback();
-                                                    });
-                                                }
-                                            });
-                                        } else if (item.reqType == PREFETCHHOMEPRODUCTS) {      //IF REQUEST TYPE HOMEPRODUCTS, UPDATED CACHE 1
-                                            prefetchDataDB.update({
-                                                _id: item._id,
-                                                cache: 0
-                                            }, {
-                                                $set: {
-                                                    cache: 1
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    conosle.log('Home Products not updated. Line-213 File-/service/cronjs' + err);
-                                                    callback();
-                                                } else {
-                                                    console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
+                                                    } else {
+                                                        console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
-                                                    fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Home Products end. Line-219 File-/service/cronjs');
-                                                        callback();
-                                                    });
-                                                }
-                                            });
-                                        } else if (item.reqType == PREFETCHCATEGORY) {  //IF REQUEST TYPE CATEGORY
+                                                        fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
+                                                            console.log('Home Products end. Line-219 File-/service/cronjs');
+                                                            callback();
+                                                        });
+                                                    }
+                                                });
+                                            } else if (item.reqType == PREFETCHCATEGORY) {  //IF REQUEST TYPE CATEGORY
 //                                            prefetchDataDB.update({
 //                                                _id: item._id,
 //                                                cache: 0
@@ -234,43 +234,43 @@ processStore = function (app_id) {
 //                                                    conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
 //                                                    callback();
 //                                                } else {
-                                            console.log('fetchCategory function run. Line-237 File-/service/cronjs');
+                                                console.log('fetchCategory function run. Line-237 File-/service/cronjs');
 //                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
-                                            fetchCategory(item, prefetchDataDB, app_id, URL, function () {
-                                                console.log('Category end. Line-240 File-/service/cronjs');
-                                                callback();
-                                            });
+                                                fetchCategory(item, prefetchDataDB, app_id, URL, function () {
+                                                    console.log('Category end. Line-240 File-/service/cronjs');
+                                                    callback();
+                                                });
 //                                                }
 //                                            });
-                                        } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
-                                            prefetchDataDB.update({
-                                                _id: item._id,
-                                                cache: 0
-                                            }, {
-                                                $set: {
-                                                    cache: 1
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    conosle.log('Products not updated. Line-255 File-/service/cronjs' + err);
-                                                    callback();
-                                                } else {
-                                                    console.log('fetchProduct function run. Line-258 File-/service/cronjs');
-//                                                        FUNCTION CALLED FOR GETTING PRODUCT REVIEW
-                                                    fetchProduct(item, prefetchDataDB, app_id, URL, function () {
-                                                        console.log('Products end. Line-261 File-/service/cronjs');
+                                            } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
+                                                prefetchDataDB.update({
+                                                    _id: item._id,
+                                                    cache: 0
+                                                }, {
+                                                    $set: {
+                                                        cache: 1
+                                                    }
+                                                }, function (err) {
+                                                    if (err) {
+                                                        conosle.log('Products not updated. Line-255 File-/service/cronjs' + err);
                                                         callback();
-                                                    });
-                                                }
-                                            });
+                                                    } else {
+                                                        console.log('fetchProduct function run. Line-258 File-/service/cronjs');
+//                                                        FUNCTION CALLED FOR GETTING PRODUCT REVIEW
+                                                        fetchProduct(item, prefetchDataDB, app_id, URL, function () {
+                                                            console.log('Products end. Line-261 File-/service/cronjs');
+                                                            callback();
+                                                        });
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        });
-                    }
-                });
-//                }   //END IF CONDITION
+                            });
+                        }
+                    });
+                }   //END IF CONDITION
             }
         });
     }, null, true);

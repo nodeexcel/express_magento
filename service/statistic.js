@@ -9,12 +9,12 @@ Grid.mongo = mongoose.mongo;
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 //WHEN DATA COMES FROM REDIS
-setStatisticRedis = function (nameAPI, callback) {
+setStatisticRedis = function (nameAPI) {
     staticsticAPIDB.findOne({
         nameAPI: nameAPI
     }, function (error, row) {
         if (error) {
-            callback({status: 0, msg: error});
+            console.log('Error. Line-17, File-service/statisticjs' + error);
         } else if (row) {
 //          UPDATED RECORD AFTER FIRST TIME
             var totalAPI = row.totalAPI;
@@ -30,11 +30,9 @@ setStatisticRedis = function (nameAPI, callback) {
                 }
             }, function (err) {
                 if (!err) {
-                    console.log(nameAPI + ' Updated Done with cache 1. Line-31 File-/service/stitisticjs');
-                    callback({status: 1});
+                    console.log(nameAPI + ' Updated Done with cache 1. Line-33 File-/service/stitisticjs');
                 } else {
-                    console.log('Error. Line-34 File-/service/stitisticjs' + err);
-                    callback({status: 0, msg: err});
+                    console.log('Error. Line-35 File-/service/stitisticjs' + err);
                 }
             });
         } else {
@@ -47,9 +45,9 @@ setStatisticRedis = function (nameAPI, callback) {
             });
             record.save(function (err) {
                 if (err) {
-                    callback({status: 0, msg: err});
+                    console.log('Error. Line-48, File-service/statisticjs' + err);
                 } else {
-                    callback({status: 1});
+                    console.log('Record saved. Line-51, File-service/statisticjs');
                 }
             });
         }
@@ -57,12 +55,12 @@ setStatisticRedis = function (nameAPI, callback) {
 };
 
 //WHEN DATA COMES FROM MAGENTO API
-setStatisticMagento = function (nameAPI, callback) {
+setStatisticMagento = function (nameAPI) {
     staticsticAPIDB.findOne({
         nameAPI: nameAPI
     }, function (error, row) {
         if (error) {
-            callback({status: 0, msg: error});
+            console.log('Error. Line-63, File-service/statisticjs' + error);
         } else if (row) {
 //          UPDATED RECORD AFTER FIRST TIME
             var totalAPI = row.totalAPI;
@@ -78,11 +76,9 @@ setStatisticMagento = function (nameAPI, callback) {
                 }
             }, function (err) {
                 if (!err) {
-                    console.log(nameAPI + ' Updated Done with cache 1. Line-77 File-/service/stitisticjs');
-                    callback({status: 1});
+                    console.log(nameAPI + ' Updated Done with cache 1. Line-79 File-/service/stitisticjs');
                 } else {
-                    console.log('Error. Line-80 File-/service/stitisticjs' + err);
-                    callback({status: 0, msg: err});
+                    console.log('Error. Line-81 File-/service/stitisticjs' + err);
                 }
             });
         } else {
@@ -95,9 +91,9 @@ setStatisticMagento = function (nameAPI, callback) {
             });
             record.save(function (err) {
                 if (err) {
-                    callback({status: 0, msg: err});
+                    console.log('Error. Line-94, File-service/statisticjs' + err);
                 } else {
-                    callback({status: 1});
+                    console.log('Record Saved. Line-96, File-service/statisticjs');
                 }
             });
         }
