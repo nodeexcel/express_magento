@@ -51,7 +51,7 @@ categoryProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id + page, {
+                                        redisSet('category_' + body.id + body.page, {
                                             'id': body.id,
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
