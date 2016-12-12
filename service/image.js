@@ -49,7 +49,6 @@ resize = function (req, url, callback) {
                                         } else if (dimensions.height > 240) {
                                          var sharp_resize_height = 240;
                                         }
-                                        console.log(sharp_resize_height,sharp_resize_width)
                                         sharp('public/original_image/' + image_name)
                                                 .resize(sharp_resize_width,sharp_resize_height)
                                                 .toFile('public/' + filename + image_webp, function (err) {
