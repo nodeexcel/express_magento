@@ -5,16 +5,12 @@ require('./validate');
 require('./image');
 require('./request');
 require('./cache');
+require('./statistic');
 require('./responseMsg');
 require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
-var mongoose = require('mongoose');
-var conn = mongoose.connection;
-var Grid = require('gridfs-stream');
-Grid.mongo = mongoose.mongo;
-var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 //FOR GET PRODUCTS
 productGet = function (req, callback) {
@@ -31,47 +27,9 @@ productGet = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    staticsticAPIDB.findOne({
-                        nameAPI: 'productGet'
-                    }, function (error, row) {
-                        if (error) {
-                            callback({status: 1, msg: result.body});
-                        } else if (row) {
-                            var totalAPI = row.totalAPI;
-                            var redisAPI = row.redisAPI;
-                            var magentoAPI = row.magentoAPI;
-                            staticsticAPIDB.update({
-                                nameAPI: 'productGet'
-                            }, {
-                                $set: {
-                                    totalAPI: totalAPI + 1,
-                                    redisAPI: redisAPI + 1,
-                                    magentoAPI: magentoAPI
-                                }
-                            }, function (err) {
-                                if (!err) {
-                                    console.log('Home Slider Updated Done with cache 1. Line-53 File-/service/productjs');
-                                    callback({status: 1, msg: result.body});
-                                } else {
-                                    console.log('Error. Line-56 File-/service/productjs' + err);
-                                    callback({status: 1, msg: result.body});
-                                }
-                            });
-                        } else {
-                            var record = new staticsticAPIDB({
-                                nameAPI: 'productGet',
-                                totalAPI: 1,
-                                redisAPI: 1,
-                                magentoAPI: 0
-                            });
-                            record.save(function (err) {
-                                if (err) {
-                                    callback({status: 1, msg: result.body});
-                                } else {
-                                    callback({status: 1, msg: result.body});
-                                }
-                            });
-                        }
+//                    FOR SET VALUE OF STATISTIC(Product Get API), DATA IS COMING FROM REDIS
+                    setStatisticRedis('productGet', function () {
+                        callback({status: 1, msg: result.body});
                     });
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
@@ -92,47 +50,9 @@ productGet = function (req, callback) {
                                             'id': body.sku,
                                             "body": JSON.stringify(response)
                                         }, function () {
-                                            staticsticAPIDB.findOne({
-                                                nameAPI: 'productGet'
-                                            }, function (error, row) {
-                                                if (error) {
-                                                    callback({status: status, msg: response});
-                                                } else if (row) {
-                                                    var totalAPI = row.totalAPI;
-                                                    var redisAPI = row.redisAPI;
-                                                    var magentoAPI = row.magentoAPI;
-                                                    staticsticAPIDB.update({
-                                                        nameAPI: 'productGet'
-                                                    }, {
-                                                        $set: {
-                                                            totalAPI: totalAPI + 1,
-                                                            redisAPI: redisAPI,
-                                                            magentoAPI: magentoAPI + 1
-                                                        }
-                                                    }, function (err) {
-                                                        if (!err) {
-                                                            console.log('Home Products Updated Done with cache 1. Line-114 File-/service/productjs');
-                                                            callback({status: status, msg: response});
-                                                        } else {
-                                                            console.log('Error. Line-117 File-/service/productjs' + err);
-                                                            callback({status: status, msg: response});
-                                                        }
-                                                    });
-                                                } else {
-                                                    var record = new staticsticAPIDB({
-                                                        nameAPI: 'productGet',
-                                                        totalAPI: 1,
-                                                        redisAPI: 0,
-                                                        magentoAPI: 1
-                                                    });
-                                                    record.save(function (err) {
-                                                        if (err) {
-                                                            callback({status: status, msg: response});
-                                                        } else {
-                                                            callback({status: status, msg: response});
-                                                        }
-                                                    });
-                                                }
+//                                          FOR SET VALUE OF STATISTIC(Product Get API), DATA IS COMING FROM MAGENTO
+                                            setStatisticMagento('productGet', function () {
+                                                callback({status: status, msg: response});
                                             });
                                         });
                                     }
@@ -177,47 +97,9 @@ productReview = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    staticsticAPIDB.findOne({
-                        nameAPI: 'productReview'
-                    }, function (error, row) {
-                        if (error) {
-                            callback({status: 1, msg: result.body});
-                        } else if (row) {
-                            var totalAPI = row.totalAPI;
-                            var redisAPI = row.redisAPI;
-                            var magentoAPI = row.magentoAPI;
-                            staticsticAPIDB.update({
-                                nameAPI: 'productReview'
-                            }, {
-                                $set: {
-                                    totalAPI: totalAPI + 1,
-                                    redisAPI: redisAPI + 1,
-                                    magentoAPI: magentoAPI
-                                }
-                            }, function (err) {
-                                if (!err) {
-                                    console.log('Home Slider Updated Done with cache 1. Line-199 File-/service/productjs');
-                                    callback({status: 1, msg: result.body});
-                                } else {
-                                    console.log('Error. Line-202 File-/service/productjs' + err);
-                                    callback({status: 1, msg: result.body});
-                                }
-                            });
-                        } else {
-                            var record = new staticsticAPIDB({
-                                nameAPI: 'productReview',
-                                totalAPI: 1,
-                                redisAPI: 1,
-                                magentoAPI: 0
-                            });
-                            record.save(function (err) {
-                                if (err) {
-                                    callback({status: 1, msg: result.body});
-                                } else {
-                                    callback({status: 1, msg: result.body});
-                                }
-                            });
-                        }
+//                    FOR SET VALUE OF STATISTIC(Product Review API), DATA IS COMING FROM REDIS
+                    setStatisticRedis('productReview', function () {
+                        callback({status: 1, msg: result.body});
                     });
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
@@ -228,47 +110,9 @@ productReview = function (req, callback) {
                                 'id': body.sku,
                                 "body": JSON.stringify(response)
                             }, function () {
-                                staticsticAPIDB.findOne({
-                                    nameAPI: 'productReview'
-                                }, function (error, row) {
-                                    if (error) {
-                                        callback({status: status, msg: response});
-                                    } else if (row) {
-                                        var totalAPI = row.totalAPI;
-                                        var redisAPI = row.redisAPI;
-                                        var magentoAPI = row.magentoAPI;
-                                        staticsticAPIDB.update({
-                                            nameAPI: 'productReview'
-                                        }, {
-                                            $set: {
-                                                totalAPI: totalAPI + 1,
-                                                redisAPI: redisAPI,
-                                                magentoAPI: magentoAPI + 1
-                                            }
-                                        }, function (err) {
-                                            if (!err) {
-                                                console.log('Home Products Updated Done with cache 1. Line-250 File-/service/productjs');
-                                                callback({status: status, msg: response});
-                                            } else {
-                                                console.log('Error. Line-253 File-/service/productjs' + err);
-                                                callback({status: status, msg: response});
-                                            }
-                                        });
-                                    } else {
-                                        var record = new staticsticAPIDB({
-                                            nameAPI: 'productReview',
-                                            totalAPI: 1,
-                                            redisAPI: 0,
-                                            magentoAPI: 1
-                                        });
-                                        record.save(function (err) {
-                                            if (err) {
-                                                callback({status: status, msg: response});
-                                            } else {
-                                                callback({status: status, msg: response});
-                                            }
-                                        });
-                                    }
+//                                      FOR SET VALUE OF STATISTIC(Product Review API), DATA IS COMING FROM MAGENTO
+                                setStatisticMagento('productReview', function () {
+                                    callback({status: status, msg: response});
                                 });
                             });
                         }
@@ -290,47 +134,9 @@ productGetRating = function (req, callback) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
-                        staticsticAPIDB.findOne({
-                            nameAPI: 'productGetRating'
-                        }, function (error, row) {
-                            if (error) {
-                                callback({status: 1, msg: result.body});
-                            } else if (row) {
-                                var totalAPI = row.totalAPI;
-                                var redisAPI = row.redisAPI;
-                                var magentoAPI = row.magentoAPI;
-                                staticsticAPIDB.update({
-                                    nameAPI: 'productGetRating'
-                                }, {
-                                    $set: {
-                                        totalAPI: totalAPI + 1,
-                                        redisAPI: redisAPI + 1,
-                                        magentoAPI: magentoAPI
-                                    }
-                                }, function (err) {
-                                    if (!err) {
-                                        console.log('Home Slider Updated Done with cache 1. Line-312 File-/service/productjs');
-                                        callback({status: 1, msg: result.body});
-                                    } else {
-                                        console.log('Error. Line-315 File-/service/productjs' + err);
-                                        callback({status: 1, msg: result.body});
-                                    }
-                                });
-                            } else {
-                                var record = new staticsticAPIDB({
-                                    nameAPI: 'productGetRating',
-                                    totalAPI: 1,
-                                    redisAPI: 1,
-                                    magentoAPI: 0
-                                });
-                                record.save(function (err) {
-                                    if (err) {
-                                        callback({status: 1, msg: result.body});
-                                    } else {
-                                        callback({status: 1, msg: result.body});
-                                    }
-                                });
-                            }
+//                    FOR SET VALUE OF STATISTIC(Product Get Rating API), DATA IS COMING FROM REDIS
+                        setStatisticRedis('productGetRating', function () {
+                            callback({status: 1, msg: result.body});
                         });
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
@@ -340,47 +146,9 @@ productGetRating = function (req, callback) {
                                 redisSet('product_', {
                                     "body": JSON.stringify(response)
                                 }, function () {
-                                    staticsticAPIDB.findOne({
-                                        nameAPI: 'productGetRating'
-                                    }, function (error, row) {
-                                        if (error) {
-                                            callback({status: status, msg: response});
-                                        } else if (row) {
-                                            var totalAPI = row.totalAPI;
-                                            var redisAPI = row.redisAPI;
-                                            var magentoAPI = row.magentoAPI;
-                                            staticsticAPIDB.update({
-                                                nameAPI: 'productGetRating'
-                                            }, {
-                                                $set: {
-                                                    totalAPI: totalAPI + 1,
-                                                    redisAPI: redisAPI,
-                                                    magentoAPI: magentoAPI + 1
-                                                }
-                                            }, function (err) {
-                                                if (!err) {
-                                                    console.log('Home Products Updated Done with cache 1. Line-362 File-/service/productjs');
-                                                    callback({status: status, msg: response});
-                                                } else {
-                                                    console.log('Error. Line-365 File-/service/productjs' + err);
-                                                    callback({status: status, msg: response});
-                                                }
-                                            });
-                                        } else {
-                                            var record = new staticsticAPIDB({
-                                                nameAPI: 'productGetRating',
-                                                totalAPI: 1,
-                                                redisAPI: 0,
-                                                magentoAPI: 1
-                                            });
-                                            record.save(function (err) {
-                                                if (err) {
-                                                    callback({status: status, msg: response});
-                                                } else {
-                                                    callback({status: status, msg: response});
-                                                }
-                                            });
-                                        }
+//                                      FOR SET VALUE OF STATISTIC(Product Get Rating API), DATA IS COMING FROM MAGENTO
+                                    setStatisticMagento('productGetRating', function () {
+                                        callback({status: status, msg: response});
                                     });
                                 });
                             }
