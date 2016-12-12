@@ -3,6 +3,7 @@ imports('config/index');
 imports('config/constant');
 var request = require('request');
 
+//FIRE ANY MAGENTO API USING REQUEST(NODE MODULE)
 API = function (req, body, url, callback) {
     try {
         request({

@@ -19,8 +19,10 @@ router.post('/config', function (req, res) {
 });
 
 router.post('/getAllowedCountries', function (req, res) {
-    validate(req, {store_id: 'required',
-        secret: 'optional'}, null, function (body) {
+    validate(req, {
+        store_id: 'required',
+        secret: 'optional'
+    }, null, function (body) {
         API(req, body, '/web/getAllowedCountries', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);

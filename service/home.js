@@ -18,6 +18,7 @@ var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
+//FOR GET HOME PRODUCTS LIST
 homeProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -51,10 +52,10 @@ homeProducts = function (req, callback) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Home Products Updated Done with cache 1. Line-54 File-/service/homejs');
+                                    console.log('Home Products Updated Done with cache 1. Line-55 File-/service/homejs');
                                     callback({status: 1, msg: result.body});
                                 } else {
-                                    console.log('Error. Line-57 File-/service/homejs' + err);
+                                    console.log('Error. Line-58 File-/service/homejs' + err);
                                     callback({status: 1, msg: result.body});
                                 }
                             });
@@ -108,10 +109,10 @@ homeProducts = function (req, callback) {
                                                         }
                                                     }, function (err) {
                                                         if (!err) {
-                                                            console.log('Home Products Updated Done with cache 1. Line-111 File-/service/homejs');
+                                                            console.log('Home Products Updated Done with cache 1. Line-113 File-/service/homejs');
                                                             callback({status: status, msg: optmized_response});
                                                         } else {
-                                                            console.log('Error. Line-114 File-/service/homejs' + err);
+                                                            console.log('Error. Line-115 File-/service/homejs' + err);
                                                             callback({status: status, msg: optmized_response});
                                                         }
                                                     });
@@ -163,6 +164,7 @@ homeProducts = function (req, callback) {
     });
 };
 
+//FOR GET HOME CATEGORIES
 homeCategories = function (req, callback) {
     validate(req, {}, null, function (body) {
         if (body.status == 0) {
@@ -191,6 +193,7 @@ homeCategories = function (req, callback) {
     });
 };
 
+//FOR GET HOME SLIDER URL LIST
 homeSlider = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -222,10 +225,10 @@ homeSlider = function (req, callback) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Home Slider Updated Done with cache 1. Line-225 File-/service/homejs');
+                                    console.log('Home Slider Updated Done with cache 1. Line-228 File-/service/homejs');
                                     callback({status: 1, msg: result.body});
                                 } else {
-                                    console.log('Error. Line-228 File-/service/homejs' + err);
+                                    console.log('Error. Line-231 File-/service/homejs' + err);
                                     callback({status: 1, msg: result.body});
                                 }
                             });
@@ -282,10 +285,10 @@ homeSlider = function (req, callback) {
                                                     }
                                                 }, function (err) {
                                                     if (!err) {
-                                                        console.log('Home Slider Updated Done with cache 1. Line-285 File-/service/homejs');
+                                                        console.log('Home Slider Updated Done with cache 1. Line-288 File-/service/homejs');
                                                         callback({status: status, msg: optmized_response});
                                                     } else {
-                                                        console.log('Error. Line-288 File-/service/homejs' + err);
+                                                        console.log('Error. Line-291 File-/service/homejs' + err);
                                                         callback({status: status, msg: optmized_response});
                                                     }
                                                 });

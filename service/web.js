@@ -2,7 +2,7 @@ require('node-import');
 require('./validate');
 require('./request');
 
-
+//FOR GET WEB CONFIGUATION
 webConfig = function (req, callback) {
     validate(req, {
         secret: 'optional'

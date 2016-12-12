@@ -16,6 +16,7 @@ var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
+//FOR GET CATEGORY PRODUCTS
 categoryProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -180,6 +181,8 @@ categoryProducts = function (req, callback) {
         }
     });
 };
+
+//FOR GET CATEGORY LIST
 categoryList = function (req, callback) {
     validate(req, {
         countryid: 'optional',
@@ -226,10 +229,10 @@ categoryList = function (req, callback) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Category Updated Done with cache 1. Line-230 File-/service/categoryjs');
+                                    console.log('Category Updated Done with cache 1. Line-232 File-/service/categoryjs');
                                     callback({status: 1, msg: result.body});
                                 } else {
-                                    console.log('Error. Line-233 File-/service/categoryjs' + err);
+                                    console.log('Error. Line-235 File-/service/categoryjs' + err);
                                     callback({status: 1, msg: result.body});
                                 }
                             });
@@ -278,10 +281,10 @@ categoryList = function (req, callback) {
                                             }
                                         }, function (err) {
                                             if (!err) {
-                                                console.log('Category Updated Done with cache 1. Line-282 File-/service/categoryjs');
+                                                console.log('Category Updated Done with cache 1. Line-284 File-/service/categoryjs');
                                                 callback({status: 1, msg: response});
                                             } else {
-                                                console.log('Error. Line-285 File-/service/categoryjs' + err);
+                                                console.log('Error. Line-287 File-/service/categoryjs' + err);
                                                 callback({status: 1, msg: response});
                                             }
                                         });

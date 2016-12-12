@@ -16,6 +16,7 @@ var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
+//FOR GET PRODUCTS
 productGet = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -49,10 +50,10 @@ productGet = function (req, callback) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Home Slider Updated Done with cache 1. Line-52 File-/service/productjs');
+                                    console.log('Home Slider Updated Done with cache 1. Line-53 File-/service/productjs');
                                     callback({status: 1, msg: result.body});
                                 } else {
-                                    console.log('Error. Line-55 File-/service/productjs' + err);
+                                    console.log('Error. Line-56 File-/service/productjs' + err);
                                     callback({status: 1, msg: result.body});
                                 }
                             });
@@ -110,10 +111,10 @@ productGet = function (req, callback) {
                                                         }
                                                     }, function (err) {
                                                         if (!err) {
-                                                            console.log('Home Products Updated Done with cache 1. Line-113 File-/service/productjs');
+                                                            console.log('Home Products Updated Done with cache 1. Line-114 File-/service/productjs');
                                                             callback({status: status, msg: response});
                                                         } else {
-                                                            console.log('Error. Line-116 File-/service/productjs' + err);
+                                                            console.log('Error. Line-117 File-/service/productjs' + err);
                                                             callback({status: status, msg: response});
                                                         }
                                                     });
@@ -162,6 +163,7 @@ productGet = function (req, callback) {
     });
 };
 
+//FOR GET PRODUCT REVIEW
 productReview = function (req, callback) {
     validate(req, {
         sku: 'required',
@@ -194,10 +196,10 @@ productReview = function (req, callback) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Home Slider Updated Done with cache 1. Line-197 File-/service/productjs');
+                                    console.log('Home Slider Updated Done with cache 1. Line-199 File-/service/productjs');
                                     callback({status: 1, msg: result.body});
                                 } else {
-                                    console.log('Error. Line-200 File-/service/productjs' + err);
+                                    console.log('Error. Line-202 File-/service/productjs' + err);
                                     callback({status: 1, msg: result.body});
                                 }
                             });
@@ -245,10 +247,10 @@ productReview = function (req, callback) {
                                             }
                                         }, function (err) {
                                             if (!err) {
-                                                console.log('Home Products Updated Done with cache 1. Line-248 File-/service/productjs');
+                                                console.log('Home Products Updated Done with cache 1. Line-250 File-/service/productjs');
                                                 callback({status: status, msg: response});
                                             } else {
-                                                console.log('Error. Line-251 File-/service/productjs' + err);
+                                                console.log('Error. Line-253 File-/service/productjs' + err);
                                                 callback({status: status, msg: response});
                                             }
                                         });
@@ -277,6 +279,7 @@ productReview = function (req, callback) {
     });
 };
 
+//FOR GET PRODUCT RATING
 productGetRating = function (req, callback) {
     validate(req, {}, null, function (body) {
         if (body.status == 0) {
@@ -306,10 +309,10 @@ productGetRating = function (req, callback) {
                                     }
                                 }, function (err) {
                                     if (!err) {
-                                        console.log('Home Slider Updated Done with cache 1. Line-309 File-/service/productjs');
+                                        console.log('Home Slider Updated Done with cache 1. Line-312 File-/service/productjs');
                                         callback({status: 1, msg: result.body});
                                     } else {
-                                        console.log('Error. Line-312 File-/service/productjs' + err);
+                                        console.log('Error. Line-315 File-/service/productjs' + err);
                                         callback({status: 1, msg: result.body});
                                     }
                                 });
@@ -356,10 +359,10 @@ productGetRating = function (req, callback) {
                                                 }
                                             }, function (err) {
                                                 if (!err) {
-                                                    console.log('Home Products Updated Done with cache 1. Line-359 File-/service/productjs');
+                                                    console.log('Home Products Updated Done with cache 1. Line-362 File-/service/productjs');
                                                     callback({status: status, msg: response});
                                                 } else {
-                                                    console.log('Error. Line-362 File-/service/productjs' + err);
+                                                    console.log('Error. Line-365 File-/service/productjs' + err);
                                                     callback({status: status, msg: response});
                                                 }
                                             });

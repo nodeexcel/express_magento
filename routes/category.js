@@ -10,6 +10,7 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
+//ROUTE FOR GETTING CATEGORY PRODUCTS
 router.all('/products', function (req, res) {
     categoryProducts(req, function (body) {
         if (body.status == 0) {
@@ -20,6 +21,7 @@ router.all('/products', function (req, res) {
     });
 });
 
+//ROUTE FOR GETTING CATEGORY LIST
 router.all('/categorylist', function (req, res) {
     categoryList(req, function (body) {
         if (body.status == 0) {

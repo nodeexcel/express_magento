@@ -8,6 +8,7 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
+//ROUTE FOR ACCOUNT ADDRESS
 router.all('/address', isAuth, function (req, res) {
     validate(req, {firstname: 'optional',
         lastname: 'optional',
@@ -25,6 +26,7 @@ router.all('/address', isAuth, function (req, res) {
     });
 });
 
+//ROUTE FOR CHANGE PASSWORD
 router.post('/changepassword', isAuth, function (req, res) {
     validate(req, {firstname: 'optional',
         lastname: 'optional',

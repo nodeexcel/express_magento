@@ -1,15 +1,16 @@
 imports('config/index');
 imports('config/constant');
+require('./category');
+require('./home');
+require('./web');
 var CronJob = require('cron').CronJob;
 var moment = require('moment');
 var jstz = require('jstz');
 var timezone = jstz.determine().name();
 var _ = require('lodash');
 var async = require('async');
-require('./category');
-require('./home');
-require('./web');
 
+//FOR GETTING CATEGORY LIST
 fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
     var req = {
         headers: {
@@ -24,17 +25,17 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
     };
     categoryList(req, function (body) {
         if (body.status == 0) {
-            console.log('category list API failed. Line-27 File-/service/preFetchjs');
+            console.log('category list API failed. Line-28 File-/service/preFetchjs');
             cb();
         } else {
             var allData = body.msg.children[0].children;
             var allCategory = getAllCategory(allData);
             async.eachOfLimit(allCategory, 10, processCategoryList, function (err) {
                 if (err) {
-                    console.log('async eachOfLimt error. Line-34 File-/service/preFetchjs' + err);
+                    console.log('async eachOfLimt error. Line-35 File-/service/preFetchjs' + err);
                     cb();
                 } else {
-                    console.log('async eachOfLimt function working for Category List(Record Empty). Line-37 File-/service/preFetchjs');
+                    console.log('async eachOfLimt function working for Category List(Record Empty). Line-38 File-/service/preFetchjs');
                     cb();
                 }
             });
@@ -51,7 +52,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
                 });
                 allRecords.save(function (err) {
                     if (err) {
-                        console.log('category not saved. Line-54 File-/service/preFetchjs' + err);
+                        console.log('category not saved. Line-55 File-/service/preFetchjs' + err);
                         callback();
                     } else {
                         callback();
@@ -62,6 +63,7 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
     });
 };
 
+//FOR GETTING SLIDER LIST
 fetchHomeSliderList = function (prefetchDataDB, APP_ID, URL, cb) {
     var req = {
         headers: {
@@ -81,6 +83,7 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, URL, cb) {
     });
 };
 
+//FOR GETTING HOME PRODUCTS LIST
 fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
     var req = {
         headers: {
@@ -99,10 +102,10 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
             var reverseAllData = _.reverse(allData);
             async.eachOfLimit(reverseAllData, 10, processHomeProducts, function (err) {
                 if (err) {
-                    console.log('async eachOfLimt error. Line-102 File-/service/preFetchjs' + err);
+                    console.log('async eachOfLimt error. Line-105 File-/service/preFetchjs' + err);
                     cb();
                 } else {
-                    console.log('async eachOfLimt function working for Home Products. Line-105 File-/service/preFetchjs');
+                    console.log('async eachOfLimt function working for Home Products. Line-108 File-/service/preFetchjs');
                     cb();
                 }
             });
@@ -118,10 +121,10 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
                 });
                 allRecords.save(function (err) {
                     if (err) {
-                        console.log('Error. Line-121 File-/service/preFetchjs' + err);
+                        console.log('Error. Line-124 File-/service/preFetchjs' + err);
                         callback();
                     } else {
-                        console.log('home product saved. Line-124 File-/service/preFetchjs');
+                        console.log('home product saved. Line-127 File-/service/preFetchjs');
                         callback();
                     }
                 });
@@ -130,6 +133,7 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
     });
 };
 
+//FOR RUNNING WEB CONFIG
 fetchWebConfig = function (APP_ID, URL, cb) {
     var req = {
         headers: {
@@ -151,6 +155,7 @@ fetchWebConfig = function (APP_ID, URL, cb) {
 
 };
 
+//FOR GETTING ALL PRODUCTS
 fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var inputPage = item.page;
@@ -169,7 +174,7 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
     categoryProducts(myReq, function (body) {
         if (body.status == 0) {
             if (body.msg == NOTFOUND) {
-                console.log('Product is not found so category cache updated. Line-172 File-/service/preFetchjs');
+                console.log('Product is not found so category cache updated. Line-177 File-/service/preFetchjs');
                 prefetchDataDB.update({
                     'key': inputId,
                     'type': PREFETCHCATEGORY
@@ -179,15 +184,15 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                     }
                 }, function (err) {
                     if (!err) {
-                        console.log('Category Updated Done with cache 1. Line-182 File-/service/preFetchjs');
+                        console.log('Category Updated Done with cache 1. Line-187 File-/service/preFetchjs');
                         cb();
                     } else {
-                        console.log('Error. Line-185 File-/service/preFetchjs' + err);
+                        console.log('Error. Line-190 File-/service/preFetchjs' + err);
                         cb();
                     }
                 });
             } else {
-                console.log('category products not found. Line-190 File-/service/preFetchjs');
+                console.log('category products not found. Line-195 File-/service/preFetchjs');
                 cb();
             }
         } else {
@@ -195,10 +200,10 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
             if (allData.length > 0) {
                 async.eachOfLimit(allData, 10, processCategoryProducts, function (err) {
                     if (err) {
-                        console.log('async eachOfLimt error. Line-198 File-/service/preFetchjs' + err);
+                        console.log('async eachOfLimt error. Line-203 File-/service/preFetchjs' + err);
                         cb();
                     } else {
-                        console.log('async eachOfLimt function working for Category Products. Line-201 File-/service/preFetchjs');
+                        console.log('async eachOfLimt function working for Category Products. Line-206 File-/service/preFetchjs');
 //                        cb();
                     }
                 });
@@ -216,7 +221,7 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                     });
                     allRecords.save(function (err) {
                         if (err) {
-                            console.log('product not saved. Line-219 File-/service/preFetchjs' + err);
+                            console.log('product not saved. Line-224 File-/service/preFetchjs' + err);
                         } else {
                             var page = inputPage;
                             var myPage = (page * 1) + 1;
@@ -229,10 +234,10 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                                 }
                             }, function (err) {
                                 if (!err) {
-                                    console.log('Page No. Update Done. Line-232 File-/service/preFetchjs' + myPage);
+                                    console.log('Page No. Update Done. Line-237 File-/service/preFetchjs' + myPage);
                                     callback();
                                 } else {
-                                    console.log('Error. Line-235 File-/service/preFetchjs' + err);
+                                    console.log('Error. Line-240 File-/service/preFetchjs' + err);
                                     callback();
                                 }
                             });
@@ -244,6 +249,7 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
     });
 };
 
+//FOR GETTING PRODUCT REVIEW
 fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var myReq = {
@@ -258,10 +264,10 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
     };
     productGet(myReq, function (body) {
         if (body.status == 0) {
-            console.log('product get not found. Line-261 File-/service/preFetchjs');
+            console.log('product get not found. Line-267 File-/service/preFetchjs');
             cb();
         } else {
-            console.log('Product Get Done. Line-264 File-/service/preFetchjs');
+            console.log('Product Get Done. Line-270 File-/service/preFetchjs');
             var productReq = {
                 headers: {
                     app_id: APP_ID
@@ -274,7 +280,7 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
             };
             productReview(productReq, function (productBody) {
                 if (productBody.status == 0) {
-                    console.log('product review not found. Line-277 File-/service/preFetchjs');
+                    console.log('product review not found. Line-283 File-/service/preFetchjs');
                     cb();
                 } else {
                     prefetchDataDB.update({
@@ -285,10 +291,10 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
                         }
                     }, function (err) {
                         if (!err) {
-                            console.log('Product Review get done, update cache 1. Line-288 File-/service/preFetchjs');
+                            console.log('Product Review get done, update cache 1. Line-294 File-/service/preFetchjs');
                             cb();
                         } else {
-                            console.log('Product Review not done. Line-291 File-/service/preFetchjs' + err);
+                            console.log('Product Review not done. Line-297 File-/service/preFetchjs' + err);
                             cb();
                         }
                     });
@@ -298,6 +304,7 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
     });
 };
 
+//RECURSIVE FUNCTION FOR GET SUBCATEGORY OF ALL CATEGORY
 var arrayCategory = [];
 getAllCategory = function (x) {
     if (x) {
