@@ -274,7 +274,8 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
                 },
                 body: {
                     sku: inputId,
-                    mobile_width: '300'
+                    mobile_width: '300',
+                    pageno: '1'
                 },
                 URL: URL
             };

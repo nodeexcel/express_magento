@@ -41,7 +41,7 @@ categoryProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_' + body.id, 'categoryProducts', function (result) {
+            redisFetch(req, 'categoryProducts_' + body.id + '_' + body.page, 'categoryProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -58,7 +58,7 @@ categoryProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id, {
+                                        redisSet('categoryProducts_' + body.id + '_' + body.page, {
                                             'id': body.id,
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
@@ -120,7 +120,7 @@ categoryList = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_' + body.parent_id, 'categoryList', function (result) {
+            redisFetch(req, 'categoryList_' + body.parent_id, 'categoryList', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -130,7 +130,7 @@ categoryList = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('category_' + body.parent_id, {
+                            redisSet('categoryList_' + body.parent_id, {
                                 'id': body.parent_id,
                                 "body": JSON.stringify(response),
                                 "type": body.type

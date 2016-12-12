@@ -25,7 +25,7 @@ homeProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'products_' + body.type, 'homeProducts', function (result) {
+            redisFetch(req, 'homeProducts_' + body.type, 'homeProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -41,7 +41,7 @@ homeProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('products_' + body.type, {
+                                        redisSet('homeProducts_' + body.type, {
                                             "body": JSON.stringify(response),
                                             "type": body.type
                                         }, function () {
@@ -84,7 +84,7 @@ homeCategories = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categories', null, function (result) {
+            redisFetch(req, 'homeCategories', null, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -94,7 +94,7 @@ homeCategories = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('categories', {
+                            redisSet('homeCategories', {
                                 "body": JSON.stringify(response)
                             }, function () {
                                 callback({status: status, msg: response});
@@ -116,7 +116,7 @@ homeSlider = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'slider', 'homeSlider', function (result) {
+            redisFetch(req, 'homeSlider', 'homeSlider', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -133,7 +133,7 @@ homeSlider = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: "OOPS! How is this possible?"});
                                     } else {
-                                        client.hmset('slider', {
+                                        client.hmset('homeSlider', {
                                             "body": JSON.stringify(response),
                                             "status": 1,
                                             "statuscode": msg
