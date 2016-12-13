@@ -32,6 +32,6 @@ staticsticAPI = new Schema({
     redisAPI: Number,
     magentoAPI: Number,
     APP_ID: String,
-    current_time: String,
-    cron: Number
+    current_date: String,
+    prefetch_status: Number
 });
