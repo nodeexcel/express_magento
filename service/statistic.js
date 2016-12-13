@@ -6,10 +6,13 @@ var mongoose = require('mongoose');
 var conn = mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
+var moment = require('moment');
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 //WHEN DATA COMES FROM REDIS
-setStatisticRedis = function (nameAPI) {
+setStatisticRedis = function (nameAPI, req) {
+    var APP_ID = req.headers.app_id;
+    var current_time = moment().format();
     staticsticAPIDB.findOne({
         nameAPI: nameAPI
     }, function (error, row) {
@@ -41,7 +44,9 @@ setStatisticRedis = function (nameAPI) {
                 nameAPI: nameAPI,
                 totalAPI: 1,
                 redisAPI: 1,
-                magentoAPI: 0
+                magentoAPI: 0,
+                APP_ID: APP_ID,
+                current_time: current_time
             });
             record.save(function (err) {
                 if (err) {
@@ -55,9 +60,18 @@ setStatisticRedis = function (nameAPI) {
 };
 
 //WHEN DATA COMES FROM MAGENTO API
-setStatisticMagento = function (nameAPI) {
+setStatisticMagento = function (nameAPI, req) {
+    var APP_ID = req.headers.app_id;
+    var current_time = moment().format();
+    if (req.isAdmin == true) {
+        cron = 1;
+    } else {
+        cron = 0;
+    }
+
     staticsticAPIDB.findOne({
-        nameAPI: nameAPI
+        nameAPI: nameAPI,
+        APP_ID: APP_ID
     }, function (error, row) {
         if (error) {
             console.log('Error. Line-63, File-service/statisticjs' + error);
@@ -72,7 +86,8 @@ setStatisticMagento = function (nameAPI) {
                 $set: {
                     totalAPI: totalAPI + 1,
                     redisAPI: redisAPI,
-                    magentoAPI: magentoAPI + 1
+                    magentoAPI: magentoAPI + 1,
+                    cron: cron + 1
                 }
             }, function (err) {
                 if (!err) {
@@ -87,7 +102,10 @@ setStatisticMagento = function (nameAPI) {
                 nameAPI: nameAPI,
                 totalAPI: 1,
                 redisAPI: 0,
-                magentoAPI: 1
+                magentoAPI: 1,
+                cron: 1,
+                APP_ID: APP_ID,
+                current_time: current_time
             });
             record.save(function (err) {
                 if (err) {
