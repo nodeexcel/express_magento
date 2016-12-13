@@ -177,7 +177,8 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                 console.log('Product is not found so category cache updated. Line-177 File-/service/preFetchjs');
                 prefetchDataDB.update({
                     'key': inputId,
-                    'type': PREFETCHCATEGORY
+                    'type': PREFETCHCATEGORY,
+                    APP_ID: APP_ID
                 }, {
                     $set: {
                         cache: 1
@@ -227,7 +228,8 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                             var myPage = (page * 1) + 1;
                             prefetchDataDB.update({
                                 'key': inputId,
-                                'type': PREFETCHCATEGORY
+                                'type': PREFETCHCATEGORY,
+                                'APP_ID': APP_ID
                             }, {
                                 $set: {
                                     page: myPage
@@ -285,7 +287,9 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
                     cb();
                 } else {
                     prefetchDataDB.update({
-                        'key': inputId
+                        'key': inputId,
+                        'type': PREFETCHPRODUCT,
+                        'APP_ID': APP_ID
                     }, {
                         $set: {
                             cache: 1
