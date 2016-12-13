@@ -20,6 +20,8 @@ Grid.mongo = mongoose.mongo;
 
 var app_urls = conn.model('AppUrls', app_url_schema);
 var prefetchDataDB = conn.model('prefetchData', prefetchData);
+var categoriesDB = conn.model('categories', categories);
+var productsDB = conn.model('products', products);
 
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
@@ -173,7 +175,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchCategoryList function run. Line-173 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING CATEGORY LIST
-                                                    fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
+                                                    fetchCategoryList(prefetchDataDB, categoriesDB, app_id, URL, respond.msg.store_id, function () {
                                                         console.log('Category List end. Line-176 File-/service/cronjs');
                                                         callback();
                                                     });
@@ -217,7 +219,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
-                                                    fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
+                                                    fetchhomeProductList(prefetchDataDB, productsDB, app_id, URL, function () {
                                                         console.log('Home Products end. Line-219 File-/service/cronjs');
                                                         callback();
                                                     });
@@ -238,7 +240,7 @@ processStore = function (app_id) {
 //                                                } else {
                                             console.log('fetchCategory function run. Line-237 File-/service/cronjs');
 //                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
-                                            fetchCategory(item, prefetchDataDB, app_id, URL, function () {
+                                            fetchCategory(item, prefetchDataDB, productsDB, app_id, URL, function () {
                                                 console.log('Category end. Line-240 File-/service/cronjs');
                                                 callback();
                                             });

@@ -11,7 +11,7 @@ var _ = require('lodash');
 var async = require('async');
 
 //FOR GETTING CATEGORY LIST
-fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
+fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId, cb) {
     var req = {
         headers: {
             app_id: APP_ID
@@ -55,7 +55,31 @@ fetchCategoryList = function (prefetchDataDB, APP_ID, URL, storeId, cb) {
                         console.log('category not saved. Line-55 File-/service/preFetchjs' + err);
                         callback();
                     } else {
-                        callback();
+                        categoriesDB.find({
+                            "categoryId": item.id,
+                            "categoryName": item.name,
+                            "APP_ID": APP_ID
+                        }, function (error, result) {
+                            if (error) {
+                                console.log('category not saved. Line-66 File-/service/preFetchjs' + error);
+                                callback();
+                            } else if (!result || result.length == 0) {
+                                var categoryRecord = new categoriesDB({
+                                    "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
+                                    "categoryId": item.id,
+                                    "categoryName": item.name,
+                                    "APP_ID": APP_ID
+                                });
+                                categoryRecord.save(function (errorCat) {
+                                    if (errorCat) {
+                                        console.log('category not saved. Line-66 File-/service/preFetchjs' + errorCat);
+                                        callback();
+                                    } else {
+                                        callback();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -84,7 +108,7 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, URL, cb) {
 };
 
 //FOR GETTING HOME PRODUCTS LIST
-fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
+fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
     var req = {
         headers: {
             app_id: APP_ID
@@ -124,8 +148,35 @@ fetchhomeProductList = function (prefetchDataDB, APP_ID, URL, cb) {
                         console.log('Error. Line-124 File-/service/preFetchjs' + err);
                         callback();
                     } else {
-                        console.log('home product saved. Line-127 File-/service/preFetchjs');
-                        callback();
+//                        console.log('home product saved. Line-127 File-/service/preFetchjs');
+//                        callback();
+                        productsDB.find({
+                            "sku": item.data.sku,
+                            "name": item.data.name,
+                            "APP_ID": APP_ID
+                        }, function (error, result) {
+                            if (error) {
+                                console.log('category not saved. Line-66 File-/service/preFetchjs' + error);
+                                callback();
+                            } else if (!result || result.length == 0) {
+                                var productRecord = new productsDB({
+                                    "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
+                                    "sku": item.data.sku,
+                                    "name": item.data.name,
+                                    "json": item.data,
+                                    "APP_ID": APP_ID,
+                                    "price": parseInt(item.data.price)
+                                });
+                                productRecord.save(function (errorPro) {
+                                    if (errorPro) {
+                                        console.log('category not saved. Line-66 File-/service/preFetchjs' + errorPro);
+                                        callback();
+                                    } else {
+                                        callback();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -156,7 +207,7 @@ fetchWebConfig = function (APP_ID, URL, cb) {
 };
 
 //FOR GETTING ALL PRODUCTS
-fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
+fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var inputPage = item.page;
     var myReq = {
@@ -224,25 +275,71 @@ fetchCategory = function (item, prefetchDataDB, APP_ID, URL, cb) {
                         if (err) {
                             console.log('product not saved. Line-224 File-/service/preFetchjs' + err);
                         } else {
-                            var page = inputPage;
-                            var myPage = (page * 1) + 1;
-                            prefetchDataDB.update({
-                                'key': inputId,
-                                'type': PREFETCHCATEGORY,
-                                'APP_ID': APP_ID
-                            }, {
-                                $set: {
-                                    page: myPage
-                                }
-                            }, function (err) {
-                                if (!err) {
-                                    console.log('Page No. Update Done. Line-237 File-/service/preFetchjs' + myPage);
+                            productsDB.find({
+                                "sku": row.sku,
+                                "name": row.name,
+                                "APP_ID": APP_ID
+                            }, function (error, result) {
+                                if (error) {
+                                    console.log('category not saved. Line-66 File-/service/preFetchjs' + error);
                                     callback();
-                                } else {
-                                    console.log('Error. Line-240 File-/service/preFetchjs' + err);
-                                    callback();
+                                } else if (!result || result.length == 0) {
+                                    var productRecord = new productsDB({
+                                        "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
+                                        "sku": row.sku,
+                                        "name": row.name,
+                                        "json": row,
+                                        "APP_ID": APP_ID,
+                                        "price": parseInt(row.price)
+                                    });
+                                    productRecord.save(function (errorPro) {
+                                        if (errorPro) {
+                                            console.log('category not saved. Line-66 File-/service/preFetchjs' + errorPro);
+                                            callback();
+                                        } else {
+                                            var page = inputPage;
+                                            var myPage = (page * 1) + 1;
+                                            prefetchDataDB.update({
+                                                'key': inputId,
+                                                'type': PREFETCHCATEGORY,
+                                                'APP_ID': APP_ID
+                                            }, {
+                                                $set: {
+                                                    page: myPage
+                                                }
+                                            }, function (err) {
+                                                if (!err) {
+                                                    console.log('Page No. Update Done. Line-237 File-/service/preFetchjs' + myPage);
+                                                    callback();
+                                                } else {
+                                                    console.log('Error. Line-240 File-/service/preFetchjs' + err);
+                                                    callback();
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             });
+
+//                            var page = inputPage;
+//                            var myPage = (page * 1) + 1;
+//                            prefetchDataDB.update({
+//                                'key': inputId,
+//                                'type': PREFETCHCATEGORY,
+//                                'APP_ID': APP_ID
+//                            }, {
+//                                $set: {
+//                                    page: myPage
+//                                }
+//                            }, function (err) {
+//                                if (!err) {
+//                                    console.log('Page No. Update Done. Line-237 File-/service/preFetchjs' + myPage);
+//                                    callback();
+//                                } else {
+//                                    console.log('Error. Line-240 File-/service/preFetchjs' + err);
+//                                    callback();
+//                                }
+//                            });
                         }
                     });
                 }

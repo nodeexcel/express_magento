@@ -32,3 +32,21 @@ staticsticAPI = new Schema({
     redisAPI: Number,
     magentoAPI: Number
 });
+
+//SCHEMA FOR CATEGORIES DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+categories = new Schema({
+    "date": String,
+    "categoryId": String,
+    "categoryName": String,
+    "APP_ID": String
+});
+
+//SCHEMA FOR PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+products = new Schema({
+    "date": String,
+    "sku": String,
+    "name": String,
+    "json": Array,
+    "APP_ID": String,
+    "price": Number
+});
