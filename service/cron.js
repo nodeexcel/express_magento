@@ -160,7 +160,8 @@ processStore = function (app_id) {
                                         if (item.reqType == PREFETCHCATEGORYLIST) { //IF REQUEST TYPE CATEGORYLIST, UPDATED CACHE 1
                                             prefetchDataDB.update({
                                                 _id: item._id,
-                                                cache: 0
+                                                cache: 0,
+                                                APP_ID: app_id
                                             }, {
                                                 $set: {
                                                     cache: 1
@@ -181,7 +182,8 @@ processStore = function (app_id) {
                                         } else if (item.reqType == PREFETCHHOMESLIDER) {        //IF REQUEST TYPE HOMESLIDER, UPDATED CACHE 1 
                                             prefetchDataDB.update({
                                                 _id: item._id,
-                                                cache: 0
+                                                cache: 0,
+                                                APP_ID: app_id
                                             }, {
                                                 $set: {
                                                     cache: 1
@@ -202,13 +204,13 @@ processStore = function (app_id) {
                                         } else if (item.reqType == PREFETCHHOMEPRODUCTS) {      //IF REQUEST TYPE HOMEPRODUCTS, UPDATED CACHE 1
                                             prefetchDataDB.update({
                                                 _id: item._id,
-                                                cache: 0
+                                                cache: 0,
+                                                APP_ID: app_id
                                             }, {
                                                 $set: {
                                                     cache: 1
                                                 }
                                             }, function (err) {
-
                                                 if (err) {
                                                     conosle.log('Home Products not updated. Line-213 File-/service/cronjs' + err);
                                                     callback();
@@ -245,7 +247,8 @@ processStore = function (app_id) {
                                         } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
                                             prefetchDataDB.update({
                                                 _id: item._id,
-                                                cache: 0
+                                                cache: 0,
+                                                APP_ID: app_id
                                             }, {
                                                 $set: {
                                                     cache: 1
