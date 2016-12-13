@@ -149,28 +149,30 @@ processStore = function (app_id) {
                                 } else {
                                     if (user.prefetch_status == 'RUNNING') {
 //                            async eachOfLimit function
-                                        async.eachOfLimit(result, 3, processRecord, function (err) {
-                                            if (err) {
-                                                console.log('async eachOfLimt error. Line-154 File-/service/cronjs' + err);
-                                            } else {
-                                                console.log('async eachOfLimt function working.. Line-156 File-/service/cronjs');
-                                            }
-                                        });
-                                        function processRecord(item, key, callback) {
-                                            if (item.reqType == PREFETCHCATEGORYLIST) { //IF REQUEST TYPE CATEGORYLIST, UPDATED CACHE 1
-                                                prefetchDataDB.update({
-                                                    _id: item._id,
-                                                    cache: 0
-                                                }, {
-                                                    $set: {
-                                                        cache: 1
-                                                    }
-                                                }, function (err) {
-                                                    if (err) {
-                                                        conosle.log('Category List not updated. Line-170 File-/service/cronjs' + err);
-                                                        callback();
-                                                    } else {
-                                                        console.log('fetchCategoryList function run. Line-173 File-/service/cronjs');
+
+                                    async.eachOfLimit(result, 3, processRecord, function (err) {
+                                        if (err) {
+                                            console.log('async eachOfLimt error. Line-154 File-/service/cronjs' + err);
+                                        } else {
+                                            console.log('async eachOfLimt function working.. Line-156 File-/service/cronjs');
+                                        }
+                                    });
+                                    function processRecord(item, key, callback) {
+                                        if (item.reqType == PREFETCHCATEGORYLIST) { //IF REQUEST TYPE CATEGORYLIST, UPDATED CACHE 1
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0,
+                                                APP_ID: app_id
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Category List not updated. Line-170 File-/service/cronjs' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchCategoryList function run. Line-173 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING CATEGORY LIST
                                                         fetchCategoryList(prefetchDataDB, app_id, URL, respond.msg.store_id, function () {
                                                             console.log('Category List end. Line-176 File-/service/cronjs');
@@ -190,27 +192,49 @@ processStore = function (app_id) {
                                                     if (err) {
                                                         console.log('Home Slider not updated. Line-191 File-/service/cronjs' + err);
                                                         callback();
-                                                    } else {
-                                                        console.log('fetchHomeSliderList function run. Line-194 File-/service/cronjs');
+                                                    });
+                                                }
+                                            });
+                                        } else if (item.reqType == PREFETCHHOMESLIDER) {        //IF REQUEST TYPE HOMESLIDER, UPDATED CACHE 1 
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0,
+                                                APP_ID: app_id
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    console.log('Home Slider not updated. Line-191 File-/service/cronjs' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchHomeSliderList function run. Line-194 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME SLIDER LIST 
-                                                        fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
-                                                            console.log('Home Slider end. Line-197 File-/service/cronjs');
-                                                            callback();
-                                                        });
-                                                    }
-                                                });
-                                            } else if (item.reqType == PREFETCHHOMEPRODUCTS) {      //IF REQUEST TYPE HOMEPRODUCTS, UPDATED CACHE 1
-                                                prefetchDataDB.update({
-                                                    _id: item._id,
-                                                    cache: 0
-                                                }, {
-                                                    $set: {
-                                                        cache: 1
-                                                    }
-                                                }, function (err) {
-
-                                                    if (err) {
-                                                        conosle.log('Home Products not updated. Line-213 File-/service/cronjs' + err);
+                                                    fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
+                                                        console.log('Home Slider end. Line-197 File-/service/cronjs');
+                                                        callback();
+                                                    });
+                                                }
+                                            });
+                                        } else if (item.reqType == PREFETCHHOMEPRODUCTS) {      //IF REQUEST TYPE HOMEPRODUCTS, UPDATED CACHE 1
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0,
+                                                APP_ID: app_id
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Home Products not updated. Line-213 File-/service/cronjs' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
+//                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
+                                                    fetchhomeProductList(prefetchDataDB, app_id, URL, function () {
+                                                        console.log('Home Products end. Line-219 File-/service/cronjs');
                                                         callback();
                                                     } else {
                                                         console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
@@ -242,17 +266,24 @@ processStore = function (app_id) {
                                                 });
 //                                                }
 //                                            });
-                                            } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
-                                                prefetchDataDB.update({
-                                                    _id: item._id,
-                                                    cache: 0
-                                                }, {
-                                                    $set: {
-                                                        cache: 1
-                                                    }
-                                                }, function (err) {
-                                                    if (err) {
-                                                        conosle.log('Products not updated. Line-255 File-/service/cronjs' + err);
+                                        } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
+                                            prefetchDataDB.update({
+                                                _id: item._id,
+                                                cache: 0,
+                                                APP_ID: app_id
+                                            }, {
+                                                $set: {
+                                                    cache: 1
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    conosle.log('Products not updated. Line-255 File-/service/cronjs' + err);
+                                                    callback();
+                                                } else {
+                                                    console.log('fetchProduct function run. Line-258 File-/service/cronjs');
+//                                                        FUNCTION CALLED FOR GETTING PRODUCT REVIEW
+                                                    fetchProduct(item, prefetchDataDB, app_id, URL, function () {
+                                                        console.log('Products end. Line-261 File-/service/cronjs');
                                                         callback();
                                                     } else {
                                                         console.log('fetchProduct function run. Line-258 File-/service/cronjs');
