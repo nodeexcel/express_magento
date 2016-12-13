@@ -13,6 +13,11 @@ var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 setStatisticRedis = function (nameAPI, req) {
     var APP_ID = req.headers.app_id;
     var current_time = moment().format();
+     if (req.isAdmin == true) {
+        cron = 1;
+    } else {
+        cron = 0;
+    }
     staticsticAPIDB.findOne({
         nameAPI: nameAPI
     }, function (error, row) {
@@ -29,7 +34,8 @@ setStatisticRedis = function (nameAPI, req) {
                 $set: {
                     totalAPI: totalAPI + 1,
                     redisAPI: redisAPI + 1,
-                    magentoAPI: magentoAPI
+                    magentoAPI: magentoAPI,
+                    cron: cron + 1
                 }
             }, function (err) {
                 if (!err) {
@@ -46,7 +52,8 @@ setStatisticRedis = function (nameAPI, req) {
                 redisAPI: 1,
                 magentoAPI: 0,
                 APP_ID: APP_ID,
-                current_time: current_time
+                current_time: current_time,
+                cron:1
             });
             record.save(function (err) {
                 if (err) {
