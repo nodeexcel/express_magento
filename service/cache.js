@@ -14,11 +14,11 @@ redisFetch = function (req, productType, APIName, callback) {
             } else {
                 if (object && status == "enabled") {
 //                    FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM REDIS
-                    setStatisticRedis(APIName);
+                    setStatisticRedis(APIName, req);
                     callback({status: 1, body: object});
                 } else {
 //                      FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM MAGENTO
-                    setStatisticMagento(APIName);
+                    setStatisticMagento(APIName, req);
                     callback({status: 2});
                 }
             }

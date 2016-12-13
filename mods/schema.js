@@ -30,5 +30,8 @@ staticsticAPI = new Schema({
     nameAPI: String,
     totalAPI: Number,
     redisAPI: Number,
-    magentoAPI: Number
+    magentoAPI: Number,
+    APP_ID: String,
+    current_date: String,
+    prefetch_status: Number
 });
