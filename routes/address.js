@@ -8,6 +8,7 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
+//ROUTE FOR EDIT CUSTOMER INFORMATION
 router.post('/edit', isAuth, function (req, res) {
     validate(req, {countryid: 'required',
         zip: 'required',
@@ -32,6 +33,7 @@ router.post('/edit', isAuth, function (req, res) {
     });
 });
 
+//ROUTE FOR DELETE CUSTOMER ADDRESS
 router.post('/delete', isAuth, function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',

@@ -14,6 +14,7 @@ var mkdirp = require('mkdirp');
 var sizeOf = require('image-size');
 var path = require('path');
 
+//FOR RESIZE IMAGE
 resize = function (req, url, callback) {
     var APP_ID = req.headers.app_id;
     if (url && APP_ID) {
@@ -29,7 +30,7 @@ resize = function (req, url, callback) {
         if (image_name_without_extension == '') {
             callback(200, config.DEFAULT_IMAGE_URL);
         } else {
-            // if (fileExists('public/original_image/' + image_name) == false && req.isAdmin == true) {
+            if (fileExists('public/original_image/' + image_name) == false && req.isAdmin == true) {
                 var file = fs.createWriteStream("public/original_image/" + image_name);
                 http.get(url, function (response) {
                     mkdirp('public/' + filename, function (err) {
@@ -68,27 +69,28 @@ resize = function (req, url, callback) {
                                         callback(200, config.CDN_URL + 'public/original_image/' + image_name);
                                     }
                                 } else {
-                                    callback(500, config.DEFAULT_IMAGE_URL);
+                                    callback(500, url);
                                 }
                             });
                         });
                     } else {
-                        callback(200, config.DEFAULT_IMAGE_URL);
+                        callback(200, url);
                     }
                 });
-            // } else {
-            //     if (fileExists('public/original_image/' + image_name) == false) {
-            //         callback(200, url)
-            //     } else {
-            //         callback(200, config.CDN_URL + filename + image_png);
-            //     }
-            // }
+            } else {
+                if (fileExists('public/original_image/' + image_name) == false) {
+                    callback(200, url)
+                } else {
+                    callback(200, config.CDN_URL + filename + image_png);
+                }
+            }
         }
     } else {
         callback(500, config.DEFAULT_IMAGE_URL);
     }
 };
 
+//FOR MINIFY IMAGE
 minify = function (req, url, callback) {
     var APP_ID = req.headers.app_id;
     if (url && APP_ID) {

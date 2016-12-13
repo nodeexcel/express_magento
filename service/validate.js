@@ -1,6 +1,7 @@
-var _underscore = require('underscore');
+var _underscore = require('underscore');    //UNDERSCOREJS FUNCTIONS USED
 require('./responseMsg');
 
+//FOR CHECK ALL REQUIRED PARAMETER AVAILABLE OR NOT
 validate = function (req, schema, secret, callback) {
     var result = {};
     var allkeys = _underscore.keys(schema);

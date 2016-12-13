@@ -1,17 +1,20 @@
+imports('config/index');
+imports('config/constant');
 require('node-import');
 require('./validate');
 require('./image');
 require('./request');
 require('./cache');
+require('./statistic');
 require('./responseMsg');
-imports('config/index');
-imports('config/constant');
+require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
 var redis = require("redis"),
         client = redis.createClient();
 
+//FOR GET HOME PRODUCTS LIST
 homeProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -22,7 +25,7 @@ homeProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'products_', null, body.type, function (result) {
+            redisFetch(req, 'homeProducts_' + body.type, 'homeProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -38,7 +41,7 @@ homeProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('products_' + body.type, {
+                                        redisSet('homeProducts_' + body.type, {
                                             "body": JSON.stringify(response),
                                             "type": body.type
                                         }, function () {
@@ -75,12 +78,13 @@ homeProducts = function (req, callback) {
     });
 };
 
+//FOR GET HOME CATEGORIES
 homeCategories = function (req, callback) {
     validate(req, {}, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categories', null, null, function (result) {
+            redisFetch(req, 'homeCategories', null, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -90,7 +94,7 @@ homeCategories = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('categories', {
+                            redisSet('homeCategories', {
                                 "body": JSON.stringify(response)
                             }, function () {
                                 callback({status: status, msg: response});
@@ -103,6 +107,7 @@ homeCategories = function (req, callback) {
     });
 };
 
+//FOR GET HOME SLIDER URL LIST
 homeSlider = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {
@@ -111,7 +116,7 @@ homeSlider = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'slider', null, null, function (result) {
+            redisFetch(req, 'homeSlider', 'homeSlider', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -128,7 +133,7 @@ homeSlider = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: "OOPS! How is this possible?"});
                                     } else {
-                                        client.hmset('slider', {
+                                        client.hmset('homeSlider', {
                                             "body": JSON.stringify(response),
                                             "status": 1,
                                             "statuscode": msg

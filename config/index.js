@@ -1,3 +1,5 @@
+//CONFIGURATION FILE
+
 var config = {
     'APP_ID': 'com.tethr',
     "DB_URL": "mongodb://127.0.0.1/magento_mobile",
