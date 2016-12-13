@@ -31,8 +31,7 @@ categoryProducts = function (req, callback) {
         type: 'optional',
         limit: 'required',
         id: 'required',
-        mobile_width: 'required',
-        pageno: 'required'}, null, function (body) {
+        page: 'required'}, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
@@ -52,7 +51,7 @@ categoryProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id, {
+                                        redisSet('category_' + body.id + body.page, {
                                             'id': body.id,
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
@@ -66,9 +65,9 @@ categoryProducts = function (req, callback) {
                             }
                             function processData(item, key, callback) {
                                 var image_url = item.data.small_image;
-                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
-                                    if (status == '200') {
-                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
+                                resize(req, image_url, function (status, image_name) {
+                                    if (status == 200) {
+                                        minify(req, image_name, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
                                             optmized_response[key] = item;

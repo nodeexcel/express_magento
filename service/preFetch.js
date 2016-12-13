@@ -41,7 +41,7 @@ fetchCategoryList = function (categoryListDB) {
             if (type == 'category') {
                 var inputId = result.get('key');
                 var myReq = {headers: {app_id: config.APP_ID},
-                    body: {id: inputId, limit: '10', mobile_width: '300', pageno: '1'},
+                    body: {id: inputId, limit: '10', pageno: '1'},
                     URL: config.URL
                 };
                 categoryProducts(myReq, function (body) {
@@ -78,7 +78,7 @@ fetchCategoryList = function (categoryListDB) {
             } else if (type == 'product') {
                 var inputId = result.get('key');
                 var myReq = {headers: {app_id: config.APP_ID},
-                    body: {sku: inputId, mobile_width: '300'},
+                    body: {sku: inputId},
                     URL: config.URL
                 };
                 productGet(myReq, function (body) {
@@ -87,7 +87,7 @@ fetchCategoryList = function (categoryListDB) {
                     } else {
                         console.log('Product Get Done');
                         var productReq = {headers: {app_id: config.APP_ID},
-                            body: {sku: inputId, mobile_width: '300', pageno: 1},
+                            body: {sku: inputId,pageno: 1},
                             URL: config.URL
                         };
                         productReview(productReq, function (productBody) {
@@ -124,7 +124,7 @@ fetchHomeSliderList = function (homeSliderList) {
             console.log(error);
         } else if (!result) {
             var req = {headers: {app_id: config.APP_ID},
-                body: {mobile_width: '300'},
+                body: {},
                 URL: config.URL
             };
             homeSlider(req, function (body) {
@@ -169,7 +169,7 @@ fetchhomeProductList = function (homeProductList) {
             console.log(error);
         } else if (!result) {
             var req = {headers: {app_id: config.APP_ID},
-                body: {mobile_width: '300'},
+                body: {},
                 URL: config.URL
             };
             homeProducts(req, function (body) {
@@ -195,7 +195,7 @@ fetchhomeProductList = function (homeProductList) {
             if (type == 'product') {
                 var inputId = result.get('key');
                 var myReq = {headers: {app_id: config.APP_ID},
-                    body: {sku: inputId, mobile_width: '300'},
+                    body: {sku: inputId},
                     URL: config.URL
                 };
                 productGet(myReq, function (body) {
@@ -204,7 +204,7 @@ fetchhomeProductList = function (homeProductList) {
                     } else {
                         console.log('Product Get Done');
                         var productReq = {headers: {app_id: config.APP_ID},
-                            body: {sku: inputId, mobile_width: '300', pageno: 1},
+                            body: {sku: inputId, pageno: 1},
                             URL: config.URL
                         };
                         productReview(productReq, function (productBody) {

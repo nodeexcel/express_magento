@@ -13,8 +13,7 @@ var async = require('async');
 productGet = function (req, callback) {
     var APP_ID = req.headers.app_id;
     validate(req, {sku: 'required',
-        secret: 'optional',
-        mobile_width: 'required'}, null, function (body) {
+        secret: 'optional'}, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
@@ -49,9 +48,9 @@ productGet = function (req, callback) {
                                 callback({status: 0, msg: ERROR});
                             }
                             function processData(image_url, key, callback) {
-                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
-                                    if (status == "200") {
-                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
+                                resize(req, image_url, function (status, image_name) {
+                                    if (status == 200) {
+                                        minify(req, image_name, function (status, minify_image) {
                                             optmized_response.push(image_name);
                                             minify_imag.push(minify_image);
                                             callback(null);
@@ -74,7 +73,6 @@ productGet = function (req, callback) {
 productReview = function (req, callback) {
     validate(req, {sku: 'required',
         secret: 'optional',
-        mobile_width: 'required',
         pageno: 'required'}, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});

@@ -1,7 +1,6 @@
 require('node-import');
 imports('config/index');
 var mongoose = require('mongoose');
-
 var Schema = mongoose.Schema;
 
 app_url_schema = new Schema({

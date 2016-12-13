@@ -10,8 +10,6 @@ var verify = require('./middleware/verify.js');
 var redis = require('./middleware/redis.js');
 var optimus = require('connect-image-optimus');
 var connect = require('connect');
-
-
 var db = require('./mods/db.js');
 var app = express();
 
@@ -22,9 +20,7 @@ var serveStatic = require('serve-static');
 var staticPath = __dirname + '/public/';
 
 app.use(optimus(staticPath));
-// app.use(connect.static(staticPath));
 app.use(serveStatic(staticPath));
-//var app = connect();
 
 var cors = require('cors');
 // view engine setup
@@ -42,7 +38,6 @@ app.use(db());
 app.use(verify);
 app.use(redis);
 
-var routes = require('./routes/index');
 var category = require('./routes/category');
 var customer = require('./routes/customer');
 var product = require('./routes/product');
@@ -54,7 +49,6 @@ var cart = require('./routes/cart');
 var redis = require('./routes/redis');
 var web = require('./routes/web');
 
-app.use('/', routes);
 app.use('/category', category);
 app.use('/customer', customer);
 app.use('/product', product);

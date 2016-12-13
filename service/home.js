@@ -51,9 +51,9 @@ homeProducts = function (req, callback) {
                             }
                             function processData(item, key, callback) {
                                 var image_url = item.data.small_image;
-                                resize(image_url, APP_ID, body.mobile_width, function (status, image_name) {
-                                    if (status == '200') {
-                                        minify(image_name, APP_ID, body.mobile_width, function (status, minify_image) {
+                                resize(req, image_url, function (status, image_name) {
+                                    if (status == 200) {
+                                        minify(req, image_name, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
                                             optmized_response[key] = item;
@@ -121,6 +121,7 @@ homeSlider = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
+//                            callback({status: 0, msg: response});
                             if (response.url !== undefined) {
                                 var optmized_response = [];
                                 async.eachOfLimit(response.url, 5, processData, function (err) {
@@ -140,8 +141,8 @@ homeSlider = function (req, callback) {
                                 callback({status: 0, msg: ERROR});
                             }
                             function processData(item, key, callback) {
-                                resize(item, APP_ID, body.mobile_width, function (status, image_name) {
-                                    if (status == '200') {
+                                resize(req, item, function (status, image_name) {
+                                    if (status == 200) {
                                         item = image_name;
                                         optmized_response[key] = item;
                                         callback(null);
