@@ -7,6 +7,7 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
+//ROUTE FOR CUSTOMER LOGIN
 router.post('/login', function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',
@@ -37,6 +38,7 @@ router.post('/login', function (req, res) {
     });
 });
 
+//ROUTE FOR CUSTOMER REGISTER
 router.post('/register', function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',
@@ -67,6 +69,7 @@ router.post('/register', function (req, res) {
     });
 });
 
+//ROUTE FOR FORGET PASSWORD
 router.post('/forgot', function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',
@@ -97,6 +100,7 @@ router.post('/forgot', function (req, res) {
     });
 });
 
+//ROUTE FOR GETTING SOCIAL ACCOUNT
 router.post('/social_account', function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',

@@ -3,29 +3,32 @@ imports('config/index');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+//SCHEMA FOR APP URL DB WHERE ALL MAGENTO STORE INFORMATION SAVED
 app_url_schema = new Schema({
-    headers: {type: String, required: true, unique: true},
-    url: {type: String, required: true, unique: true},
-    status: {type: String, required: true, unique: true},
-    cron_running_time: {type: String, required: true, unique: true}
+    headers: {type: String, required: true},
+    URL: {type: String, required: true},
+    status: {type: String, required: true},
+    cron_running_time: {type: String, required: true},
+    prefetch_status: {type: String, required: true}
 });
 
-categoryListSchema = new Schema({
+//SCHEMA FOR PREFETCHADTA DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+prefetchData = new Schema({
+    "categoryId": String,
     "cache": Number,
     "key": String,
     "name": String,
-    "type": String
+    "type": String,
+    "req": Array,
+    "reqType": String,
+    "APP_ID": String,
+    "page": Number
 });
 
-homeSliderSchema = mongoose.Schema({
-    "cache": Number,
-    "URL": String,
-    "type": String
-});
-
-homeProductSchema = mongoose.Schema({
-    cache: Number,
-    key: String,
-    categoryName: String,
-    type: String
+//SCHEMA FOR STATICSTIC DB
+staticsticAPI = new Schema({
+    nameAPI: String,
+    totalAPI: Number,
+    redisAPI: Number,
+    magentoAPI: Number
 });

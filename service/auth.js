@@ -1,3 +1,4 @@
+//FOR API AUTHORIZE OR NOT
 isAuth = function (req, res, next) {
     if (req.body.secret) {
         next();

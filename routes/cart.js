@@ -8,6 +8,7 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
+//ROUTE FOR CART
 router.all('/cart', isAuth, function (req, res) {
     validate(req, {countryid: 'optional',
         zip: 'optional',

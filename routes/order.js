@@ -19,6 +19,7 @@ router.post('/alllist', isAuth, function (req, res) {
     });
 });
 
+//ROUTE FOR GET TOTAL ORDER
 router.post('/totalorder', isAuth, function (req, res) {
     validate(req, {secret: 'required'}, req.body.secret, function (body) {
         API(req, body, '/order/totalorder/', function (status, response, msg) {
@@ -31,6 +32,7 @@ router.post('/totalorder', isAuth, function (req, res) {
     });
 });
 
+//ROUTE FOR GET ORDER
 router.post('/get', isAuth, function (req, res) {
     validate(req, {order_id: 'required',
         secret: 'required'}, req.body.secret, function (body) {

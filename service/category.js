@@ -1,18 +1,22 @@
+imports('config/index');
+imports('config/constant');
 require('node-import');
 require('./validate');
 require('./image');
 require('./request');
 require('./cache');
 require('./responseMsg');
-imports('config/index');
-imports('config/constant');
+require('./statistic');
+require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
 
+//FOR GET CATEGORY PRODUCTS
 categoryProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -31,11 +35,12 @@ categoryProducts = function (req, callback) {
         type: 'optional',
         limit: 'required',
         id: 'required',
-        page: 'required'}, null, function (body) {
+        page: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.id, null, function (result) {
+            redisFetch(req, 'categoryProducts_' + body.id + '_' + body.page, 'categoryProducts', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -43,15 +48,16 @@ categoryProducts = function (req, callback) {
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
-                            callback({status: 0, msg: response});
+                            callback({status: 0, msg: msg});
                         } else {
+//                            callback({status: status, msg: response});
                             if (response !== undefined) {
                                 var optmized_response = [];
                                 async.eachOfLimit(response, 5, processData, function (err) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id + body.page, {
+                                        redisSet('categoryProducts_' + body.id + '_' + body.page, {
                                             'id': body.id,
                                             "limit": body.limit,
                                             "body": JSON.stringify(optmized_response)
@@ -72,7 +78,7 @@ categoryProducts = function (req, callback) {
                                             item.data.minify_image = minify_image;
                                             optmized_response[key] = item;
                                             callback(null);
-                                        })
+                                        });
                                     } else {
                                         item.data.small_image = image_url;
                                         item.data.minify_image = image_url;
@@ -89,8 +95,10 @@ categoryProducts = function (req, callback) {
     });
 };
 
+//FOR GET CATEGORY LIST
 categoryList = function (req, callback) {
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -106,11 +114,12 @@ categoryList = function (req, callback) {
         productid: 'optional',
         store_id: 'required',
         parent_id: 'required',
-        type: 'required'}, null, function (body) {
+        type: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.parent_id, body.type, function (result) {
+            redisFetch(req, 'categoryList_' + body.parent_id, 'categoryList', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -120,12 +129,12 @@ categoryList = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('category_' + body.parent_id, {
+                            redisSet('categoryList_' + body.parent_id, {
                                 'id': body.parent_id,
                                 "body": JSON.stringify(response),
                                 "type": body.type
                             }, function () {
-                                callback({status: 1, msg: response});
+                                callback({status: status, msg: response});
                             });
                         }
                     });

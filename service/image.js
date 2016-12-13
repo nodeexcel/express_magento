@@ -14,6 +14,7 @@ var mkdirp = require('mkdirp');
 var sizeOf = require('image-size');
 var path = require('path');
 
+//FOR RESIZE IMAGE
 resize = function (req, url, callback) {
     var APP_ID = req.headers.app_id;
     if (url && APP_ID) {
@@ -89,6 +90,7 @@ resize = function (req, url, callback) {
     }
 };
 
+//FOR MINIFY IMAGE
 minify = function (req, url, callback) {
     var APP_ID = req.headers.app_id;
     if (url && APP_ID) {
