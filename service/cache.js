@@ -5,7 +5,7 @@ require('./statistic');
 //FOR GET DATA FROM RADIS
 redisFetch = function (req, productType, APIName, callback) {
     var status = req.status;
-    if (req.isAdmin == true) {
+    if (req.isAdmin == 'true') {
         callback(null);
     } else {
         client.hgetall(productType, function (err, object) {
