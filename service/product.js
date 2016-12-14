@@ -22,13 +22,13 @@ productGet = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            console.log(response);
                             if (response !== undefined) {
                                 var optmized_response = {};
                                 async.eachOfLimit(response, 1, processData, function (err) {
@@ -84,7 +84,8 @@ productReview = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -114,7 +115,8 @@ productGetRating = function (req, callback) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
-                        callback({status: 1, msg: result.body});
+                        var setData = JSON.parse(result.body.body);
+                        callback({status: 1, msg: setData});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {

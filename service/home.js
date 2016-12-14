@@ -27,7 +27,8 @@ homeProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/home/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -85,7 +86,8 @@ homeCategories = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/home/categories/', function (status, response, msg) {
                         if (status == 0) {

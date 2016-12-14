@@ -12,7 +12,8 @@ var async = require('async');
 
 categoryProducts = function (req, callback) {
     var APP_ID = req.headers.app_id;
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -32,7 +33,8 @@ categoryProducts = function (req, callback) {
         limit: 'required',
         id: 'required',
         mobile_width: 'required',
-        pageno: 'required'}, null, function (body) {
+        page: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
@@ -40,7 +42,8 @@ categoryProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -91,7 +94,8 @@ categoryProducts = function (req, callback) {
 };
 
 categoryList = function (req, callback) {
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -107,7 +111,8 @@ categoryList = function (req, callback) {
         productid: 'optional',
         store_id: 'required',
         parent_id: 'required',
-        type: 'required'}, null, function (body) {
+        type: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
@@ -115,7 +120,8 @@ categoryList = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    var setData = JSON.parse(result.body.body);
+                    callback({status: 1, msg: setData});
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {
                         if (status == 0) {
