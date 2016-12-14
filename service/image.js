@@ -14,6 +14,8 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 
 resize = function (url, APP_ID, mobile_width, callback) {
+    callback(200,url);
+    return;
     if (url && APP_ID) {
         if (mobile_width) {
             mobile_width = mobile_width;
@@ -75,6 +77,8 @@ resize = function (url, APP_ID, mobile_width, callback) {
 };
 
 minify = function (url, APP_ID, callback) {
+    callback(200,url);
+return;
     if (url && APP_ID) {
         var image_url = URL_.parse(url).path;
         var filename = image_url.substring(0, image_url.lastIndexOf("/"));
