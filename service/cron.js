@@ -7,19 +7,23 @@ var timezone = jstz.determine().name();
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var async = require('async');
+require('../mods/schema');
 require('./category');
 require('./home');
-require('../mods/schema');
 require('./preFetch');
 require('./web');
 //var Schema = mongoose.Schema;
 var conn = mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
+
 var app_urls = conn.model('AppUrls', app_url_schema);
 var prefetchDataDB = conn.model('prefetchData', prefetchData);
 var categoriesDB = conn.model('categories', categories);
 var productsDB = conn.model('products', products);
+var homeSliderDB = conn.model('homeSliderData', homeSliderData);
+var homeProductsDB = conn.model('homeProductsData', homeProductsData);
+
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
@@ -65,36 +69,36 @@ processStore = function (app_id) {
                                         } else {
                                             console.log('prefetch status RUNNING. Line-68 File-/service/cronjs');
                                             var reqArray = [
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            store_id: respond.msg.store_id,
-                                                            parent_id: '1',
-                                                            type: 'full'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHCATEGORYLIST,
-                                                    "name": PREFETCHCATEGORYLIST,
-                                                    "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHHOMESLIDER,
-                                                    "name": PREFETCHHOMESLIDER,
-                                                    "APP_ID": app_id
-                                                },
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            store_id: respond.msg.store_id,
+//                                                            parent_id: '1',
+//                                                            type: 'full'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHCATEGORYLIST,
+//                                                    "name": PREFETCHCATEGORYLIST,
+//                                                    "APP_ID": app_id
+//                                                },
+//                                                {
+//                                                    "req": {
+//                                                        headers: {
+//                                                            app_id: app_id
+//                                                        },
+//                                                        body: {
+//                                                            mobile_width: '300'
+//                                                        },
+//                                                        URL: URL
+//                                                    },
+//                                                    "reqType": PREFETCHHOMESLIDER,
+//                                                    "name": PREFETCHHOMESLIDER,
+//                                                    "APP_ID": app_id
+//                                                },
                                                 {
                                                     "req": {
                                                         headers: {
@@ -193,7 +197,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchHomeSliderList function run. Line-194 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME SLIDER LIST 
-                                                    fetchHomeSliderList(prefetchDataDB, app_id, URL, function () {
+                                                    fetchHomeSliderList(homeSliderDB, app_id, URL, function () {
                                                         console.log('Home Slider end. Line-197 File-/service/cronjs');
                                                         callback();
                                                     });
@@ -215,7 +219,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
-                                                    fetchhomeProductList(prefetchDataDB, productsDB, app_id, URL, function () {
+                                                    fetchhomeProductList(prefetchDataDB, homeProductsDB, app_id, URL, function () {
                                                         console.log('Home Products end. Line-219 File-/service/cronjs');
                                                         callback();
                                                     });

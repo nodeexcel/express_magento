@@ -56,7 +56,7 @@ products = new Schema({
 });
 
 //SCHEMA FOR HOME PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
-homeProducts = new Schema({
+homeProductsData = new Schema({
     "date": String,
     "sku": String,
     "name": String,
@@ -66,4 +66,11 @@ homeProducts = new Schema({
     "in_stock": String,
     "media_images": String,
     "small_image": String
+});
+
+//SCHEMA FOR HOME SLIDER DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+homeSliderData = new Schema({
+    "date": String,
+    "url": String,
+    "APP_ID": String
 });
