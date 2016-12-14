@@ -38,12 +38,12 @@ categoryProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.id, null, function (result) {
+//            redisFetch(req, 'category_', body.id, null, function (result) {
+            redisFetch(req, 'categoryProducts_' + body.id, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    var setData = JSON.parse(result.body.body);
-                    callback({status: 1, msg: setData});
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -55,10 +55,10 @@ categoryProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('category_' + body.id, {
+                                        redisSet('categoryProducts_' + body.id, {
                                             'id': body.id,
                                             "limit": body.limit,
-                                            "body": JSON.stringify(optmized_response)
+                                            "body": optmized_response
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
                                         });
@@ -116,20 +116,20 @@ categoryList = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'category_', body.parent_id, body.type, function (result) {
+//            redisFetch(req, 'category_', body.parent_id, body.type, function (result) {
+            redisFetch(req, 'categoryList_' + body.parent_id, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    var setData = JSON.parse(result.body.body);
-                    callback({status: 1, msg: setData});
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('category_' + body.parent_id, {
+                            redisSet('categoryList_' + body.parent_id, {
                                 'id': body.parent_id,
-                                "body": JSON.stringify(response),
+                                "body": response,
                                 "type": body.type
                             }, function () {
                                 callback({status: 1, msg: response});
