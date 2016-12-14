@@ -20,9 +20,10 @@ Grid.mongo = mongoose.mongo;
 var app_urls = conn.model('AppUrls', app_url_schema);
 var prefetchDataDB = conn.model('prefetchData', prefetchData);
 var categoriesDB = conn.model('categories', categories);
-var productsDB = conn.model('products', products);
+var categoryProductsDB = conn.model('categoryProductsData', categoryProductsData);
 var homeSliderDB = conn.model('homeSliderData', homeSliderData);
 var homeProductsDB = conn.model('homeProductsData', homeProductsData);
+var productsDB = conn.model('productsData', productsData);
 
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
@@ -240,7 +241,7 @@ processStore = function (app_id) {
 //                                                } else {
                                             console.log('fetchCategory function run. Line-237 File-/service/cronjs');
 //                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
-                                            fetchCategory(item, prefetchDataDB, productsDB, app_id, URL, function () {
+                                            fetchCategory(item, prefetchDataDB, categoryProductsDB, app_id, URL, function () {
                                                 console.log('Category end. Line-240 File-/service/cronjs');
                                                 callback();
                                             });
@@ -262,7 +263,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchProduct function run. Line-258 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING PRODUCT REVIEW
-                                                    fetchProduct(item, prefetchDataDB, app_id, URL, function () {
+                                                    fetchProduct(item, prefetchDataDB, productsDB, app_id, URL, function () {
                                                         console.log('Products end. Line-261 File-/service/cronjs');
                                                         callback();
                                                     });

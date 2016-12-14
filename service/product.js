@@ -21,7 +21,7 @@ productGet = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'productGet_' + body.parent_id, 'productGet', function (result) {
+            redisFetch(req, 'productGet_' + body.sku, 'productGet', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {

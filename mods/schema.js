@@ -42,8 +42,8 @@ categories = new Schema({
     "json": Array
 });
 
-//SCHEMA FOR PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
-products = new Schema({
+//SCHEMA FOR CATEGORY PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+categoryProductsData = new Schema({
     "date": String,
     "sku": String,
     "name": String,
@@ -73,4 +73,31 @@ homeSliderData = new Schema({
     "date": String,
     "url": String,
     "APP_ID": String
+});
+
+//SCHEMA FOR PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+productsData = new Schema({
+    "date": String,
+    "sku": String,
+    "name": String,
+    "json": Array,
+    "APP_ID": String,
+    "price": Number,
+    "in_stock": String,
+    "media_images": String,
+    "small_image": String
+});
+
+//SCHEMA FOR PRODUCTS REVIEW DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+productsReviewData = new Schema({
+    "date": String,
+    "sku": String,
+    "review_id": String,
+    "json": Array,
+    "APP_ID": String,
+    "rating_by_star": Array,
+    "total_attribute_rating": Array,
+    "rating": Number,
+    "total_review": Number
+
 });

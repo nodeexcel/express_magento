@@ -14,7 +14,6 @@ var async = require('async');
 
 //FOR GET CATEGORY PRODUCTS
 categoryProducts = function (req, callback) {
-    var APP_ID = req.headers.app_id;
     validate(req, {
         countryid: 'optional',
         zip: 'optional',

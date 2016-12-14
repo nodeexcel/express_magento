@@ -124,7 +124,9 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
                                     console.log('Error. Line-122, File-preFetchjs');
                                     cb();
                                 } else {
-                                    cb();
+                                    if (a == body.msg.length) {
+                                        cb();
+                                    }
                                 }
                             });
                         }
@@ -237,7 +239,7 @@ fetchWebConfig = function (APP_ID, URL, cb) {
 };
 
 //FOR GETTING ALL PRODUCTS
-fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
+fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var inputPage = item.page;
     var myReq = {
@@ -305,7 +307,7 @@ fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         if (err) {
                             console.log('product not saved. Line-224 File-/service/preFetchjs' + err);
                         } else {
-                            productsDB.find({
+                            categoryProductsDB.find({
                                 "sku": row.sku,
                                 "APP_ID": APP_ID
                             }, function (error, result) {
@@ -313,7 +315,7 @@ fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                                     console.log('category not saved. Line-66 File-/service/preFetchjs' + error);
                                     callback();
                                 } else if (!result || result.length == 0) {
-                                    var productRecord = new productsDB({
+                                    var productRecord = new categoryProductsDB({
                                         "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                                         "sku": row.sku,
                                         "name": row.name,
@@ -380,15 +382,14 @@ fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
 };
 
 //FOR GETTING PRODUCT REVIEW
-fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
+fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var myReq = {
         headers: {
             app_id: APP_ID
         },
         body: {
-            sku: inputId,
-            mobile_width: '300'
+            sku: inputId
         },
         URL: URL
     };
@@ -405,7 +406,7 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
                 body: {
                     sku: inputId,
                     mobile_width: '300',
-                    pageno: '1'
+                    page: '1'
                 },
                 URL: URL
             };
@@ -414,6 +415,9 @@ fetchProduct = function (item, prefetchDataDB, APP_ID, URL, cb) {
                     console.log('product review not found. Line-283 File-/service/preFetchjs');
                     cb();
                 } else {
+                    console.log('--------------------');
+                    console.log(productBody);
+                    console.log('--------------------');
                     prefetchDataDB.update({
                         'key': inputId,
                         'type': PREFETCHPRODUCT,
