@@ -20,7 +20,6 @@ var app_urls = conn.model('AppUrls', app_url_schema);
 var prefetchDataDB = conn.model('prefetchData', prefetchData);
 var categoriesDB = conn.model('categories', categories);
 var productsDB = conn.model('products', products);
-var homeProductsDB = conn.model('homeProducts', homeProducts);
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
@@ -216,7 +215,7 @@ processStore = function (app_id) {
                                                 } else {
                                                     console.log('fetchhomeProductList function run. Line-216 File-/service/cronjs');
 //                                                        FUNCTION CALLED FOR GETTING HOME PRODUCT LIST
-                                                    fetchhomeProductList(prefetchDataDB, homeProductsDB, app_id, URL, function () {
+                                                    fetchhomeProductList(prefetchDataDB, productsDB, app_id, URL, function () {
                                                         console.log('Home Products end. Line-219 File-/service/cronjs');
                                                         callback();
                                                     });
