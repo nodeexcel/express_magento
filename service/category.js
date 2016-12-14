@@ -44,7 +44,7 @@ categoryProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -60,7 +60,7 @@ categoryProducts = function (req, callback) {
                                         redisSet('categoryProducts_' + body.id + '_' + body.page, {
                                             'id': body.id,
                                             "limit": body.limit,
-                                            "body": JSON.stringify(optmized_response)
+                                            "body": optmized_response
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
                                         });
@@ -123,7 +123,7 @@ categoryList = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {
                         if (status == 0) {
@@ -131,7 +131,7 @@ categoryList = function (req, callback) {
                         } else {
                             redisSet('categoryList_' + body.parent_id, {
                                 'id': body.parent_id,
-                                "body": JSON.stringify(response),
+                                "body": response,
                                 "type": body.type
                             }, function () {
                                 callback({status: status, msg: response});

@@ -14,7 +14,6 @@ var async = require('async');
 
 //FOR GET PRODUCTS
 productGet = function (req, callback) {
-    var APP_ID = req.headers.app_id;
     validate(req, {
         sku: 'required',
         secret: 'optional'
@@ -26,7 +25,7 @@ productGet = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
@@ -44,7 +43,7 @@ productGet = function (req, callback) {
                                     } else {
                                         redisSet('productGet_' + body.sku, {
                                             'id': body.sku,
-                                            "body": JSON.stringify(response)
+                                            "body": response
                                         }, function () {
                                             callback({status: status, msg: response});
                                         });
@@ -81,24 +80,24 @@ productReview = function (req, callback) {
     validate(req, {
         sku: 'required',
         secret: 'optional',
-        pageno: 'required'
+        page: 'required'
     }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'productReview_' + body.sku + '_' + body.pageno, 'productReview', function (result) {
+            redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('productReview_' + body.sku + '_' + body.pageno, {
+                            redisSet('productReview_' + body.sku + '_' + body.page, {
                                 'id': body.sku,
-                                "body": JSON.stringify(response)
+                                "body": response
                             }, function () {
                                 callback({status: status, msg: response});
                             });
@@ -111,7 +110,6 @@ productReview = function (req, callback) {
 };
 
 //FOR GET PRODUCT RATING
-
 //RESPONSE - {"data":{"max_review":5,"attribute":{"1":"Quality","2":"Value","3":"Price"},"options":{"1":["1","2","3","4","5"],"2":["6","7","8","9","10"],"3":["11","12","13","14","15"]}},"status":1,"message":"success"}
 productGetRating = function (req, callback) {
     validate(req, {}, null, function (body) {
@@ -123,14 +121,14 @@ productGetRating = function (req, callback) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
-                        callback({status: 1, msg: result.body});
+                        callback({status: 1, msg: result.body.body});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {
                                 callback({status: 0, msg: response});
                             } else {
                                 redisSet('productGetRating', {
-                                    "body": JSON.stringify(response)
+                                    "body": response
                                 }, function () {
                                     callback({status: status, msg: response});
                                 });

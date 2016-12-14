@@ -69,36 +69,36 @@ processStore = function (app_id) {
                                         } else {
                                             console.log('prefetch status RUNNING. Line-68 File-/service/cronjs');
                                             var reqArray = [
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: app_id
-//                                                        },
-//                                                        body: {
-//                                                            store_id: respond.msg.store_id,
-//                                                            parent_id: '1',
-//                                                            type: 'full'
-//                                                        },
-//                                                        URL: URL
-//                                                    },
-//                                                    "reqType": PREFETCHCATEGORYLIST,
-//                                                    "name": PREFETCHCATEGORYLIST,
-//                                                    "APP_ID": app_id
-//                                                },
-//                                                {
-//                                                    "req": {
-//                                                        headers: {
-//                                                            app_id: app_id
-//                                                        },
-//                                                        body: {
-//                                                            mobile_width: '300'
-//                                                        },
-//                                                        URL: URL
-//                                                    },
-//                                                    "reqType": PREFETCHHOMESLIDER,
-//                                                    "name": PREFETCHHOMESLIDER,
-//                                                    "APP_ID": app_id
-//                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            store_id: respond.msg.store_id,
+                                                            parent_id: '1',
+                                                            type: 'full'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHCATEGORYLIST,
+                                                    "name": PREFETCHCATEGORYLIST,
+                                                    "APP_ID": app_id
+                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHHOMESLIDER,
+                                                    "name": PREFETCHHOMESLIDER,
+                                                    "APP_ID": app_id
+                                                },
                                                 {
                                                     "req": {
                                                         headers: {

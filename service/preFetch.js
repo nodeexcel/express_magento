@@ -138,7 +138,6 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
 
 //FOR GETTING HOME PRODUCTS LIST
 fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb) {
-    console.log('home products');
     var req = {
         headers: {
             app_id: APP_ID

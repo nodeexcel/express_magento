@@ -16,7 +16,6 @@ var redis = require("redis"),
 
 //FOR GET HOME PRODUCTS LIST
 homeProducts = function (req, callback) {
-    var APP_ID = req.headers.app_id;
     validate(req, {
         type: 'optional',
         secret: 'optional',
@@ -29,7 +28,7 @@ homeProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/home/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -42,7 +41,7 @@ homeProducts = function (req, callback) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
                                         redisSet('homeProducts_' + body.type, {
-                                            "body": JSON.stringify(response),
+                                            "body": response,
                                             "type": body.type
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
@@ -88,14 +87,14 @@ homeCategories = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/home/categories/', function (status, response, msg) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
                             redisSet('homeCategories', {
-                                "body": JSON.stringify(response)
+                                "body": response
                             }, function () {
                                 callback({status: status, msg: response});
                             });
@@ -109,7 +108,6 @@ homeCategories = function (req, callback) {
 
 //FOR GET HOME SLIDER URL LIST
 homeSlider = function (req, callback) {
-    var APP_ID = req.headers.app_id;
     validate(req, {
         mobile_width: 'required'
     }, null, function (body) {
@@ -120,7 +118,7 @@ homeSlider = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/home/slider/', function (status, response, msg) {
                         if (status == 0) {
@@ -133,13 +131,11 @@ homeSlider = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: "OOPS! How is this possible?"});
                                     } else {
-                                        client.hmset('homeSlider', {
-                                            "body": JSON.stringify(response),
-                                            "status": 1,
-                                            "statuscode": msg
+                                        redisSet('homeSlider', {
+                                            "body": response
+                                        }, function () {
+                                            callback({status: status, msg: optmized_response});
                                         });
-                                        client.expire('categories', config.PRODUCT_EXPIRESAT);
-                                        callback({status: status, msg: optmized_response});
                                     }
                                 });
                             } else {

@@ -8,19 +8,15 @@ redisFetch = function (req, productType, APIName, callback) {
     if (req.isAdmin == true) {
         callback(null);
     } else {
-        client.hgetall(productType, function (err, object) {
-            if (err) {
-                callback({status: 0, body: err});
-            } else {
-                if (object && status == "enabled") {
+        client.get(productType, function (err, object) {
+            if (object && status == "enabled") {
 //                    FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM REDIS
-                    setStatisticRedis(APIName, req);
-                    callback({status: 1, body: object});
-                } else {
+                setStatisticRedis(APIName, req);
+                callback({status: 1, body: JSON.parse(object)});
+            } else {
 //                      FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM MAGENTO
-                    setStatisticMagento(APIName, req);
-                    callback({status: 2});
-                }
+                setStatisticMagento(APIName, req);
+                callback({status: 2});
             }
         });
     }
@@ -28,7 +24,7 @@ redisFetch = function (req, productType, APIName, callback) {
 
 //FUNCTION FOR SET DATA IN REDIS
 redisSet = function (key, value, callback) {
-    client.hmset(key, value);
+    client.set(key, JSON.stringify(value));
     client.expire(key, config.CATEGORY_EXPIRESAT);
     callback();
 };
