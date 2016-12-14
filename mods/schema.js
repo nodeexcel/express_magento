@@ -54,3 +54,16 @@ products = new Schema({
     "media_images": String,
     "small_image": String
 });
+
+//SCHEMA FOR HOME PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
+homeProducts = new Schema({
+    "date": String,
+    "sku": String,
+    "name": String,
+    "json": Array,
+    "APP_ID": String,
+    "price": Number,
+    "in_stock": String,
+    "media_images": String,
+    "small_image": String
+});

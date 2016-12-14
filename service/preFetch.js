@@ -109,7 +109,7 @@ fetchHomeSliderList = function (prefetchDataDB, APP_ID, URL, cb) {
 };
 
 //FOR GETTING HOME PRODUCTS LIST
-fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
+fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb) {
     var req = {
         headers: {
             app_id: APP_ID
@@ -151,7 +151,7 @@ fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
                     } else {
 //                        console.log('home product saved. Line-127 File-/service/preFetchjs');
 //                        callback();
-                        productsDB.find({
+                        homeProductsDB.find({
                             "sku": item.data.sku,
                             "APP_ID": APP_ID
                         }, function (error, result) {
@@ -159,7 +159,7 @@ fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
                                 console.log('category not saved. Line-66 File-/service/preFetchjs' + error);
                                 callback();
                             } else if (!result || result.length == 0) {
-                                var productRecord = new productsDB({
+                                var productRecord = new homeProductsDB({
                                     "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                                     "sku": item.data.sku,
                                     "name": item.data.name,
