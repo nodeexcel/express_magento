@@ -6,12 +6,22 @@ var mongoose = require('mongoose');
 var conn = mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
+var moment = require('moment');
 var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 //WHEN DATA COMES FROM REDIS
-setStatisticRedis = function (nameAPI) {
+setStatisticRedis = function (nameAPI, req) {
+    var APP_ID = req.headers.app_id;
+    var current_date = moment().format('L');
+    if (req.isAdmin == true) {
+        prefetch_status = 1;
+    } else {
+        prefetch_status = 0;
+    }
     staticsticAPIDB.findOne({
-        nameAPI: nameAPI
+        nameAPI: nameAPI,
+        APP_ID: APP_ID,
+        current_date: current_date
     }, function (error, row) {
         if (error) {
             console.log('Error. Line-17, File-service/statisticjs' + error);
@@ -20,13 +30,15 @@ setStatisticRedis = function (nameAPI) {
             var totalAPI = row.totalAPI;
             var redisAPI = row.redisAPI;
             var magentoAPI = row.magentoAPI;
+            var prefetch_Status = row.prefetch_status;
             staticsticAPIDB.update({
                 nameAPI: nameAPI
             }, {
                 $set: {
                     totalAPI: totalAPI + 1,
                     redisAPI: redisAPI + 1,
-                    magentoAPI: magentoAPI
+                    magentoAPI: magentoAPI,
+                    prefetch_status: prefetch_Status + prefetch_status
                 }
             }, function (err) {
                 if (!err) {
@@ -41,7 +53,10 @@ setStatisticRedis = function (nameAPI) {
                 nameAPI: nameAPI,
                 totalAPI: 1,
                 redisAPI: 1,
-                magentoAPI: 0
+                magentoAPI: 0,
+                APP_ID: APP_ID,
+                current_date: current_date,
+                prefetch_status: 1
             });
             record.save(function (err) {
                 if (err) {
@@ -55,9 +70,18 @@ setStatisticRedis = function (nameAPI) {
 };
 
 //WHEN DATA COMES FROM MAGENTO API
-setStatisticMagento = function (nameAPI) {
+setStatisticMagento = function (nameAPI, req) {
+    var APP_ID = req.headers.app_id;
+    var current_date = moment().format('L');
+    if (req.isAdmin == true) {
+        prefetch_status = 1;
+    } else {
+        prefetch_status = 0;
+    }
     staticsticAPIDB.findOne({
-        nameAPI: nameAPI
+        nameAPI: nameAPI,
+        APP_ID: APP_ID,
+        current_date: current_date
     }, function (error, row) {
         if (error) {
             console.log('Error. Line-63, File-service/statisticjs' + error);
@@ -66,13 +90,15 @@ setStatisticMagento = function (nameAPI) {
             var totalAPI = row.totalAPI;
             var redisAPI = row.redisAPI;
             var magentoAPI = row.magentoAPI;
+            var prefetch_Status = row.prefetch_status;
             staticsticAPIDB.update({
                 nameAPI: nameAPI
             }, {
                 $set: {
                     totalAPI: totalAPI + 1,
                     redisAPI: redisAPI,
-                    magentoAPI: magentoAPI + 1
+                    magentoAPI: magentoAPI + 1,
+                    prefetch_status: prefetch_Status + prefetch_status
                 }
             }, function (err) {
                 if (!err) {
@@ -87,7 +113,10 @@ setStatisticMagento = function (nameAPI) {
                 nameAPI: nameAPI,
                 totalAPI: 1,
                 redisAPI: 0,
-                magentoAPI: 1
+                magentoAPI: 1,
+                prefetch_status: 1,
+                APP_ID: APP_ID,
+                current_date: current_date
             });
             record.save(function (err) {
                 if (err) {

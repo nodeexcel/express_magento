@@ -12,17 +12,14 @@ require('./home');
 require('../mods/schema');
 require('./preFetch');
 require('./web');
-
 //var Schema = mongoose.Schema;
 var conn = mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
-
 var app_urls = conn.model('AppUrls', app_url_schema);
 var prefetchDataDB = conn.model('prefetchData', prefetchData);
 var categoriesDB = conn.model('categories', categories);
 var productsDB = conn.model('products', products);
-
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
@@ -44,7 +41,6 @@ processStore = function (app_id) {
 //APIS RUN IF CURRENT TIME AND SAVED DB TIME BOTH MATCH
 //                if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
                 console.log('You will see this message every minute. Line-45 File-/service/cronjs');
-
                 fetchWebConfig(app_id, URL, function (respond) {
                     if (respond.status != 0) {
                         prefetchDataDB.find({
