@@ -10,6 +10,7 @@ Grid.mongo = mongoose.mongo;
 
 module.exports = function () {
     var app_urls = mongoose.model('AppUrls', app_url_schema);
+    var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
     mongoose.connect(config.DB_URL, function (err, db) {
         getActiveInstallations(app_urls);
     });
@@ -23,6 +24,7 @@ module.exports = function () {
         req.mongo = conn;
         req.gfs = gfs;
         req.app = app_urls;
+        req.staticsticAPIDB = staticsticAPIDB;
         next();
     };
 };
