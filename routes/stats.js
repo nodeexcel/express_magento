@@ -11,7 +11,7 @@ router.post('/statistics_status', function (req, res) {
             if (err) {
                 oops(res, err);
             } else if (!dbrecord || dbrecord.length == '0') {
-                success(res, 0, "not found");
+                success(res, 0, []);
             } else {
                 success(res, 1, dbrecord);
             }
