@@ -68,7 +68,8 @@ fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId
                                     "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                                     "categoryId": item.id,
                                     "categoryName": item.name,
-                                    "APP_ID": APP_ID
+                                    "APP_ID": APP_ID,
+                                    "json": item
                                 });
                                 categoryRecord.save(function (errorCat) {
                                     if (errorCat) {
@@ -152,7 +153,6 @@ fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
 //                        callback();
                         productsDB.find({
                             "sku": item.data.sku,
-                            "name": item.data.name,
                             "APP_ID": APP_ID
                         }, function (error, result) {
                             if (error) {
@@ -165,7 +165,10 @@ fetchhomeProductList = function (prefetchDataDB, productsDB, APP_ID, URL, cb) {
                                     "name": item.data.name,
                                     "json": item.data,
                                     "APP_ID": APP_ID,
-                                    "price": parseInt(item.data.price)
+                                    "price": parseInt(item.data.price),
+                                    "in_stock": item.data.in_stock,
+                                    "media_images": item.data.media_images[0],
+                                    "small_image": item.data.small_image
                                 });
                                 productRecord.save(function (errorPro) {
                                     if (errorPro) {
@@ -277,7 +280,6 @@ fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         } else {
                             productsDB.find({
                                 "sku": row.sku,
-                                "name": row.name,
                                 "APP_ID": APP_ID
                             }, function (error, result) {
                                 if (error) {
@@ -290,7 +292,10 @@ fetchCategory = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                                         "name": row.name,
                                         "json": row,
                                         "APP_ID": APP_ID,
-                                        "price": parseInt(row.price)
+                                        "price": parseInt(row.price),
+                                        "in_stock": row.in_stock,
+                                        "media_images": row.media_images[0],
+                                        "small_image": row.small_image
                                     });
                                     productRecord.save(function (errorPro) {
                                         if (errorPro) {

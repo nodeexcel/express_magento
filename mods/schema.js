@@ -38,7 +38,8 @@ categories = new Schema({
     "date": String,
     "categoryId": String,
     "categoryName": String,
-    "APP_ID": String
+    "APP_ID": String,
+    "json": Array
 });
 
 //SCHEMA FOR PRODUCTS DB(DATA FETCHED FROM CRON AND SAVE MONGODB)
@@ -48,5 +49,8 @@ products = new Schema({
     "name": String,
     "json": Array,
     "APP_ID": String,
-    "price": Number
+    "price": Number,
+    "in_stock": String,
+    "media_images": String,
+    "small_image": String
 });
