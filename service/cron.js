@@ -23,7 +23,7 @@ var productsDB = conn.model('products', products);
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
-    new CronJob('* * * * * *', function () {
+    new CronJob('*/1 * * * *', function () {
         app_urls.findOne({
             APP_ID: app_id
         }, function (err, user) {
