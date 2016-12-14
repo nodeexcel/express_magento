@@ -25,7 +25,7 @@ productGet = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
@@ -89,7 +89,7 @@ productReview = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -120,7 +120,7 @@ productGetRating = function (req, callback) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
-                        callback({status: 1, msg: result.body});
+                        callback({status: 1, msg: result.body.body});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {

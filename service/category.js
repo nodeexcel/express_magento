@@ -43,7 +43,7 @@ categoryProducts = function (req, callback) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
