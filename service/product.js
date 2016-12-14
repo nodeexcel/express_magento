@@ -12,13 +12,16 @@ var async = require('async');
 
 productGet = function (req, callback) {
     var APP_ID = req.headers.app_id;
-    validate(req, {sku: 'required',
+    validate(req, {
+        sku: 'required',
         secret: 'optional',
-        mobile_width: 'required'}, null, function (body) {
+        mobile_width: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+//            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+            redisFetch(req, 'productGet_' + body.sku, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -34,9 +37,9 @@ productGet = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('product_' + body.sku, {
+                                        redisSet('productGet_' + body.sku, {
                                             'id': body.sku,
-                                            "body": JSON.stringify(optmized_response)
+                                            "body": optmized_response
                                         }, function () {
                                             callback({status: status, msg: optmized_response})
                                         });
@@ -72,14 +75,17 @@ productGet = function (req, callback) {
 };
 
 productReview = function (req, callback) {
-    validate(req, {sku: 'required',
+    validate(req, {
+        sku: 'required',
         secret: 'optional',
         mobile_width: 'required',
-        pageno: 'required'}, null, function (body) {
+        page: 'required'
+    }, null, function (body) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+//            redisFetch(req, 'product_', body.parent_id, null, function (result) {
+            redisFetch(req, 'productReview_' + body.sku + '_' + body.page, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -89,9 +95,9 @@ productReview = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('product_' + body.sku, {
+                            redisSet('productReview_' + body.sku + '_' + body.page, {
                                 'id': body.sku,
-                                "body": JSON.stringify(response)
+                                "body": response
                             }, function () {
                                 callback({status: status, msg: response});
                             });
@@ -109,7 +115,8 @@ productGetRating = function (req, callback) {
             callback({status: 0, msg: body.body});
         } else {
             if (req.URL) {
-                redisFetch(req, 'product_', null, null, function (result) {
+//                redisFetch(req, 'product_', null, null, function (result) {
+                redisFetch(req, 'productGetRating', function (result) {
                     if (result.status == 0) {
                         callback({status: 0, msg: result.body});
                     } else if (result.status == 1) {
@@ -119,8 +126,8 @@ productGetRating = function (req, callback) {
                             if (status == 0) {
                                 callback({status: 0, msg: response});
                             } else {
-                                redisSet('product_', {
-                                    "body": JSON.stringify(response),
+                                redisSet('productGetRating', {
+                                    "body": response,
                                 }, function () {
                                     callback({status: status, msg: response})
                                 });

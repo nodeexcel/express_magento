@@ -16,6 +16,7 @@ var path = require('path');
 resize = function (url, APP_ID, mobile_width, callback) {
     callback(200,url);
     return;
+
     if (url && APP_ID) {
         if (mobile_width) {
             mobile_width = mobile_width;
@@ -87,6 +88,10 @@ return;
         var image_name_without_extension = image_name.substr(0, image_name.lastIndexOf('.'));
         var image_jpg = '/' + image_name_without_extension + '.jpg';
         var image_minified_name = filename.replace("comtethr/300", "comtethr/300/minify");
+        
+        callback(200, config.CDN_URL+image_minified_name+image_jpg);
+        return;
+        
         if (fileExists('public' + image_minified_name + '/' + image_jpg) == false) {
                 imagemin(["public/original_image/" + image_jpg], 'public/' + image_minified_name, {
                  plugins: [

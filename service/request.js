@@ -15,7 +15,7 @@ API = function (req, body, url, callback) {
             callback(0, error, ERROR);
         } else if (result.statusCode === 500) {
             var allData = JSON.parse(body);
-            callback(0, allData.data, NOTFOUND);
+            callback(0, allData, allData.message);
         } else {
             allData = JSON.parse(body);
             callback(1, allData.data, SUCCESS);
