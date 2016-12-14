@@ -9,11 +9,8 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
-var redis = require("redis"),
-        client = redis.createClient();
 
 homeProducts = function (req, callback) {
-    console.log('home products');
     var APP_ID = req.headers.app_id;
     validate(req, {
         type: 'optional',
@@ -23,7 +20,8 @@ homeProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'products_', null, body.type, function (result) {
+//            redisFetch(req, 'products_', null, body.type, function (result) {
+            redisFetch(req, 'homeProducts_' + body.type, function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -39,8 +37,8 @@ homeProducts = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
-                                        redisSet('products_' + body.type, {
-                                            "body": JSON.stringify(response),
+                                        redisSet('homeProducts_' + body.type, {
+                                            "body": response,
                                             "type": body.type
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
@@ -81,7 +79,8 @@ homeCategories = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categories', null, null, function (result) {
+//            redisFetch(req, 'categories', null, null, function (result) {
+            redisFetch(req, 'homeCategories', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -91,8 +90,8 @@ homeCategories = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            redisSet('categories', {
-                                "body": JSON.stringify(response)
+                            redisSet('homeCategories', {
+                                "body": response
                             }, function () {
                                 callback({status: status, msg: response});
                             });
@@ -112,7 +111,8 @@ homeSlider = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'slider', null, null, function (result) {
+//            redisFetch(req, 'slider', null, null, function (result) {
+            redisFetch(req, 'homeSlider', function (result) {
                 if (result.status == 0) {
                     callback({status: 0, msg: result.body});
                 } else if (result.status == 1) {
@@ -128,12 +128,9 @@ homeSlider = function (req, callback) {
                                     if (err) {
                                         callback({status: 0, msg: "OOPS! How is this possible?"});
                                     } else {
-                                        client.hmset('slider', {
-                                            "body": JSON.stringify(response),
-                                            "status": 1,
-                                            "statuscode": msg
+                                        redisSet('homeSlider', {
+                                            "body": response
                                         });
-                                        client.expire('categories', config.PRODUCT_EXPIRESAT);
                                         callback({status: status, msg: optmized_response});
                                     }
                                 });
