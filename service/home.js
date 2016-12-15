@@ -130,8 +130,9 @@ homeSlider = function (req, callback) {
                                     } else {
                                         redisSet('homeSlider', {
                                             "body": response
+                                        }, function () {
+                                            callback({status: status, msg: optmized_response});
                                         });
-                                        callback({status: status, msg: optmized_response});
                                     }
                                 });
                             } else {
