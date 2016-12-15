@@ -22,9 +22,7 @@ productGet = function (req, callback) {
             callback({status: 0, msg: body.body});
         } else {
             redisFetch(req, 'productGet_' + body.sku, 'productGet', function (result) {
-                if (result.status == 0) {
-                    callback({status: 0, msg: result.body});
-                } else if (result.status == 1) {
+                if (result.status == 1) {
                     callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
