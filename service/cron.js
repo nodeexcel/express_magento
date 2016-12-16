@@ -113,20 +113,6 @@ processStore = function (app_id) {
                                                     "reqType": PREFETCHHOMEPRODUCTS,
                                                     "name": PREFETCHHOMEPRODUCTS,
                                                     "APP_ID": app_id
-                                                },
-                                                {
-                                                    "req": {
-                                                        headers: {
-                                                            app_id: app_id
-                                                        },
-                                                        body: {
-                                                            mobile_width: '300'
-                                                        },
-                                                        URL: URL
-                                                    },
-                                                    "reqType": PREFETCHPRODUCT,
-                                                    "name": PREFETCHPRODUCT,
-                                                    "APP_ID": app_id
                                                 }
                                             ];
                                             _.forEach(reqArray, function (row) {
@@ -241,28 +227,27 @@ processStore = function (app_id) {
                                                 }
                                             });
                                         } else if (item.reqType == PREFETCHCATEGORY) {  //IF REQUEST TYPE CATEGORY
-//                                            prefetchDataDB.update({
-//                                                _id: item._id,
-//                                                cache: 0
-//                                            }, {
-//                                                $set: {
-//                                                    cache: 1
-//                                                }
-//                                            }, function (err) {
-//                                                if (err) {
-//                                                    conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
-//                                                    callback();
-//                                                } else {
+                                           prefetchDataDB.update({
+                                               _id: item._id,
+                                               cache: 0
+                                           }, {
+                                               $set: {
+                                                   cache: 1
+                                               }
+                                           }, function (err) {
+                                               if (err) {
+                                                   conosle.log('Category not updated. Line-227 File-/service/cronjs' + err);
+                                                   callback();
+                                               } else {
                                             console.log('fetchCategory function run. Line-237 File-/service/cronjs');
 //                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
                                             fetchCategory(item, prefetchDataDB, categoryProductsDB, app_id, URL, function () {
                                                 console.log('Category end. Line-240 File-/service/cronjs');
                                                 callback();
                                             });
-//                                                }
-//                                            });
+                                               }
+                                           });
                                         } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
-                                            console.log('AAAAAAAAAAAAAAAAAAAAAA')
                                             prefetchDataDB.update({
                                                 _id: item._id,
                                                 cache: 0,

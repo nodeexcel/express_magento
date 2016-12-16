@@ -21,7 +21,8 @@ fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId
             parent_id: '1',
             type: 'full'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     categoryList(req, function (body) {
         if (body.status == 0) {
@@ -97,7 +98,8 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
         body: {
             mobile_width: '300'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     homeSlider(req, function (body) {
         if (body.status == 0) {
@@ -149,7 +151,8 @@ fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb
         body: {
             mobile_width: '300'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     homeProducts(req, function (body) {
         if (body.status == 0) {
@@ -228,7 +231,7 @@ fetchWebConfig = function (APP_ID, URL, cb) {
         body: {
             secret: 'optional'
         },
-        URL: URL
+        URL: URL,
     };
     webConfig(req, function (body) {
         if (body.status == 0) {
@@ -254,7 +257,8 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
             mobile_width: '300',
             page: inputPage
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     categoryProducts(myReq, function (body) {
         if (body.status == 0) {
@@ -385,25 +389,19 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
 
 //FOR GETTING PRODUCT REVIEW
 fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
-    console.log('-----------------')
-    console.log(item)
-    console.log('----------------')
     var inputId = item.key;
     var myReq = {
         headers: {
             app_id: APP_ID
         },
         body: {
-            sku: 'wsd008'
+            sku: inputId
         },
         URL: URL,
         isAdmin: true
     };
     // console.log(myReq)
     productGet(myReq, function (body) {
-        console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCC')
-        console.log(body)
-        console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCC')
         if (body.status == 0) {
             console.log('product get not found. Line-404 File-/service/preFetchjs');
             cb();
@@ -419,7 +417,6 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         console.log('Error. Line-415, File-service/preFetchjs' + err);
                         cb();
                     } else if (!result || result.length == 0) {
-                        console.log('IIIIIIIIIIIIIIIIIIIIIIII')
                         var record = new productsDB({
                             "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                             "sku": body.msg.data.sku,
@@ -434,10 +431,8 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         record.save(function (error) {
                             if (error) {
                                 console.log('Error. Line-431, File-preFetchjs');
-                                 console.log('EEEEEEEEEEEEEEEEE')
                                 cb();
                             } else {
-                                console.log('DDDDDDDDDDDDDDDDDDDDDDD')
                                 console.log('save done');
                                 cb();
                             }
@@ -453,11 +448,9 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                             }
                         }, function (err) {
                             if (!err) {
-                                console.log('GGGGGGGGGGGGGGGGGGG')
                                 console.log('product Updated Done with cache 1. Line-449 File-/service/preFetchjs');
                                 cb();
                             } else {
-                                console.log('FFFFFFFFFFFFFFFFFFFFF')
                                 console.log('Error. Line-452 File-/service/preFetchjs' + err);
                                 cb();
                             }
