@@ -73,12 +73,14 @@ categoryProducts = function (req, callback) {
                                         minify(req, image_name, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
+                                            item.data.media_images = false;
                                             optmized_response[key] = item;
                                             callback(null);
                                         });
                                     } else {
                                         item.data.small_image = image_url;
                                         item.data.minify_image = image_url;
+                                        item.data.media_images = false;
                                         optmized_response[key] = item;
                                         callback(null);
                                     }

@@ -20,7 +20,7 @@ resize = function (req, url, callback) {
     if (url && APP_ID) {
         var image_url = URL_.parse(url).path;
         var app_id = APP_ID.replace(/[^a-zA-Z0-9 ]/g, "");
-        var image_stored_url = app_id + '/' + image_url;
+        var image_stored_url = app_id + image_url;
         var url_last_index_length = url.lastIndexOf('/');
         var image_name = url.substring(url_last_index_length + 1);
         var filename = image_stored_url.substring(0, image_stored_url.lastIndexOf("/"));

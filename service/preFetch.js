@@ -108,7 +108,6 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
             if (body.msg) {
                 for (var a = 0; a < body.msg.length; a++) {
                     var row = body.msg[a];
-                    console.log(row)
                     homeSliderDB.find({
                         APP_ID: APP_ID,
                         url: row
@@ -136,9 +135,9 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
                         }
                     });
                 }
-            }else{
-            cb();                
-        }
+            } else {
+                cb();
+            }
         }
     });
 };
@@ -401,7 +400,6 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
         URL: URL,
         isAdmin: true
     };
-    // console.log(myReq)
     productGet(myReq, function (body) {
         if (body.status == 0) {
             console.log('product get not found. Line-404 File-/service/preFetchjs');
