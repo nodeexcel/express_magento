@@ -422,7 +422,7 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                             "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                             "sku": body.msg.data.sku,
                             "name": body.msg.data.name,
-                            "json": row,
+                            "json": body.msg.data,
                             "APP_ID": APP_ID,
                             "price": body.msg.data.price,
                             "in_stock": body.msg.data.in_stock,
