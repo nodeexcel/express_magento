@@ -21,7 +21,8 @@ fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId
             parent_id: '1',
             type: 'full'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     categoryList(req, function (body) {
         if (body.status == 0) {
@@ -97,7 +98,8 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
         body: {
             mobile_width: '300'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     homeSlider(req, function (body) {
         if (body.status == 0) {
@@ -106,6 +108,7 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
             if (body.msg) {
                 for (var a = 0; a < body.msg.length; a++) {
                     var row = body.msg[a];
+                    console.log(row)
                     homeSliderDB.find({
                         APP_ID: APP_ID,
                         url: row
@@ -149,7 +152,8 @@ fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb
         body: {
             mobile_width: '300'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     homeProducts(req, function (body) {
         if (body.status == 0) {
@@ -254,7 +258,8 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
             mobile_width: '300',
             page: inputPage
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
     categoryProducts(myReq, function (body) {
         if (body.status == 0) {
@@ -383,7 +388,7 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
     });
 };
 
-//FOR GETTING PRODUCT REVIEW
+//FOR GETTING PRODUCT GET
 fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
     var inputId = item.key;
     var myReq = {
@@ -459,6 +464,7 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
         }
     });
 };
+
 
 //RECURSIVE FUNCTION FOR GET SUBCATEGORY OF ALL CATEGORY
 var arrayCategory = [];

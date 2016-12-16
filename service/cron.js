@@ -113,7 +113,21 @@ processStore = function (app_id) {
                                                     "reqType": PREFETCHHOMEPRODUCTS,
                                                     "name": PREFETCHHOMEPRODUCTS,
                                                     "APP_ID": app_id
-                                                }
+                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHPRODUCT,
+                                                    "name": PREFETCHPRODUCT,
+                                                    "APP_ID": app_id
+                                                },
                                             ];
                                             _.forEach(reqArray, function (row) {
                                                 var record = new prefetchDataDB({
