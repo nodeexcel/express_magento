@@ -125,6 +125,7 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
                                     cb();
                                 } else {
                                     if (a == body.msg.length) {
+                                        body.msg.length = 0;
                                         cb();
                                     }
                                 }
@@ -132,8 +133,9 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
                         }
                     });
                 }
-            }
-            cb();
+            }else{
+            cb();                
+        }
         }
     });
 };
@@ -383,60 +385,88 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
 
 //FOR GETTING PRODUCT REVIEW
 fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
+    console.log('-----------------')
+    console.log(item)
+    console.log('----------------')
     var inputId = item.key;
     var myReq = {
         headers: {
             app_id: APP_ID
         },
         body: {
-            sku: inputId
+            sku: 'wsd008'
         },
-        URL: URL
+        URL: URL,
+        isAdmin: true
     };
+    // console.log(myReq)
     productGet(myReq, function (body) {
+        console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCC')
+        console.log(body)
+        console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCC')
         if (body.status == 0) {
-            console.log('product get not found. Line-267 File-/service/preFetchjs');
+            console.log('product get not found. Line-404 File-/service/preFetchjs');
             cb();
         } else {
-            console.log('Product Get Done. Line-270 File-/service/preFetchjs');
-            var productReq = {
-                headers: {
-                    app_id: APP_ID
-                },
-                body: {
-                    sku: inputId,
-                    mobile_width: '300',
-                    page: '1'
-                },
-                URL: URL
-            };
-            productReview(productReq, function (productBody) {
-                if (productBody.status == 0) {
-                    console.log('product review not found. Line-283 File-/service/preFetchjs');
-                    cb();
-                } else {
-                    console.log('--------------------');
-                    console.log(productBody);
-                    console.log('--------------------');
-                    prefetchDataDB.update({
-                        'key': inputId,
-                        'type': PREFETCHPRODUCT,
-                        'APP_ID': APP_ID
-                    }, {
-                        $set: {
-                            cache: 1
-                        }
-                    }, function (err) {
-                        if (!err) {
-                            console.log('Product Review get done, update cache 1. Line-294 File-/service/preFetchjs');
-                            cb();
-                        } else {
-                            console.log('Product Review not done. Line-297 File-/service/preFetchjs' + err);
-                            cb();
-                        }
-                    });
-                }
-            });
+            console.log('Product Get Done. Line-407 File-/service/preFetchjs');
+            if (body.msg) {
+                var row = body.msg.data.media_images;
+                productsDB.find({
+                    APP_ID: APP_ID,
+                    sku: body.msg.data.sku
+                }, function (err, result) {
+                    if (err) {
+                        console.log('Error. Line-415, File-service/preFetchjs' + err);
+                        cb();
+                    } else if (!result || result.length == 0) {
+                        console.log('IIIIIIIIIIIIIIIIIIIIIIII')
+                        var record = new productsDB({
+                            "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
+                            "sku": body.msg.data.sku,
+                            "name": body.msg.data.name,
+                            "json": row,
+                            "APP_ID": APP_ID,
+                            "price": body.msg.data.price,
+                            "in_stock": body.msg.data.in_stock,
+                            "minify_image": body.msg.data.minify_image,
+                            "small_image": body.msg.data.small_image
+                        });
+                        record.save(function (error) {
+                            if (error) {
+                                console.log('Error. Line-431, File-preFetchjs');
+                                 console.log('EEEEEEEEEEEEEEEEE')
+                                cb();
+                            } else {
+                                console.log('DDDDDDDDDDDDDDDDDDDDDDD')
+                                console.log('save done');
+                                cb();
+                            }
+                        });
+                    } else {
+                        prefetchDataDB.update({
+                            'key': inputId,
+                            'type': PREFETCHPRODUCT,
+                            'APP_ID': APP_ID
+                        }, {
+                            $set: {
+                                cache: 1
+                            }
+                        }, function (err) {
+                            if (!err) {
+                                console.log('GGGGGGGGGGGGGGGGGGG')
+                                console.log('product Updated Done with cache 1. Line-449 File-/service/preFetchjs');
+                                cb();
+                            } else {
+                                console.log('FFFFFFFFFFFFFFFFFFFFF')
+                                console.log('Error. Line-452 File-/service/preFetchjs' + err);
+                                cb();
+                            }
+                        });
+                    }
+                });
+            } else {
+                cb();
+            }
         }
     });
 };

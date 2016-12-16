@@ -28,7 +28,7 @@ var productsDB = conn.model('productsData', productsData);
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
 // pattern for crone  after 5 min '*/5 * * * *'
-    new CronJob('*/1 * * * *', function () {
+    new CronJob('* * * * * *', function () {
         app_urls.findOne({
             APP_ID: app_id
         }, function (err, user) {
@@ -112,6 +112,20 @@ processStore = function (app_id) {
                                                     },
                                                     "reqType": PREFETCHHOMEPRODUCTS,
                                                     "name": PREFETCHHOMEPRODUCTS,
+                                                    "APP_ID": app_id
+                                                },
+                                                {
+                                                    "req": {
+                                                        headers: {
+                                                            app_id: app_id
+                                                        },
+                                                        body: {
+                                                            mobile_width: '300'
+                                                        },
+                                                        URL: URL
+                                                    },
+                                                    "reqType": PREFETCHPRODUCT,
+                                                    "name": PREFETCHPRODUCT,
                                                     "APP_ID": app_id
                                                 }
                                             ];
@@ -248,6 +262,7 @@ processStore = function (app_id) {
 //                                                }
 //                                            });
                                         } else if (item.reqType == PREFETCHPRODUCT) {   // IF REQUEST TYPE PRODUCT, UPADTED CACHE 1
+                                            console.log('AAAAAAAAAAAAAAAAAAAAAA')
                                             prefetchDataDB.update({
                                                 _id: item._id,
                                                 cache: 0,

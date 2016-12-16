@@ -6,7 +6,7 @@ require('./statistic');
 redisFetch = function (req, productType, APIName, callback) {
     var status = req.status;
     if (req.isAdmin == true) {
-        callback(null);
+        callback({status:0});
     } else {
         client.get(productType, function (err, object) {
             if (object && status == "enabled") {
