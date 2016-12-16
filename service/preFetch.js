@@ -21,8 +21,7 @@ fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId
             parent_id: '1',
             type: 'full'
         },
-        URL: URL,
-        isAdmin: true
+        URL: URL
     };
     categoryList(req, function (body) {
         if (body.status == 0) {
@@ -98,8 +97,7 @@ fetchHomeSliderList = function (homeSliderDB, APP_ID, URL, cb) {
         body: {
             mobile_width: '300'
         },
-        URL: URL,
-        isAdmin: true
+        URL: URL
     };
     homeSlider(req, function (body) {
         if (body.status == 0) {
@@ -151,8 +149,7 @@ fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb
         body: {
             mobile_width: '300'
         },
-        URL: URL,
-        isAdmin: true
+        URL: URL
     };
     homeProducts(req, function (body) {
         if (body.status == 0) {
@@ -257,8 +254,7 @@ fetchCategory = function (item, prefetchDataDB, categoryProductsDB, APP_ID, URL,
             mobile_width: '300',
             page: inputPage
         },
-        URL: URL,
-        isAdmin: true
+        URL: URL
     };
     categoryProducts(myReq, function (body) {
         if (body.status == 0) {
