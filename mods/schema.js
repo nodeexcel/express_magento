@@ -64,7 +64,7 @@ homeProductsData = new Schema({
     "APP_ID": String,
     "price": Number,
     "in_stock": String,
-    "media_images": String,
+    "media_images": Array,
     "small_image": String
 });
 

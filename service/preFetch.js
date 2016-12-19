@@ -202,8 +202,8 @@ fetchhomeProductList = function (prefetchDataDB, homeProductsDB, APP_ID, URL, cb
                                     "APP_ID": APP_ID,
                                     "price": parseInt(item.data.price),
                                     "in_stock": item.data.in_stock,
-                                    "media_images": String,
-                                    "small_image": String
+                                    "media_images": item.data.media_images,
+                                    "small_image": item.data.small_image
                                 });
                                 productRecord.save(function (errorPro) {
                                     if (errorPro) {

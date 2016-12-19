@@ -53,6 +53,7 @@ homeProducts = function (req, callback) {
                                 var image_url = item.data.small_image;
                                 resize(req, image_url, function (status, image_name) {
                                     if (status == 200) {
+                                        console.log(image_name)
                                         minify(req, image_name, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
