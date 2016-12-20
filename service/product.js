@@ -75,63 +75,64 @@ productGet = function (req, callback) {
 
 //FOR GET PRODUCT REVIEW
 productReview = function (req, callback) {
-validate(req, {
-sku: 'required',
+    validate(req, {
+        sku: 'required',
         secret: 'optional',
         page: 'required'
-        }, null, function (body) {
-if (body.status == 0) {
-callback({status: 0, msg: body.body});
+    }, null, function (body) {
+        if (body.status == 0) {
+            callback({status: 0, msg: body.body});
         } else {
-redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result) {
-if (result) {
-callback({status: 1, msg: result.body);
-        } else {
-API(req, body, '/product/review/', function (status, response, msg) {
-if (status == 0) {
-callback({status: 0, msg: response});
-        } else {
-redisSet('productReview_' + body.sku + '_' + body.page, {
-'id': body.sku,
-        "body": response
-        }, function () {
-callback({status: status, msg: response});
-        });
+            redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result) {
+                if (result) {
+                    callback({status: 1, msg: result.body});
+                } else {
+                    API(req, body, '/product/review/', function (status, response, msg) {
+                        if (status == 0) {
+                            callback({status: 0, msg: response});
+                        } else {
+                            redisSet('productReview_' + body.sku + '_' + body.page, {
+                                'id': body.sku,
+                                "body": response
+                            }, function () {
+                                callback({status: status, msg: response});
+                            });
+                        }
+                    });
+                }
+            });
         }
-});
-        }
-});
-        }
-});
+    });
 };
+
 //FOR GET PRODUCT RATING
 //RESPONSE - {"data":{"max_review":5,"attribute":{"1":"Quality","2":"Value","3":"Price"},"options":{"1":["1","2","3","4","5"],"2":["6","7","8","9","10"],"3":["11","12","13","14","15"]}},"status":1,"message":"success"}
-        productGetRating = function (req, callback) {
-        validate(req, {}, null, function (body) {
+productGetRating = function (req, callback) {
+    validate(req, {}, null, function (body) {
         if (body.status == 0) {
-        callback({status: 0, msg: body.body});
+            callback({status: 0, msg: body.body});
         } else {
-        if (req.URL) {
-        redisFetch(req, 'productGetRating', 'productGetRating', function (error, result) {
-        if (result) {
-        callback({status: 1, msg: result.body});
-        } else {
-        API(req, body, '/product/getrating/', function (status, response, msg) {
-        if (status == 0) {
-        callback({status: 0, msg: response});
-        } else {
-        redisSet('productGetRating', {
-        "body": response
-        }, function () {
-        callback({status: status, msg: response});
-        });
+            if (req.URL) {
+                redisFetch(req, 'productGetRating', 'productGetRating', function (error, result) {
+                    if (result) {
+                        callback({status: 1, msg: result.body});
+                    } else {
+                        API(req, body, '/product/getrating/', function (status, response, msg) {
+                            if (status == 0) {
+                                callback({status: 0, msg: response});
+                            } else {
+                                redisSet('productGetRating', {
+                                    "body": response
+                                }, function () {
+                                    callback({status: status, msg: response});
+                                });
+                            }
+                        });
+                    }
+                });
+            } else {
+                callback({status: 0, msg: INVALID});
+            }
         }
-        });
-        }
-        });
-        } else {
-        callback({status: 0, msg: INVALID});
-        }
-        }
-        });
-        };
+    });
+};
