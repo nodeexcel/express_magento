@@ -13,7 +13,6 @@ API = function (req, body, url, callback) {
             timeout: 60 * 1000,
             body: JSON.stringify(body)
         }, function (error, result, body) {
-            console.log(body)
             if (error) {
                 callback(0, error, ERROR);
             } else if (result.statusCode === 500) {
