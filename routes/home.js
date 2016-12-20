@@ -11,7 +11,7 @@ router.post('/products', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, 1, body.msg);
+            success(res, 1, body.msg, body.response);
         }
     });
 });
@@ -22,7 +22,7 @@ router.post('/categories', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, 1, body.msg);
+            success(res, 1, body.msg, body.response);
         }
     });
 });
@@ -33,7 +33,7 @@ router.post('/slider', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, 1, body.msg);
+            success(res, 1, body.msg, body.response);
         }
     });
 });

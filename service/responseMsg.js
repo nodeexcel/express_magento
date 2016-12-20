@@ -1,7 +1,12 @@
 //CALLED WHEN ANY OPERATION SUCCESS FOR RETURN RESPONSE
-success = function (res, status, data) {
+success = function (res, status, data, resp) {
     if (status == 1) {
-        res.json({status: status, body: data});
+        if (resp) {
+            res.set('X-Cache', 'Redis');
+            res.json({status: status, body: data});
+        } else {
+            res.json({status: status, body: data});
+        }
     } else {
         res.status(500).send(data);
     }

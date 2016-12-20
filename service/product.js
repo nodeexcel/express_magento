@@ -21,9 +21,9 @@ productGet = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'productGet_' + body.sku, 'productGet', function (error, result) {
+            redisFetch(req, 'productGet_' + body.sku, 'productGet', function (error, result, res) {
                 if (result) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body, response: res});
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
@@ -83,9 +83,9 @@ productReview = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result) {
+            redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result, res) {
                 if (result) {
-                    callback({status: 1, msg: result.body});
+                    callback({status: 1, msg: result.body, response: res});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -113,9 +113,9 @@ productGetRating = function (req, callback) {
             callback({status: 0, msg: body.body});
         } else {
             if (req.URL) {
-                redisFetch(req, 'productGetRating', 'productGetRating', function (error, result) {
+                redisFetch(req, 'productGetRating', 'productGetRating', function (error, result, res) {
                     if (result) {
-                        callback({status: 1, msg: result.body});
+                        callback({status: 1, msg: result.body, response: res});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {

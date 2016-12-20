@@ -9,17 +9,17 @@ redisFetch = function (req, productType, APIName, callback) {
         callback(new Error('Not Admin'));
     } else {
         client.get(productType, function (err, object) {
-            if (object && status == "enable") {
+            if (object && status == "enabled") {
 //                    FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM REDIS
                 setStatisticRedis(APIName, req);
-                // callback({status: 1, body: JSON.parse(object)});
-                callback(false, JSON.parse(object));
+                var res = {
+                    isRedis: true
+                };
+                callback(false, JSON.parse(object), res);
             } else {
-                console.log('2')
 //                      FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM MAGENTO
                 setStatisticMagento(APIName, req);
                 callback(new Error('Cache Disabled'));
-                // callback({status: 2});
             }
         });
     }
