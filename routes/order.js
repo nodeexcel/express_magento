@@ -13,7 +13,8 @@ router.post('/alllist', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -26,7 +27,8 @@ router.post('/totalorder', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -40,7 +42,8 @@ router.post('/get', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });

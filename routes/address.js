@@ -27,7 +27,8 @@ router.post('/edit', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -52,7 +53,8 @@ router.post('/delete', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });

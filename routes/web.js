@@ -13,7 +13,8 @@ router.post('/config', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, 1, body.msg);
+            success(res,body);
+            // success(res, 1, body.msg);
         }
     });
 });
@@ -27,7 +28,8 @@ router.post('/getAllowedCountries', function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });

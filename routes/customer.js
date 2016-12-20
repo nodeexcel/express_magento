@@ -32,7 +32,8 @@ router.post('/login', function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -63,7 +64,8 @@ router.post('/register', function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -94,7 +96,8 @@ router.post('/forgot', function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -127,7 +130,8 @@ router.post('/social_account', function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });

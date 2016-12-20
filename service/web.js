@@ -18,6 +18,5 @@ webConfig = function (req, callback) {
                 }
             });
         }
-
     });
 };

@@ -17,10 +17,12 @@ router.all('/address', isAuth, function (req, res) {
         zip: 'optional',
         secret: 'required'}, req.body.secret, function (body) {
         API(req, body, '/account/address/', function (status, response, msg) {
+            console.log(msg)
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });
@@ -38,7 +40,8 @@ router.post('/changepassword', isAuth, function (req, res) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res, status, response);
+                success(res,response);
+                // success(res, status, response);
             }
         });
     });

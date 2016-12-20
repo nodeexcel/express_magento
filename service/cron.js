@@ -44,7 +44,7 @@ processStore = function (app_id) {
                 var format = 'HH:mm ZZ';
                 var cron_running_time_with_IST = moment(cron_running_time, format).tz('Asia/Calcutta').format(format);
 //APIS RUN IF CURRENT TIME AND SAVED DB TIME BOTH MATCH >=
-               if (current_time >= cron_running_time_with_IST) {         // IF CONDITION STARTS
+               if (current_time == cron_running_time_with_IST) {         // IF CONDITION STARTS
                 console.log('You will see this message every minute. Line-45 File-/service/cronjs');
                 fetchWebConfig(app_id, URL, function (respond) {
                     if (respond.status != 0) {

@@ -23,7 +23,7 @@ productGet = function (req, callback) {
         } else {
             redisFetch(req, 'productGet_' + body.sku, 'productGet', function (error, result, res) {
                 if (result) {
-                    callback({status: 1, msg: result.body, response: res});
+                    callback({status: 1, msg: result.body.url, isRedis: res});;
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
@@ -85,7 +85,7 @@ productReview = function (req, callback) {
         } else {
             redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result, res) {
                 if (result) {
-                    callback({status: 1, msg: result.body, response: res});
+                   callback({status: 1, msg: result.body.url, isRedis: res});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -115,7 +115,7 @@ productGetRating = function (req, callback) {
             if (req.URL) {
                 redisFetch(req, 'productGetRating', 'productGetRating', function (error, result, res) {
                     if (result) {
-                        callback({status: 1, msg: result.body, response: res});
+                        callback({status: 1, msg: result.body.url, isRedis: res});
                     } else {
                         API(req, body, '/product/getrating/', function (status, response, msg) {
                             if (status == 0) {
