@@ -84,7 +84,7 @@ productsData = new Schema({
     "APP_ID": String,
     "price": Number,
     "in_stock": String,
-    "minify_image": String,
+    "minify_image": Array,
     "small_image": String
 });
 
@@ -99,5 +99,4 @@ productsReviewData = new Schema({
     "total_attribute_rating": Array,
     "rating": Number,
     "total_review": Number
-
 });

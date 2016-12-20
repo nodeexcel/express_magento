@@ -39,9 +39,9 @@ categoryProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categoryProducts_' + body.id + '_' + body.page, 'categoryProducts', function (result) {
-                 if (result.status == 1) {
-                    callback({status: 1, msg: result.body.body});
+            redisFetch(req, 'categoryProducts_' + body.id + '_' + body.page, 'categoryProducts', function (error,result) {
+                 if (result) {
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/category/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -118,8 +118,8 @@ categoryList = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'categoryList_' + body.parent_id, 'categoryList', function (result) {
-                 if (result.status == 1) {
+            redisFetch(req, 'categoryList_' + body.parent_id, 'categoryList', function (error,result) {
+                 if (result) {
                     callback({status: 1, msg: result.body.body});
                 } else {
                     API(req, body, '/category/categorylist/', function (status, response, msg) {

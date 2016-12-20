@@ -417,11 +417,11 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         cb();
                     } else if (!result || result.length == 0) {
                         var record = new productsDB({
+                            "APP_ID": APP_ID,
                             "date": moment().format('MMMM Do YYYY, h:mm:ss a'),
                             "sku": body.msg.data.sku,
                             "name": body.msg.data.name,
                             "json": body.msg.data,
-                            "APP_ID": APP_ID,
                             "price": body.msg.data.price,
                             "in_stock": body.msg.data.in_stock,
                             "minify_image": body.msg.data.minify_image,
@@ -438,9 +438,9 @@ fetchProduct = function (item, prefetchDataDB, productsDB, APP_ID, URL, cb) {
                         });
                     } else {
                         prefetchDataDB.update({
+                            'APP_ID': APP_ID,
                             'key': inputId,
-                            'type': PREFETCHPRODUCT,
-                            'APP_ID': APP_ID
+                            'type': PREFETCHPRODUCT
                         }, {
                             $set: {
                                 cache: 1

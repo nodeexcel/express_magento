@@ -6,17 +6,20 @@ require('./statistic');
 redisFetch = function (req, productType, APIName, callback) {
     var status = req.status;
     if (req.isAdmin == true) {
-        callback({status:0});
+        callback(new Error('Not Admin'));
     } else {
         client.get(productType, function (err, object) {
-            if (object && status == "enabled") {
+            if (object && status == "enable") {
 //                    FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM REDIS
                 setStatisticRedis(APIName, req);
-                callback({status: 1, body: JSON.parse(object)});
+                // callback({status: 1, body: JSON.parse(object)});
+                callback(false, JSON.parse(object));
             } else {
+                console.log('2')
 //                      FOR SET VALUE OF STATISTIC(Category Products API), DATA IS COMING FROM MAGENTO
                 setStatisticMagento(APIName, req);
-                callback({status: 2});
+                callback(new Error('Cache Disabled'));
+                // callback({status: 2});
             }
         });
     }

@@ -24,9 +24,9 @@ homeProducts = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'homeProducts_' + body.type, 'homeProducts', function (result) {
-                 if (result.status == 1) {
-                    callback({status: 1, msg: result.body.body});
+            redisFetch(req, 'homeProducts_' + body.type, 'homeProducts', function (error, result) {
+                if (result) {
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/home/products/', function (status, response, msg) {
                         if (status == 0) {
@@ -53,7 +53,6 @@ homeProducts = function (req, callback) {
                                 var image_url = item.data.small_image;
                                 resize(req, image_url, function (status, image_name) {
                                     if (status == 200) {
-                                        console.log(image_name)
                                         minify(req, image_name, function (status, minify_image) {
                                             item.data.small_image = image_name;
                                             item.data.minify_image = minify_image;
@@ -82,9 +81,9 @@ homeCategories = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'homeCategories', null, function (result) {
-                 if (result.status == 1) {
-                    callback({status: 1, msg: result.body.body});
+            redisFetch(req, 'homeCategories', null, function (error, result) {
+                if (result) {
+                    callback({status: 1, msg: result.body});
                 } else {
                     API(req, body, '/home/categories/', function (status, response, msg) {
                         if (status == 0) {
@@ -111,9 +110,9 @@ homeSlider = function (req, callback) {
         if (body.status == 0) {
             callback({status: 0, msg: body.body});
         } else {
-            redisFetch(req, 'homeSlider', 'homeSlider', function (result) {
-                 if (result.status == 1) {
-                    callback({status: 1, msg: result.body.body});
+            redisFetch(req, 'homeSlider', 'homeSlider', function (error, result) {
+                if (result) {
+                    callback({status: 1, msg: result.body.url});
                 } else {
                     API(req, body, '/home/slider/', function (status, response, msg) {
                         if (status == 0) {
