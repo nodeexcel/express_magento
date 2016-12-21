@@ -15,13 +15,12 @@ router.all('/address', isAuth, function (req, res) {
         password: 'optional',
         newPassword: 'optional',
         zip: 'optional',
-        secret: 'required'}, req.body.secret, function (body) {
+        secret: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/account/address/', function (status, response, msg) {
-            console.log(msg)
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });
@@ -35,12 +34,12 @@ router.post('/changepassword', isAuth, function (req, res) {
         password: 'required',
         newPassword: 'required',
         zip: 'optional',
-        secret: 'required'}, req.body.secret, function (body) {
+        secret: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/account/changepassword/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });

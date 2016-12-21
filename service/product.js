@@ -17,33 +17,34 @@ productGet = function (req, callback) {
     validate(req, {
         sku: 'required',
         secret: 'optional'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'productGet_' + body.sku, 'productGet', function (error, result, res) {
                 if (result) {
-                    callback({status: 1, msg: result.body.url, isRedis: res});;
+                    callback({status: 1, msg: result.body.url, isRedis: res});
+                    ;
                 } else {
                     API(req, body, '/product/get/', function (status, response, msg) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
 //                            callback({status: status, msg: response});
-                            if (response.data.media_images !== undefined) {
+                            if (response.data.data.media_images !== undefined) {
                                 var optmized_response = [];
                                 var minify_imag = [];
-                                async.eachOfLimit(response.data.media_images, 1, processData, function (err) {
-                                    response.data.media_images = optmized_response;
-                                    response.data.minify_image = minify_imag;
+                                async.eachOfLimit(response.data.data.media_images, 1, processData, function (err) {
+                                    response.data.data.media_images = optmized_response;
+                                    response.data.data.minify_image = minify_imag;
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
                                         redisSet('productGet_' + body.sku, {
                                             'id': body.sku,
-                                            "body": response
+                                            "body": response.data
                                         }, function () {
-                                            callback({status: status, msg: response});
+                                            callback({status: status, msg: response.data});
                                         });
                                     }
                                 });
@@ -79,13 +80,13 @@ productReview = function (req, callback) {
         sku: 'required',
         secret: 'optional',
         page: 'required'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result, res) {
                 if (result) {
-                   callback({status: 1, msg: result.body.url, isRedis: res});
+                    callback({status: 1, msg: result.body.url, isRedis: res});
                 } else {
                     API(req, body, '/product/review/', function (status, response, msg) {
                         if (status == 0) {
@@ -108,7 +109,7 @@ productReview = function (req, callback) {
 //FOR GET PRODUCT RATING
 //RESPONSE - {"data":{"max_review":5,"attribute":{"1":"Quality","2":"Value","3":"Price"},"options":{"1":["1","2","3","4","5"],"2":["6","7","8","9","10"],"3":["11","12","13","14","15"]}},"status":1,"message":"success"}
 productGetRating = function (req, callback) {
-    validate(req, {}, null, function (error,body) {
+    validate(req, {}, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {

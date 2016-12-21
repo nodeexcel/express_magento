@@ -35,7 +35,7 @@ categoryProducts = function (req, callback) {
         limit: 'required',
         id: 'required',
         page: 'required'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
@@ -48,9 +48,9 @@ categoryProducts = function (req, callback) {
                             callback({status: 0, msg: msg});
                         } else {
 //                            callback({status: status, msg: response});
-                            if (response !== undefined) {
+                            if (response.data !== undefined) {
                                 var optmized_response = [];
-                                async.eachOfLimit(response, 5, processData, function (err) {
+                                async.eachOfLimit(response.data, 5, processData, function (err) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
@@ -114,7 +114,7 @@ categoryList = function (req, callback) {
         store_id: 'required',
         parent_id: 'required',
         type: 'required'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {

@@ -20,7 +20,7 @@ homeProducts = function (req, callback) {
         type: 'optional',
         secret: 'optional',
         mobile_width: 'required'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
@@ -32,14 +32,14 @@ homeProducts = function (req, callback) {
                         if (status == 0) {
                             callback({status: 0, msg: response});
                         } else {
-                            if (response !== undefined) {
+                            if (response.data !== undefined) {
                                 var optmized_response = [];
-                                async.eachOfLimit(response, 5, processData, function (err) {
+                                async.eachOfLimit(response.data, 5, processData, function (err) {
                                     if (err) {
                                         callback({status: 0, msg: 'OOPS! How is this possible?'});
                                     } else {
                                         redisSet('homeProducts_' + body.type, {
-                                            "body": response,
+                                            "body": response.data,
                                             "type": body.type
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
@@ -77,7 +77,7 @@ homeProducts = function (req, callback) {
 
 //FOR GET HOME CATEGORIES
 homeCategories = function (req, callback) {
-    validate(req, {}, null, function (error,body) {
+    validate(req, {}, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
@@ -106,7 +106,7 @@ homeCategories = function (req, callback) {
 homeSlider = function (req, callback) {
     validate(req, {
         mobile_width: 'required'
-    }, null, function (error,body) {
+    }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
         } else {
@@ -119,14 +119,14 @@ homeSlider = function (req, callback) {
                             callback({status: 0, msg: response});
                         } else {
 //                            callback({status: 0, msg: response});
-                            if (response.url !== undefined) {
+                            if (response.data.url !== undefined) {
                                 var optmized_response = [];
-                                async.eachOfLimit(response.url, 5, processData, function (err) {
+                                async.eachOfLimit(response.data.url, 5, processData, function (err) {
                                     if (err) {
                                         callback({status: 0, msg: "OOPS! How is this possible?"});
                                     } else {
                                         redisSet('homeSlider', {
-                                            "body": response
+                                            "body": response.data
                                         }, function () {
                                             callback({status: status, msg: optmized_response});
                                         });

@@ -22,12 +22,12 @@ router.post('/edit', isAuth, function (req, res) {
         password: 'optional',
         newPassword: 'optional',
         secret: 'required',
-        entity_id: 'required'}, req.body.secret, function (body) {
+        entity_id: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/address/edit/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });
@@ -48,12 +48,12 @@ router.post('/delete', isAuth, function (req, res) {
         password: 'optional',
         newPassword: 'optional',
         secret: 'required',
-        entity_id: 'required'}, req.body.secret, function (body) {
+        entity_id: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/address/delete/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });

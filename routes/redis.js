@@ -13,7 +13,7 @@ router.post('/flush', function (req, res) {
         if (err) {
             oops(res, err);
         } else {
-            success(res, 1, succeeded);
+            success(res, succeeded);
         }
     });
 });
@@ -32,11 +32,11 @@ router.post('/set_status', function (req, res) {
                 if (error) {
                     oops(res, error);
                 } else {
-                    success(res, 1, 'the status is successfully changed to ' + status);
+                    success(res, 'the status is successfully changed to ' + status);
                 }
             });
         } else {
-            success(res, 0, "the status is not changed successfully,  you have to set status enabled or disabled");
+            success(res, "the status is not changed successfully,  you have to set status enabled or disabled");
         }
     });
 });
@@ -48,7 +48,7 @@ router.post('/check_status', function (req, res) {
         if (err) {
             oops(res, err);
         } else {
-            success(res, 1, result[0].status);
+            success(res, result[0].status);
         }
     });
 });

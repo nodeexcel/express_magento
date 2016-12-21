@@ -27,7 +27,7 @@ router.post('/login', function (req, res) {
         parent_id: 'optional',
         type: 'optional',
         website_id: 'required',
-        email: 'required'}, null, function (body) {
+        email: 'required'}, null, function (error, body) {
         API(req, body, '/customer/login/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
@@ -59,7 +59,7 @@ router.post('/register', function (req, res) {
         parent_id: 'optional',
         type: 'optional',
         website_id: 'required',
-        email: 'required'}, null, function (body) {
+        email: 'required'}, null, function (error,body) {
         API(req, body, '/customer/register/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
@@ -91,7 +91,7 @@ router.post('/forgot', function (req, res) {
         parent_id: 'optional',
         type: 'optional',
         website_id: 'required',
-        email: 'required'}, null, function (body) {
+        email: 'required'}, null, function (error,body) {
         API(req, body, '/customer/forgot/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
@@ -125,7 +125,7 @@ router.post('/social_account', function (req, res) {
         website_id: 'required',
         email: 'required',
         social: 'required',
-        social_id: 'required'}, null, function (body) {
+        social_id: 'required'}, null, function (error,body) {
         API(req, body, '/customer/social_account/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);

@@ -11,9 +11,9 @@ router.post('/statistics_status', function (req, res) {
             if (err) {
                 oops(res, err);
             } else if (!dbrecord || dbrecord.length == '0') {
-                success(res, 1, []);
+                success(res, []);
             } else {
-                success(res, 1, dbrecord);
+                success(res, dbrecord);
             }
         });
     });

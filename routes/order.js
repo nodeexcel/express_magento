@@ -8,12 +8,12 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/alllist', isAuth, function (req, res) {
-    validate(req, {secret: 'required'}, req.body.secret, function (body) {
+    validate(req, {secret: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/order/alllist/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });
@@ -22,12 +22,12 @@ router.post('/alllist', isAuth, function (req, res) {
 
 //ROUTE FOR GET TOTAL ORDER
 router.post('/totalorder', isAuth, function (req, res) {
-    validate(req, {secret: 'required'}, req.body.secret, function (body) {
+    validate(req, {secret: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/order/totalorder/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });
@@ -37,12 +37,12 @@ router.post('/totalorder', isAuth, function (req, res) {
 //ROUTE FOR GET ORDER
 router.post('/get', isAuth, function (req, res) {
     validate(req, {order_id: 'required',
-        secret: 'required'}, req.body.secret, function (body) {
+        secret: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/order/get', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });

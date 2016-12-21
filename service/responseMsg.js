@@ -1,6 +1,8 @@
 //CALLED WHEN ANY OPERATION SUCCESS FOR RETURN RESPONSE
 success = function (res, data) {
-if (data.status == 1) {
+    if (data == null) {
+        res.json({status: status, body: data});
+    } else if (data.status == 1) {
         if (data.isRedis) {
             res.set('X-Cache', 'Redis');
             res.json({status: status, body: data});

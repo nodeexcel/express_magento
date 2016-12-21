@@ -24,12 +24,12 @@ router.all('/cart', isAuth, function (req, res) {
         secret: 'required',
         entity_id: 'optional',
         productid: 'required',
-        store_id: 'required'}, req.body.secret, function (body) {
+        store_id: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/cart/cart/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                success(res,response);
+                success(res, response);
                 // success(res, status, response);
             }
         });

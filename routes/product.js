@@ -16,7 +16,7 @@ router.post('/get', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res,body);
+            success(res, body);
             // success(res, 1, body.msg, body.response);
         }
     });
@@ -28,7 +28,7 @@ router.post('/review', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res,body);
+            success(res, body);
             // success(res, 1, body.msg, body.response);
         }
     });
@@ -40,7 +40,7 @@ router.post('/getrating', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res,body);
+            success(res, body);
             // success(res, 1, body.msg, body.response);
         }
     });
@@ -75,8 +75,8 @@ router.post('/submitreview', function (req, res) {
 router.post('/productNotification', function (req, res) {
     validate(req, {
         sku: 'required',
-        email: 'optional'
-    }, null, function (body) {
+        email: 'required'
+    }, null, function (error, body) {
         API(req, body, '/product/productNotification/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
