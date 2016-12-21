@@ -29,8 +29,10 @@ validate = function (req, schema, secret, callback) {
         }
     }
     if (find == true) {
-        callback({status: 0, body: 'Fill required fields!'});
+        callback(new Error('Fill required fields!'));
+        // callback({status: 0, body: 'Fill required fields!'});
     } else {
-        callback(result);
+        callback(false,result);
+        // callback(result);
     }
 };

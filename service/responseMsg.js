@@ -25,5 +25,5 @@ if (data.status == 1) {
 
 //CALLED WHEN ANY OPERATION FAILED FOR RETURN RESPONSE
 oops = function (res, data) {
-    res.status(500).send(data);
+    res.status(500).send(data.toString());
 };

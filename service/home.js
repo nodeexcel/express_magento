@@ -20,9 +20,9 @@ homeProducts = function (req, callback) {
         type: 'optional',
         secret: 'optional',
         mobile_width: 'required'
-    }, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    }, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'homeProducts_' + body.type, 'homeProducts', function (error, result, res) {
                 if (result) {
@@ -77,9 +77,9 @@ homeProducts = function (req, callback) {
 
 //FOR GET HOME CATEGORIES
 homeCategories = function (req, callback) {
-    validate(req, {}, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    validate(req, {}, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'homeCategories', null, function (error, result, res) {
                 if (result) {
@@ -106,9 +106,9 @@ homeCategories = function (req, callback) {
 homeSlider = function (req, callback) {
     validate(req, {
         mobile_width: 'required'
-    }, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    }, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'homeSlider', 'homeSlider', function (error, result, res) {
                 if (result) {

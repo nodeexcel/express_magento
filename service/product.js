@@ -17,9 +17,9 @@ productGet = function (req, callback) {
     validate(req, {
         sku: 'required',
         secret: 'optional'
-    }, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    }, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'productGet_' + body.sku, 'productGet', function (error, result, res) {
                 if (result) {
@@ -79,9 +79,9 @@ productReview = function (req, callback) {
         sku: 'required',
         secret: 'optional',
         page: 'required'
-    }, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    }, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             redisFetch(req, 'productReview_' + body.sku + '_' + body.page, 'productReview', function (error, result, res) {
                 if (result) {
@@ -108,9 +108,9 @@ productReview = function (req, callback) {
 //FOR GET PRODUCT RATING
 //RESPONSE - {"data":{"max_review":5,"attribute":{"1":"Quality","2":"Value","3":"Price"},"options":{"1":["1","2","3","4","5"],"2":["6","7","8","9","10"],"3":["11","12","13","14","15"]}},"status":1,"message":"success"}
 productGetRating = function (req, callback) {
-    validate(req, {}, null, function (body) {
-        if (body.status == 0) {
-            callback({status: 0, msg: body.body});
+    validate(req, {}, null, function (error,body) {
+        if (error) {
+            callback({status: 0, msg: error});
         } else {
             if (req.URL) {
                 redisFetch(req, 'productGetRating', 'productGetRating', function (error, result, res) {
