@@ -3,12 +3,12 @@ success = function (res, data) {
     if (data.status == 1) {
         if (data.isRedis) {
             res.set('X-Cache', 'Redis');
-            res.json({status: status, body: data.data});
+            res.json({status: data.status, body: data.data});
             // console.log('---------Response starts-------');
             // console.log({status: status, body: data});
             // console.log('---------Response ends---------');
         } else {
-            res.json({status: status, body: data.data});
+            res.json({status: data.status, body: data.data});
             // console.log('---------Response starts-------');
             // console.log({status: 500, body: data});
             // console.log('---------Response ends---------');
