@@ -16,7 +16,7 @@ router.post('/get', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, body);
+            success(res, body.msg);
             // success(res, 1, body.msg, body.response);
         }
     });
@@ -28,7 +28,7 @@ router.post('/review', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, body);
+            success(res, body.msg);
             // success(res, 1, body.msg, body.response);
         }
     });
@@ -40,7 +40,7 @@ router.post('/getrating', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, body);
+            success(res, body.msg);
             // success(res, 1, body.msg, body.response);
         }
     });

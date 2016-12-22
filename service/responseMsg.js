@@ -17,6 +17,8 @@ success = function (res, data) {
             // console.log({status: 500, body: data});
             // console.log('---------Response ends---------');
         }
+    }else{
+       res.json({status: 1, body: data}); 
     }
 };
 
