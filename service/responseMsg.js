@@ -8,7 +8,11 @@ success = function (res, data) {
             // console.log({status: status, body: data});
             // console.log('---------Response ends---------');
         } else {
-            res.json({status: data.status, body: data.data});
+            if (data.data) {
+                res.json({status: data.status, body: data.data});
+            } else {
+                res.json({status: data.status, body: data});
+            }
             // console.log('---------Response starts-------');
             // console.log({status: 500, body: data});
             // console.log('---------Response ends---------');
