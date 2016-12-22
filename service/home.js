@@ -11,8 +11,6 @@ require('../mods/schema');
 var express = require('express');
 var router = express.Router();
 var async = require('async');
-var redis = require("redis"),
-        client = redis.createClient();
 
 //FOR GET HOME PRODUCTS LIST
 homeProducts = function (req, callback) {

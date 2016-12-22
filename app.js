@@ -50,6 +50,17 @@ var redis = require('./routes/redis');
 var web = require('./routes/web');
 var stats = require('./routes/stats');
 
+app.use(function (req, res, next) {
+    console.log('***************Request header starts*************');
+    console.log(req.headers);
+    console.log('***************Request header ends***************');
+
+    console.log('################Request body starts##############');
+    console.log(req.body);
+    console.log('###############Request body ends#################');
+    next();
+});
+
 app.use('/category', category);
 app.use('/customer', customer);
 app.use('/product', product);

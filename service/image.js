@@ -46,12 +46,12 @@ resize = function (req, url, callback) {
                                 if (dimensions) {
                                     if (dimensions.width > 480 || dimensions.height > 240) {
                                         if (dimensions.width > 480) {
-                                           var sharp_resize_width = 480;
+                                            var sharp_resize_width = 480;
                                         } else if (dimensions.height > 240) {
-                                         var sharp_resize_height = 240;
+                                            var sharp_resize_height = 240;
                                         }
                                         sharp('public/original_image/' + image_name)
-                                                .resize(sharp_resize_width,sharp_resize_height)
+                                                .resize(sharp_resize_width, sharp_resize_height)
                                                 .toFile('public/' + filename + image_webp, function (err) {
                                                     if (err) {
                                                         callback(500, config.DEFAULT_IMAGE_URL);
@@ -92,7 +92,7 @@ resize = function (req, url, callback) {
 
 //FOR MINIFY IMAGE
 minify = function (req, url, callback) {
-    return callback(200,url);
+    return callback(200, url);
     // var APP_ID = req.headers.app_id;
     // if (url && APP_ID) {
     //     var image_url = URL_.parse(url).path;
