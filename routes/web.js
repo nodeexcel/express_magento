@@ -13,7 +13,7 @@ router.post('/config', function (req, res) {
         if (body.status == 0) {
             oops(res, body.msg);
         } else {
-            success(res, body);
+            success(res, body.msg);
             // success(res, 1, body.msg);
         }
     });
