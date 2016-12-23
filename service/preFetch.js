@@ -29,7 +29,7 @@ fetchCategoryList = function (prefetchDataDB, categoriesDB, APP_ID, URL, storeId
             console.log('category list API failed. Line-28 File-/service/preFetchjs');
             cb();
         } else {
-            var allData = body.msg.children[0].children;
+            var allData = body.msg.data.children[0].children;
             var allCategory = getAllCategory(allData);
             async.eachOfLimit(allCategory, 10, processCategoryList, function (err) {
                 if (err) {

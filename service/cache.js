@@ -6,6 +6,7 @@ require('./statistic');
 redisFetch = function (req, productType, APIName, callback) {
     var status = req.status;
     if (req.isAdmin == true) {
+        setStatisticMagento(APIName, req);
         callback(new Error('Not Admin'));
     } else {
         client.get(productType, function (err, object) {
