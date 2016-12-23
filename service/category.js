@@ -92,6 +92,7 @@ categoryProducts = function (req, callback) {
             });
         }
     });
+
 };
 
 //FOR GET CATEGORY LIST
