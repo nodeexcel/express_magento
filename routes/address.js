@@ -22,9 +22,9 @@ router.post('/edit', isAuth, function (req, res) {
         password: 'optional',
         newPassword: 'optional',
         secret: 'required',
-        entity_id: 'required',
-        default_billing:'required',
-        default_shipping:'required'}, req.body.secret, function (error, body) {
+        default_billing: 'required',
+        default_shipping: 'required',
+        entity_id: 'required'}, req.body.secret, function (error, body) {
         API(req, body, '/address/edit/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
