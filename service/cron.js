@@ -184,8 +184,8 @@ processStore = function (app_id) {
                                     }
                                 } else {
                                     if (user.prefetch_status == 'RUNNING') {
-//                            async eachOfLimit function
-                                        async.eachOfLimit(result, 1, processRecord, function (err) {
+            //                            async eachOfLimit function
+                                        async.eachOfLimit(result, 3, processRecord, function (err) {
                                             if (err) {
                                                 console.log('async eachOfLimt error. Line-154 File-/service/cronjs' + err);
                                             } else {
