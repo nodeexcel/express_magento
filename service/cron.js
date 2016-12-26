@@ -24,6 +24,7 @@ var categoryProductsDB = conn.model('categoryProductsData', categoryProductsData
 var homeSliderDB = conn.model('homeSliderData', homeSliderData);
 var homeProductsDB = conn.model('homeProductsData', homeProductsData);
 var productsDB = conn.model('productsData', productsData);
+var staticsticAPIDB = conn.model('staticsticAPI', staticsticAPI);
 
 //FOR RUNNING THE CRON
 processStore = function (app_id) {
@@ -274,6 +275,39 @@ processStore = function (app_id) {
                                                     } else {
                                                         console.log('fetchCategory function run. Line-237 File-/service/cronjs');
 //                                                FUNCTION CALLED FOR GETTING LIST OF ALL PRODUCTS FOR ALL CATEGORIES
+                                                        console.log('--------------------')
+                                                        var current_date = moment().format('L');
+                                                        staticsticAPIDB.findOne({
+                                                            nameAPI: 'categoryProducts',
+                                                            APP_ID: app_id,
+                                                            current_date: current_date
+                                                        }, function (error, row) {
+                                                            if (error) {
+                                                                console.log('Error. Line-63, File-service/statisticjs' + error);
+                                                            } else if (row) {
+                                                    //          UPDATED RECORD AFTER FIRST TIME
+                                                                console.log('found');
+                                                            } else {
+                                                    //          FIRST TIME WHEN RECORD NOT AVAILABLE
+                                                                var record = new staticsticAPIDB({
+                                                                    nameAPI: 'categoryProducts',
+                                                                    totalAPI: 1,
+                                                                    redisAPI: 0,
+                                                                    magentoAPI: 1,
+                                                                    prefetch_status: 1,
+                                                                    APP_ID: app_id,
+                                                                    current_date: current_date
+                                                                });
+                                                                record.save(function (err) {
+                                                                    if (err) {
+                                                                        console.log('Error. Line-94, File-service/statisticjs' + err);
+                                                                    } else {
+                                                                        console.log('saved done')
+                                                                        console.log('Record Saved. Line-96, File-service/statisticjs');
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
                                                         fetchCategory(item, prefetchDataDB, categoryProductsDB, app_id, URL, function () {
                                                             console.log('Category end. Line-240 File-/service/cronjs');
                                                             callback();
