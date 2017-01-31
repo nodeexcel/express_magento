@@ -18,6 +18,18 @@ validate = function (req, schema, secret, callback) {
                 } else {
                     result[myKey] = '';
                 }
+            } else if (myKey == 'fax') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
+            } else if (myKey == 'company') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
             } else {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
@@ -32,7 +44,7 @@ validate = function (req, schema, secret, callback) {
         callback(new Error('Fill required fields!'));
         // callback({status: 0, body: 'Fill required fields!'});
     } else {
-        callback(false,result);
+        callback(false, result);
         // callback(result);
     }
 };
