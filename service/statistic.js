@@ -92,7 +92,9 @@ setStatisticMagento = function (nameAPI, req) {
             var magentoAPI = row.magentoAPI;
             var prefetch_Status = row.prefetch_status;
             staticsticAPIDB.update({
-                nameAPI: nameAPI
+                nameAPI: nameAPI,
+                APP_ID: APP_ID,
+                current_date: current_date
             }, {
                 $set: {
                     totalAPI: totalAPI + 1,
