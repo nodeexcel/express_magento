@@ -34,4 +34,17 @@ router.all('/categorylist', function (req, res) {
     });
 });
 
+router.post('/filterby', function (req, res) {
+    validate(req, {
+        id: 'required'}, null, function (error, body) {
+        API(req, body, '/category/filterby/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res,response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
 module.exports = router;
