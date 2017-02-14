@@ -49,25 +49,19 @@ router.post('/getrating', function (req, res) {
 //ROUTE FOR REVIEW SUBMIT OF ANY PRODUCT
 router.post('/submitreview', function (req, res) {
     validate(req, {
-        sku: 'required',
-        store_id: 'required',
-        title: 'required',
-        details: 'required',
-        nickname: 'required',
-        rating_options: 'required',
-        secret: 'optional'
-    }, null, function (body) {
-        if (req.headers.app_id && req.URL) {
-            API(req, body, '/product/submitreview/', function (status, response, msg) {
-                if (status == 0) {
-                    oops(res, msg);
-                } else {
-                    success(res, response);
-                }
-            });
-        } else {
-            oops(res, INVALID);
-        }
+        sku:'required',
+        store_id:'required',
+        title:'required',
+        details:'required',
+        nickname:'required',
+        rating_options:'required',}, null, function (error, body) {
+        API(req, body, '/product/submitreview/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res,response);
+            }
+        });
     });
 });
 
