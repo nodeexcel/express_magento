@@ -47,4 +47,18 @@ router.post('/filterby', function (req, res) {
         });
     });
 });
+router.post('/sortby', function (req, res) {
+    validate(req, {
+        id: 'required',
+        store_id:'required'}, null, function (error, body) {
+        API(req, body, '/category/sortby/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res,response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
 module.exports = router;
