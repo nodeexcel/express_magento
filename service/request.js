@@ -16,7 +16,7 @@ API = function (req, body, url, callback) {
             if (error) {
                 callback(0, error, ERROR);
             } else if (result.statusCode === 500) {
-                callback(0, {}, NOTFOUND);
+                callback(0, {}, body);
             } else if (result.statusCode === 401) {
                 callback(0, {}, "UnAuthorized")
             } else {
