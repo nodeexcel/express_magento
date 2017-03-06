@@ -35,7 +35,8 @@ categoryProducts = function (req, callback) {
         limit: 'required',
         id: 'required',
         page: 'required',
-        sort_by:'required'
+        sort_by:'required',
+        sort_order:'required'
     }, null, function (error, body) {
         if (error) {
             callback({status: 0, msg: error});
