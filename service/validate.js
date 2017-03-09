@@ -11,6 +11,8 @@ validate = function (req, schema, secret, callback) {
         if (schema[myKey] != 'optional') {
             if (myKey == 'secret') {
                 result[myKey] = secret;
+            }else{
+                result[myKey]= '';
             }
             if (myKey == 'entity_id') {
                 if (req.body[myKey]) {
