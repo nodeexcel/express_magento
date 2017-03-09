@@ -36,6 +36,12 @@ validate = function (req, schema, secret, callback) {
                 } else {
                     result[myKey] = '';
                 }
+            }else if (myKey == 'options') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
             } else if (myKey == 'company') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
