@@ -8,6 +8,9 @@ validate = function (req, schema, secret, callback) {
     var find = false;
     for (var a = 0; a < allkeys.length; a++) {
         var myKey = allkeys[a];
+        console.log('---------------------------------------')
+        console.log(myKey)
+        console.log('---------------------------------------')
         if (schema[myKey] != 'optional') {
             if (myKey == 'secret') {
                 result[myKey] = secret;

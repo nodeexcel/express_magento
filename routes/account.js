@@ -59,6 +59,9 @@ router.post('/edit', isAuth, function(req, res) {
         websiteId: 'required',
         secret: 'required'
     }, req.body.secret, function(error, body) {
+        console.log('******************************');
+        console.log(body)
+        console.log('******************************');
         API(req, body, '/account/edit/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
