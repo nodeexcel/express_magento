@@ -9,14 +9,16 @@ var express = require('express');
 var router = express.Router();
 
 //ROUTE FOR ACCOUNT ADDRESS
-router.all('/address', isAuth, function (req, res) {
-    validate(req, {firstname: 'optional',
+router.all('/address', isAuth, function(req, res) {
+    validate(req, {
+        firstname: 'optional',
         lastname: 'optional',
         password: 'optional',
         newPassword: 'optional',
         zip: 'optional',
-        secret: 'required'}, req.body.secret, function (error, body) {
-        API(req, body, '/account/address/', function (status, response, msg) {
+        secret: 'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/address/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
@@ -28,14 +30,36 @@ router.all('/address', isAuth, function (req, res) {
 });
 
 //ROUTE FOR CHANGE PASSWORD
-router.post('/changepassword', isAuth, function (req, res) {
-    validate(req, {firstname: 'optional',
+router.post('/changepassword', isAuth, function(req, res) {
+    validate(req, {
+        firstname: 'optional',
         lastname: 'optional',
         password: 'required',
         newPassword: 'required',
         zip: 'optional',
-        secret: 'required'}, req.body.secret, function (error, body) {
-        API(req, body, '/account/changepassword/', function (status, response, msg) {
+        secret: 'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/changepassword/', function(status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
+router.post('/edit', isAuth, function(req, res) {
+    validate(req, {
+        firstname: 'required',
+        lastname: 'required',
+        email: 'required',
+        email_check: 'required',
+        websiteId: 'required',
+        secret: 'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/changepassword/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {

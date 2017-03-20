@@ -26,12 +26,6 @@ validate = function (req, schema, secret, callback) {
                 } else {
                     result[myKey] = '';
                 }
-            }else if (myKey == 'sort_by') {
-                if (req.body[myKey]) {
-                    result[myKey] = req.body[myKey];
-                } else {
-                    result[myKey] = '';
-                }
             }else if (myKey == 'title') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
