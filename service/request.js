@@ -18,6 +18,8 @@ API = function (req, body, url, callback) {
             } else if (result.statusCode === 500) {
                 callback(0, {}, body);
             } else if (result.statusCode === 401) {
+
+                console.log(body);
                 callback(0, {}, "UnAuthorized")
             } else {
                 allData = JSON.parse(body);
