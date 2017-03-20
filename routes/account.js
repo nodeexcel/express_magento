@@ -59,7 +59,7 @@ router.post('/edit', isAuth, function(req, res) {
         websiteId: 'required',
         secret: 'required'
     }, req.body.secret, function(error, body) {
-        API(req, body, '/account/changepassword/', function(status, response, msg) {
+        API(req, body, '/account/edit/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
