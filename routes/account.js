@@ -93,9 +93,9 @@ router.post('/addWishlist', isAuth, function(req, res) {
         super_group:'required',
         bundle_option:'required',
         bundle_option_qty:'required',
-        super_attribute:'required'
+        super_attribute:'required',
+        secret: 'required'
     }, req.body.secret, function(error, body) {
-        console.log(body);
         API(req, body, '/account/addWishlist/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
