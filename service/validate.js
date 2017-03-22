@@ -8,14 +8,11 @@ validate = function (req, schema, secret, callback) {
     var find = false;
     for (var a = 0; a < allkeys.length; a++) {
         var myKey = allkeys[a];
-        console.log('---------------------------------------')
-        console.log(myKey)
-        console.log('---------------------------------------')
         if (schema[myKey] != 'optional') {
             if (myKey == 'secret') {
                 result[myKey] = secret;
-            }else{
-                result[myKey]= '';
+            } else {
+                result[myKey] = '';
             }
             if (myKey == 'entity_id') {
                 if (req.body[myKey]) {
@@ -29,31 +26,55 @@ validate = function (req, schema, secret, callback) {
                 } else {
                     result[myKey] = '';
                 }
-            }else if (myKey == 'title') {
+            } else if (myKey == 'title') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {
                     result[myKey] = '';
                 }
-            }else if (myKey == 'details') {
+            } else if (myKey == 'details') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {
                     result[myKey] = '';
                 }
-            }else if (myKey == 'fax') {
+            } else if (myKey == 'fax') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {
                     result[myKey] = '';
                 }
-            }else if (myKey == 'options') {
+            } else if (myKey == 'options') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {
                     result[myKey] = '';
                 }
             } else if (myKey == 'company') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
+            } else if (myKey == 'super_group') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
+            } else if (myKey == 'bundle_option') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
+            } else if (myKey == 'bundle_option_qty') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
+            } else if (myKey == 'super_attribute') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {

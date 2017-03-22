@@ -59,9 +59,6 @@ router.post('/edit', isAuth, function(req, res) {
         websiteId: 'required',
         secret: 'required'
     }, req.body.secret, function(error, body) {
-        console.log('******************************');
-        console.log(body)
-        console.log('******************************');
         API(req, body, '/account/edit/', function(status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
@@ -72,5 +69,42 @@ router.post('/edit', isAuth, function(req, res) {
         });
     });
 });
+
+router.post('/removeWishlist', isAuth, function(req, res) {
+    validate(req, {
+        itemId: 'required',
+        secret: 'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/removeWishlist/', function(status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
+router.post('/addWishlist', isAuth, function(req, res) {
+    validate(req, {
+        product: 'required',
+        qty: 'required',
+        super_group:'required',
+        bundle_option:'required',
+        bundle_option_qty:'required',
+        super_attribute:'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/addWishlist/', function(status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
 
 module.exports = router;
