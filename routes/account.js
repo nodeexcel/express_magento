@@ -88,7 +88,7 @@ router.post('/removeWishlist', isAuth, function(req, res) {
 
 router.post('/addWishlist', isAuth, function(req, res) {
     validate(req, {
-        product: 'required',
+        productId: 'required',
         qty: 'required',
         super_group:'required',
         bundle_option:'required',
