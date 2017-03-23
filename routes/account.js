@@ -107,5 +107,20 @@ router.post('/addWishlist', isAuth, function(req, res) {
     });
 });
 
+router.post('/getWishlist', isAuth, function(req, res) {
+    validate(req, {
+        secret: 'required'
+    }, req.body.secret, function(error, body) {
+        API(req, body, '/account/getWishlist/', function(status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
 
 module.exports = router;
