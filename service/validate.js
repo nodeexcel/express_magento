@@ -80,6 +80,12 @@ validate = function (req, schema, secret, callback) {
                 } else {
                     result[myKey] = '';
                 }
+            }else if (myKey == 'qty') {
+                if (req.body[myKey]) {
+                    result[myKey] = req.body[myKey];
+                } else {
+                    result[myKey] = '';
+                }
             } else {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
