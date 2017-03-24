@@ -59,26 +59,18 @@ validate = function (req, schema, secret, callback) {
             } else if (myKey == 'super_group') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
-                } else {
-                    result[myKey] = '';
-                }
+                } 
             } else if (myKey == 'bundle_option') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
-                } else {
-                    result[myKey] = '';
                 }
             } else if (myKey == 'bundle_option_qty') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
-                } else {
-                    result[myKey] = '';
                 }
             } else if (myKey == 'super_attribute') {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
-                } else {
-                    result[myKey] = '';
                 }
             }else if (myKey == 'qty') {
                 if (req.body[myKey]) {
