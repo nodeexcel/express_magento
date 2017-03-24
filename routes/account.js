@@ -94,6 +94,7 @@ router.post('/addWishlist', isAuth, function(req, res) {
         bundle_option:'required',
         bundle_option_qty:'required',
         super_attribute:'required',
+        links:'required',
         secret: 'required'
     }, req.body.secret, function(error, body) {
         API(req, body, '/account/addWishlist/', function(status, response, msg) {
