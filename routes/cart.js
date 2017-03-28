@@ -9,7 +9,7 @@ var express = require('express');
 var router = express.Router();
 
 //ROUTE FOR CART
-router.all('/cart', isAuth, function (req, res) {
+router.all('/cart', function (req, res) {
     validate(req, {
         secret: 'required',
         productid: 'required',
