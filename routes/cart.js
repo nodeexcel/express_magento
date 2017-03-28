@@ -52,4 +52,18 @@ router.all('/getShippingMethods', isAuth, function (req, res) {
     });
 });
 
+router.all('/getPaymentMethods', isAuth, function (req, res) {
+    validate(req, {countryid: 'optional',
+        secret: 'required'}, req.body.secret, function (error, body) {
+        API(req, body, '/cart/getPaymentMethods/', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
 module.exports = router;
