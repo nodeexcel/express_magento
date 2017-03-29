@@ -35,4 +35,21 @@ router.post('/getAllowedCountries', function (req, res) {
     });
 });
 
+router.post('/getStaticPageContent', function (req, res) {
+    validate(req, {
+        store_id: 'required',
+        secret: 'optional',
+        page_code:'required'
+    }, null, function (error, body) {
+        API(req, body, '/web/getStaticPageContent', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
 module.exports = router;
