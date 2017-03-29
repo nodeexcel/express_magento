@@ -10,16 +10,27 @@ var router = express.Router();
 
 //ROUTE FOR CART
 router.all('/cart', function (req, res) {
-    validate(req, {
-        secret: 'required',
+    validate(req, {countryid: 'optional',
+        zip: 'optional',
+        city: 'optional',
+        telephone: 'optional',
+        fax: 'optional',
+        company: 'optional',
+        street: 'optional',
+        firstname: 'optional',
+        lastname: 'optional',
+        password: 'optional',
+        newPassword: 'optional',
+        secret: 'optional',
+        entity_id: 'optional',
         productid: 'required',
         store_id: 'required',
         qty:'required',
         options:'required',
-        super_attribute:'required',
         bundle_option:'required',
+        links:'required',
         bundle_option_qty:'required',
-        links:'required'}, req.body.secret, function (error, body) {
+        super_attribute:'required'}, null, function (error, body) {
         API(req, body, '/cart/cart/', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);

@@ -48,7 +48,7 @@ validate = function (req, schema, secret, callback) {
                 if (req.body[myKey]) {
                     result[myKey] = req.body[myKey];
                 } else {
-                    result[myKey] = '';
+                    delete result[myKey];
                 }
             } else if (myKey == 'company') {
                 if (req.body[myKey]) {
