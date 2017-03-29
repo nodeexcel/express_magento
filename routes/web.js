@@ -39,9 +39,28 @@ router.post('/getStaticPageContent', function (req, res) {
     validate(req, {
         store_id: 'required',
         secret: 'optional',
-        page_code:'required'
+        page_code: 'required'
     }, null, function (error, body) {
         API(req, body, '/web/getStaticPageContent', function (status, response, msg) {
+            if (status == 0) {
+                oops(res, msg);
+            } else {
+                success(res, response);
+                // success(res, status, response);
+            }
+        });
+    });
+});
+
+router.post('/contactus', function (req, res) {
+    validate(req, {
+        name: 'required',
+        email: 'required',
+        comment: 'required',
+        secret: 'optional',
+        telephone: 'required'
+    }, null, function (error, body) {
+        API(req, body, '/web/contactus', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
