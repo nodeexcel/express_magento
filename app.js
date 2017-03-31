@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 
 var verify = require('./middleware/verify.js');
 var redis = require('./middleware/redis.js');
-// var route = require('./middleware/route.js');
+var route = require('./middleware/route.js');
 var optimus = require('connect-image-optimus');
 var connect = require('connect');
 var db = require('./mods/db.js');
@@ -38,19 +38,19 @@ app.use(cors());
 app.use(db());
 app.use(verify);
 app.use(redis);
-// app.use(route);
+app.use(route);
 
-var category = require('./routes/category');
-var customer = require('./routes/customer');
-var product = require('./routes/product');
-var home = require('./routes/home');
-var account = require('./routes/account');
-var order = require('./routes/order');
-var address = require('./routes/address');
-var cart = require('./routes/cart');
-var redis = require('./routes/redis');
-var web = require('./routes/web');
-var stats = require('./routes/stats');
+// var category = require('./routes/category');
+// var customer = require('./routes/customer');
+// var product = require('./routes/product');
+// var home = require('./routes/home');
+// var account = require('./routes/account');
+// var order = require('./routes/order');
+// var address = require('./routes/address');
+// var cart = require('./routes/cart');
+// var redis = require('./routes/redis');
+// var web = require('./routes/web');
+// var stats = require('./routes/stats');
 
 // app.use(function (req, res, next) {
 //     console.log('***************Request header starts*************');
@@ -63,17 +63,17 @@ var stats = require('./routes/stats');
 //     next();
 // });
 
-app.use('/category', category);
-app.use('/customer', customer);
-app.use('/product', product);
-app.use('/home', home);
-app.use('/account', account);
-app.use('/order', order);
-app.use('/address', address);
-app.use('/cart', cart);
-app.use('/redis', redis);
-app.use('/web', web);
-app.use('/stats', stats);
+// app.use('/category', category);
+// app.use('/customer', customer);
+// app.use('/product', product);
+// app.use('/home', home);
+// app.use('/account', account);
+// app.use('/order', order);
+// app.use('/address', address);
+// app.use('/cart', cart);
+// app.use('/redis', redis);
+// app.use('/web', web);
+// app.use('/stats', stats);
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
