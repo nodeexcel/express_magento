@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var verify = require('./middleware/verify.js');
 var redis = require('./middleware/redis.js');
+// var route = require('./middleware/route.js');
 var optimus = require('connect-image-optimus');
 var connect = require('connect');
 var db = require('./mods/db.js');
@@ -37,6 +38,7 @@ app.use(cors());
 app.use(db());
 app.use(verify);
 app.use(redis);
+// app.use(route);
 
 var category = require('./routes/category');
 var customer = require('./routes/customer');

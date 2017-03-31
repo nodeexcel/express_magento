@@ -5,6 +5,7 @@ var request = require('request');
 
 //FIRE ANY MAGENTO API USING REQUEST(NODE MODULE)
 API = function (req, body, url, callback) {
+    console.log(body);
     try {
         request({
             url: req.URL + url, //URL to hit
