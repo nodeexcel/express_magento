@@ -1,0 +1,5 @@
+node_modules/
+nbproject/
+public/
+npm-shrinkwrap.json
+dump.rdb
