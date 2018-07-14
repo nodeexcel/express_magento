@@ -5,10 +5,7 @@ var request = require('request');
 
 API = function (req, body, url, callback) {
     request({
-
-        url:'http://plivo1.demo.xmagestore.com/magento2/magento223/index.php/rest/V1/cmsBlock/1/web/getStaticPageContent/',
-
-        // url: 'http://'+ req.URL + url, //URL to hit
+        url: 'http://'+ req.URL + url, //URL to hit
         method: 'post',
         headers: {APP_ID: req.headers.app_id, "Authorization": req.headers.authorization},
         timeout: 10000,

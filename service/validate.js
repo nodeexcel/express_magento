@@ -2,7 +2,10 @@ var _underscore = require('underscore');
 require('./responseMsg');
 
 validate = function (req, schema, secret, callback) {
+<<<<<<< HEAD
     
+=======
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
     var result = {};
     var allkeys = _underscore.keys(schema);
     var find = false;

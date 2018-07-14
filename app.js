@@ -1,7 +1,11 @@
 var express = require('express');
 var path = require('path');
 require('node-import');
+<<<<<<< HEAD
 var favicon = require('serve-favicon');
+=======
+var favicon = require('static-favicon');
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -10,7 +14,12 @@ var verify = require('./middleware/verify.js');
 var redis = require('./middleware/redis.js');
 var optimus = require('connect-image-optimus');
 var connect = require('connect');
+<<<<<<< HEAD
 var http  = require('http');
+=======
+
+
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
 var db = require('./mods/db.js');
 var app = express();
 
@@ -30,16 +39,27 @@ var cors = require('cors');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+<<<<<<< HEAD
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+=======
+app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public ')));
 app.use(cors());
 app.use(db());
 app.use(verify);
+<<<<<<< HEAD
 // app.use(redis);
+=======
+app.use(redis);
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
 
 var routes = require('./routes/index');
 var category = require('./routes/category');
@@ -76,7 +96,11 @@ app.use(function (req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
+<<<<<<< HEAD
         res.send('error', {
+=======
+        res.render('error', {
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
             message: err.message,
             error: err
         });
@@ -88,11 +112,18 @@ if (app.get('env') === 'development') {
 app.use(function (err, req, res, next) {
     console.log(err)
     res.status(err.status || 500);
+<<<<<<< HEAD
     res.send('error', {
+=======
+    res.render('error', {
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
         message: err.message,
         error: {}
     });
 });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cb1a537d14da937ee030fac16c499c0cc245f271
 module.exports = app;
