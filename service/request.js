@@ -3,11 +3,11 @@ imports('config/index');
 imports('config/constant');
 var request = require('request');
 
-API = function (req, body, url, callback) {
+API = function (req, body, url, method, callback) {
     request({
         protocol:'http:',
         url: req.URL + url, //URL to hit
-        // method: 'post',
+        method: method,
         headers: {APP_ID: req.headers.app_id, "Authorization": req.headers.authorization},
         timeout: 10000,
         body: JSON.stringify(body)
