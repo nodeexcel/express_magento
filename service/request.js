@@ -5,7 +5,8 @@ var request = require('request');
 
 API = function (req, body, url, callback) {
     request({
-        url: 'http://'+ req.URL + url, //URL to hit
+        protocol:'http:',
+        url: req.URL + url, //URL to hit
         method: 'post',
         headers: {APP_ID: req.headers.app_id, "Authorization": req.headers.authorization},
         timeout: 10000,

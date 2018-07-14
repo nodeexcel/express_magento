@@ -13,6 +13,7 @@ module.exports = function () {
 
     var app_url_schema = new Schema({
         headers: {type: String, required: true, unique: true},
+        APP_ID: {type: String, required: true, unique: true},
         url: {type: String, required: true, unique: true},
         status: {type: String, required: true, unique: true},
         cron_running_time: {type: String, required: true, unique: true}
