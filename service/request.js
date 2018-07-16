@@ -5,7 +5,7 @@ var request = require('request');
 
 API = function (req, body, url, method, callback) {
     request({
-        protocol:'http:',
+        protocol: 'http:',
         url: req.URL + url, //URL to hit
         method: method,
         headers: {APP_ID: req.headers.app_id, "Authorization": req.headers.authorization},
@@ -19,7 +19,11 @@ API = function (req, body, url, method, callback) {
             callback(0, allData.data, NOTFOUND);
         } else {
             allData = JSON.parse(body);
+            if (allData.data) {
             callback(1, allData.data, SUCCESS);
+            } else {
+                callback(1, allData, SUCCESS);
+            }
         }
     });
 };

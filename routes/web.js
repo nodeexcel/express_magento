@@ -7,18 +7,6 @@ imports('config/constant');
 var express = require('express');
 var router = express.Router();
 
-router.post('/getStaticPageContent', function (req, res) {
-    validate(req, {secret: "optional"}, null, function (body) {
-        API(req, body, '/rest/V1/cmsBlock/1', 'get', function (status, response, msg) {
-            if (status == 0) {
-                oops(res, msg);
-            } else {
-                success(res, status, response);
-            }
-        });
-    });
-});
-
 router.post('/config', function (req, res) {
     validate(req, {secret: 'optional'}, null, function (body) {
         API(req, body, '/excellence/mobile/api/v1/web/config', 'post', function (status, response, msg) {
