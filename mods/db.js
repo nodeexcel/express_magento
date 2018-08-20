@@ -13,6 +13,7 @@ module.exports = function () {
 
     var app_url_schema = new Schema({
         headers: {type: String, required: true, unique: true},
+        APP_ID: {type: String, required: true, unique: true},
         url: {type: String, required: true, unique: true},
         status: {type: String, required: true, unique: true},
         cron_running_time: {type: String, required: true, unique: true}
@@ -54,10 +55,10 @@ module.exports = function () {
     conn.on('error', function (err) {
         process.exit();
     });
-    var gfs = Grid(conn.db);
+    // var gfs = Grid(conn.db);
     return function (req, res, next) {
         req.mongo = conn;
-        req.gfs = gfs;
+        // req.gfs = gfs;
         req.app = app_urls;
         next();
     };

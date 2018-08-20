@@ -9,7 +9,7 @@ var router = express.Router();
 
 router.post('/config', function (req, res) {
     validate(req, {secret: 'optional'}, null, function (body) {
-        API(req, body, '/web/config', function (status, response, msg) {
+        API(req, body, '/excellence/mobile/api/v1/web/config', 'post', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
@@ -20,9 +20,9 @@ router.post('/config', function (req, res) {
 });
 
 router.post('/getAllowedCountries', function (req, res) {
-    validate(req, {store_id: 'required',
+    validate(req, {store_id: 1,
         secret: 'optional'}, null, function (body) {
-        API(req, body, '/web/getAllowedCountries', function (status, response, msg) {
+        API(req, null, '/rest/V1/directory/countries', 'GET', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
