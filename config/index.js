@@ -1,7 +1,7 @@
 var config = {
     'APP_ID': 'com.tethr',
     "DB_URL": "mongodb://127.0.0.1/magento_mobile",
-    "URL": "plivo1.demo.xmag/estore.com/magento2/magento223/index.php",         //new url
+    "URL": "http://plivo1.demo.xmag/estore.com/magento2/magento223/index.php",         //new url
     "CATEGORY_EXPIRESAT": "216000",
     "PRODUCT_EXPIRESAT": "216000",
     "ACCOUNT_EXPIRESAT": "21600",

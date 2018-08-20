@@ -8,7 +8,8 @@ var express = require('express');
 var router = express.Router();
 
 router.post('/login', function (req, res) {
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -25,19 +26,20 @@ router.post('/login', function (req, res) {
         store_id: 'optional',
         parent_id: 'optional',
         type: 'optional',
-        email: 'required'}, null, function (body) {
-            body={
-                "username":body.email,
-                "password":body.password
-            }
-        API(req, body, '/rest/V1/integration/customer/token','POST', function (status, result, msg) {
+        email: 'required'
+    }, null, function (body) {
+        body = {
+            "username": body.email,
+            "password": body.password
+        }
+        API(req, body, '/rest/V1/integration/customer/token', 'POST', function (status, result, msg) {
             if (status == 0) {
                 oops(res, msg);
             } else {
-                req.headers={
-                                'app_id': req.headers.app_id,
-                                'authorization': "Bearer "+result
-                            }
+                req.headers = {
+                    'app_id': req.headers.app_id,
+                    'authorization': "Bearer " + result
+                }
                 req.URL = req.URL;
                 API(req, null, '/rest/V1/customers/me', 'GET', function (status, response, msg) {
                     if (status == 0) {
@@ -53,7 +55,8 @@ router.post('/login', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-    validate(req, {countryid: 'optional',
+    validate(req, {
+        countryid: 'optional',
         zip: 'optional',
         city: 'optional',
         telephone: 'optional',
@@ -70,24 +73,24 @@ router.post('/register', function (req, res) {
         store_id: 'optional',
         parent_id: 'optional',
         type: 'optional',
-        email: 'required'}, null, function (body) {
-            body= {
-                'customer' : {
-                        "email": body.email,
-                        "firstname": body.firstname,
-                        "lastname": body.lastname,
-                        "defaultBilling": "",
-                        "defaultShipping": "",
-                        "confirmation": "",
-                        "middlename": "",
-                        "disableAutoGroupChange": 0,
-                        "extensionAttributes": {},
-                        "customAttributes": [
-                        ]
-                      },
-                      "password": body.password,
-                      "redirectUrl": ""
-            }
+        email: 'required'
+    }, null, function (body) {
+        body = {
+            'customer': {
+                "email": body.email,
+                "firstname": body.firstname,
+                "lastname": body.lastname,
+                "defaultBilling": "",
+                "defaultShipping": "",
+                "confirmation": "",
+                "middlename": "",
+                "disableAutoGroupChange": 0,
+                "extensionAttributes": {},
+                "customAttributes": []
+            },
+            "password": body.password,
+            "redirectUrl": ""
+        }
         API(req, body, '/rest/V1/customers', 'POST', function (status, response, msg) {
             if (status == 0) {
                 oops(res, msg);
