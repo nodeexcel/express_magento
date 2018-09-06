@@ -12,6 +12,7 @@ var optimus = require('connect-image-optimus');
 var connect = require('connect');
 var http  = require('http');
 var db = require('./mods/db.js');
+require('./service/request');
 var app = express();
 
 var optimus = require('connect-image-optimus');
@@ -53,6 +54,18 @@ var cart = require('./routes/cart');
 var redis = require('./routes/redis');
 var web = require('./routes/web');
 
+app.use('/V1/*', function(req, res, next){
+    req.URL = 'http://192.168.1.129/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest';
+
+    API(req, req.body, req.originalUrl, req.method, function (status, response, msg) {
+        if (status == 0) {
+            oops(res, msg);
+        } else {
+            console.log(response)
+            success(res, status, response);
+        }
+    })
+});
 app.use('/', routes);
 app.use('/category', category);
 app.use('/customer', customer);
