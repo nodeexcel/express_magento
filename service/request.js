@@ -4,6 +4,9 @@ imports('config/constant');
 var request = require('request');
 
 API = function (req, body, url, method, callback) {
+    console.log("************************************************************************");
+    console.log(req.URL + url);
+    console.log("************************************************************************");
     request({
         protocol: 'http:',
         url: req.URL + url, //URL to hit
